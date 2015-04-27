@@ -10,6 +10,8 @@ version = '0.0.1'
 def nowDate = new Date()
 def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
 
+eclipse.project.natures 'org.springsource.ide.eclipse.gradle.core.nature'
+
 jar {
   manifest {
     attributes 'Implementation-Title': project.name,
