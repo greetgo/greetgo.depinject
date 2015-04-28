@@ -29,7 +29,17 @@ eclipse {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
   }
+  
+  project {
+      natures 'com.google.gwt.eclipse.core.gwtNature'
+      buildCommand 'com.google.gdt.eclipse.core.webAppProjectValidator'
+      buildCommand 'com.google.gwt.eclipse.core.gwtProjectValidator'
+  }
+  classpath {
+      containers 'com.google.gwt.eclipse.core.GWT_CONTAINER'
+  }
 }
+
 
 project.eclipse.classpath.file.whenMerged { cp ->
   if (project.hasProperty("sourceCompatibility")) {
@@ -54,6 +64,7 @@ configurations { repoUpload }
 dependencies {
   compile "com.google.gwt:gwt-user:2.7.0"
   compile "greetgo.3rd-party:smartgwt:5.0p"
+  compile 'com.metapossum:metapossum-scanner:1.0.1'
 
   testCompile 'org.testng:testng:6.1.1'
   testCompile 'org.easytesting:fest-assert-core:2.0M10'
