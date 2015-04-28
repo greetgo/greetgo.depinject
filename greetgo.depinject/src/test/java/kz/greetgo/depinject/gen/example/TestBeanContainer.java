@@ -5,5 +5,5 @@ import kz.greetgo.depinject.src.Include;
 
 @Include(TotalConfig.class)
 public interface TestBeanContainer extends BeanContainer {
-  
+  AsdBean getAsdBean();
 }

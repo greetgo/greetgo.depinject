@@ -44,8 +44,21 @@ public class BeanContainerImplGeneratorTest {
     x.findBeanClassSet();
     
     assertThat(x.beanClassSet).contains(AsdBeanImpl.class, Place1bean.class, Place2bean.class);
+  }
+  
+  @Test
+  public void generate() throws Exception {
     
-    System.out.println(x.beanClassSet);
+    BeanContainerImplGenerator x = new BeanContainerImplGenerator();
+    x.beanContainerIface = TestBeanContainer.class;
+    
+    x.srcDir = "build/gensrc";
+    x.packageName = "kz.greetgo.depinject.gen.asd";
+    x.implClassName = "HelloImpl";
+    
+    x.generate();
+    
+    assertThat(1);
   }
   
 }
