@@ -3,6 +3,7 @@ package kz.greetgo.depinject.gen;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -39,7 +40,7 @@ public class BeanContainerImplGenerator {
     if (!BeanContainer.class.isAssignableFrom(beanContainerIface)) throw new NoBeanContainer();
     
     Include include = beanContainerIface.getAnnotation(Include.class);
-    if (include == null) throw new NoInclude();
+    if (include == null) throw new NoInclude(beanContainerIface);
     
     scannedConfigs.clear();
     
@@ -108,6 +109,11 @@ public class BeanContainerImplGenerator {
     } finally {
       out.close();
     }
+  }
+  
+  public void generateTo(PrintWriter writer) throws Exception {
+    generateContent();
+    writer.print(content.toString());
   }
   
   private static String rndId() {
@@ -240,4 +246,5 @@ public class BeanContainerImplGenerator {
     }
     pb.pr(prepareField(beanClass)).prn(";");
   }
+  
 }

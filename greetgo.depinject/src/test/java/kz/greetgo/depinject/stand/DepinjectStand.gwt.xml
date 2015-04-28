@@ -3,6 +3,7 @@
 <module rename-to="DepinjectStand">
 
   <inherits name="com.google.gwt.user.User" />
+  <inherits name="kz.greetgo.depinject.Depinject" />
 
   <entry-point class="kz.greetgo.depinject.stand.src.DepinjectStandEP" />
 

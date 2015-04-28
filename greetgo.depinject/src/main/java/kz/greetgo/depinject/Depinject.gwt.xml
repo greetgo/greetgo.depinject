@@ -2,8 +2,10 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
 <module>
 
-  <inherits name="com.google.gwt.user.User" />
-
   <source path="src" />
+
+  <generate-with class="kz.greetgo.depinject.gen.BeanContainerGenerator">
+    <when-type-assignable class="kz.greetgo.depinject.src.BeanContainer" />
+  </generate-with>
 
 </module>
