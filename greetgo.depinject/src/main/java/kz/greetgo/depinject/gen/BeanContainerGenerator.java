@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.PropertyOracle;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -28,9 +27,6 @@ public class BeanContainerGenerator extends Generator {
   
   private String innerGenerate(TreeLogger logger, GeneratorContext context, String typeName)
       throws Exception {
-    PropertyOracle propertyOracle = context.getPropertyOracle();
-    propertyOracle.getConfigurationProperty("");
-    
     TypeOracle typeOracle = context.getTypeOracle();
     JClassType typeInfo = typeOracle.findType(typeName);
     if (typeInfo == null) {
