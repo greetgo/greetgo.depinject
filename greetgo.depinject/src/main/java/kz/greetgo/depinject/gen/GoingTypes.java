@@ -6,9 +6,9 @@ import java.lang.reflect.Type;
 import kz.greetgo.depinject.src.gwtrpc.InvokeService;
 
 public class GoingTypes {
-  public final Class<?> toServer, fromServer;
+  public final Type toServer, fromServer;
   
-  private GoingTypes(Class<?> toServer, Class<?> fromServer) {
+  private GoingTypes(Type toServer, Type fromServer) {
     this.toServer = toServer;
     this.fromServer = fromServer;
   }
@@ -41,7 +41,7 @@ public class GoingTypes {
     
     if (ptype.getRawType() == InvokeService.class) {
       Type[] args = ptype.getActualTypeArguments();
-      return new GoingTypes((Class<?>)args[0], (Class<?>)args[1]);
+      return new GoingTypes(args[0], args[1]);
     }
     
     for (Type subtype : ((Class<?>)ptype.getRawType()).getGenericInterfaces()) {

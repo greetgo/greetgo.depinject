@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -256,8 +257,8 @@ public class BeanContainerImplGenerator {
         PreparedField syncFld = prepareField(syncBeanClass);
         PreparedField convFld = prepareField(syncAsyncConverterBeanClass);
         GoingTypes tt = GoingTypes.extractFromSync(calcSyncClass(asyncClass));
-        String toServer = content.imp(tt.toServer);
-        String fromServer = content.imp(tt.fromServer);
+        String toServer = asString(tt.toServer);
+        String fromServer = asString(tt.fromServer);
         String asyncCallback = content.imp(AsyncCallback.class);
         String request = content.imp(Request.class);
         
@@ -287,6 +288,12 @@ public class BeanContainerImplGenerator {
       
       return;
     }
+  }
+  
+  private String asString(Type type) {
+    if (type instanceof Class) return ((Class<?>)type).getName();
+    if (type instanceof ParameterizedType) return ((ParameterizedType)type).toString();
+    throw new IllegalArgumentException("Unknown value " + type);
   }
   
   private Class<?> findBeanClassFor(Class<?> fieldType) {
