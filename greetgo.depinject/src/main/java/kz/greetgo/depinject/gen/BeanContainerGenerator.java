@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.PropertyOracle;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -15,6 +16,20 @@ public class BeanContainerGenerator extends Generator {
   @Override
   public String generate(TreeLogger logger, GeneratorContext context, String typeName)
       throws UnableToCompleteException {
+    try {
+      return innerGenerate(logger, context, typeName);
+    } catch (UnableToCompleteException e) {
+      throw e;
+    } catch (Exception e) {
+      if (e instanceof RuntimeException) throw (RuntimeException)e;
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private String innerGenerate(TreeLogger logger, GeneratorContext context, String typeName)
+      throws Exception {
+    PropertyOracle propertyOracle = context.getPropertyOracle();
+    propertyOracle.getConfigurationProperty("");
     
     TypeOracle typeOracle = context.getTypeOracle();
     JClassType typeInfo = typeOracle.findType(typeName);
@@ -49,6 +64,7 @@ public class BeanContainerGenerator extends Generator {
     String implTypeSimpleName = implTypeName.substring(lastPointIndex + 1);
     
     PrintWriter writer = context.tryCreate(logger, implTypePackageName, implTypeSimpleName);
+    
     if (writer == null) {
       logger.log(Type.ERROR, "Cannot create writer: implTypePackageName = " + implTypePackageName
           + ", implTypeSimpleName = " + implTypeSimpleName);
@@ -63,8 +79,6 @@ public class BeanContainerGenerator extends Generator {
       g.packageName = implTypePackageName;
       
       g.generateTo(writer);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
     } finally {
       context.commit(logger, writer);
     }

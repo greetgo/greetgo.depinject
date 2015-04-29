@@ -23,6 +23,12 @@ import kz.greetgo.depinject.src.BeanGetter;
 import kz.greetgo.depinject.src.HasAfterInject;
 import kz.greetgo.depinject.src.Include;
 import kz.greetgo.depinject.src.ScanBeans;
+import kz.greetgo.depinject.src.gwtrpc.InvokeServiceAsync;
+import kz.greetgo.depinject.src.gwtrpc.SyncAsyncConverter;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class BeanContainerImplGenerator {
   private final ClassScanner classScanner = new ClassScannerDef();
@@ -133,51 +139,170 @@ public class BeanContainerImplGenerator {
         throw new BeanContainerMethodCannotHasAnyParameters(method);
       }
       Class<?> returnType = method.getReturnType();
-      Class<?> beanClass = findBeanClassFor(returnType);
       String retTypeStr = content.imp(returnType);
       PrintBlock pb = content.newPrintBlock();
       pb.pr("@Override public ").pr(retTypeStr).pr(" ").pr(method.getName()).prn("() {");
       pb.moreIndent();
-      pb.pr("return ").pr(prepareField(beanClass)).prn(".get();");
+      pb.pr("return ").pr(prepareField(returnType).accept()).prn(";");
       pb.lessIndent();
       pb.prn("}");
     }
     
   }
   
-  private final Map<Class<?>, String> preparedFieldMap = new HashMap<>();
-  
-  private String prepareField(Class<?> beanClass) {
-    {
-      String fieldName = preparedFieldMap.get(beanClass);
-      if (fieldName != null) return fieldName;
+  private class PreparedField {
+    final Class<?> type;
+    final String fieldName;
+    final Class<?> beanClass;
+    String getterFieldName;
+    
+    public PreparedField(Class<?> type, String fieldName, Class<?> beanClass, String getterFieldName) {
+      this.type = type;
+      this.fieldName = fieldName;
+      this.beanClass = beanClass;
+      this.getterFieldName = getterFieldName;
     }
     
-    String fieldName = "field_" + beanClass.getSimpleName() + "_" + rndId();
-    preparedFieldMap.put(beanClass, fieldName);
+    public String accept() {
+      if (fieldName == null) return getterFieldName() + ".get()";
+      return fieldName;
+    }
     
-    createField(fieldName, beanClass);
+    String getterFieldName() {
+      if (getterFieldName != null) return getterFieldName;
+      
+      getterFieldName = fieldName + "_getter";
+      PrintBlock p = content.newPrintBlock();
+      String getterName = content.imp(BeanGetter.class);
+      String typeName = content.imp(type);
+      p.pr("private final ").pr(getterName).pr("<").pr(typeName).pr("> ").pr(getterFieldName);
+      p.pr(" = new ").pr(getterName).pr("<").pr(typeName).prn("> (){");
+      p.moreIndent();
+      p.prn("@Override");
+      p.pr("public ").pr(typeName).prn(" get() {");
+      p.pr("  return ").pr(fieldName).prn(";");
+      p.prn("}");
+      p.lessIndent();
+      p.prn("};");
+      
+      return getterFieldName;
+    }
     
-    return fieldName;
+    public boolean needGetterTypeConvert() {
+      if (beanClass == null) return false;
+      return beanClass != type;
+    }
   }
   
-  private Class<?> findBeanClassFor(Class<?> beaningClass) {
+  private final Map<Class<?>, PreparedField> preparedFieldMap = new HashMap<>();
+  
+  private PreparedField prepareField(Class<?> fieldType) throws Exception {
+    {
+      PreparedField pfield = preparedFieldMap.get(fieldType);
+      if (pfield != null) return pfield;
+    }
+    
+    PreparedField pfield = createField(fieldType);
+    
+    preparedFieldMap.put(fieldType, pfield);
+    
+    return pfield;
+  }
+  
+  private PreparedField createField(Class<?> fieldType) throws Exception {
+    {
+      Class<?> beanClass = findBeanClassFor(fieldType);
+      if (beanClass != null) return createBeanField(fieldType, beanClass);
+    }
+    
+    if (InvokeServiceAsync.class.isAssignableFrom(fieldType)) {
+      return createServiceField(fieldType);
+    }
+    
+    throw new NoMatchingBeanFor(fieldType);
+  }
+  
+  private static final String ASYNC = "Async";
+  
+  private PreparedField createServiceField(Class<?> asyncClass) throws Exception {
+    String name = asyncClass.getName();
+    if (!name.endsWith(ASYNC)) {
+      throw new InvokeServiceAsyncMustEndWithAsync(asyncClass);
+    }
+    String syncClassName = name.substring(0, name.length() - ASYNC.length());
+    Class<?> syncClass = Class.forName(syncClassName);
+    
+    {
+      Class<?> syncBeanClass = findBeanClassFor(syncClass);
+      Class<?> syncAsyncConverterBeanClass = findBeanClassFor(SyncAsyncConverter.class);
+      if (syncBeanClass != null && syncAsyncConverterBeanClass != null) {
+        PreparedField syncFld = prepareField(syncBeanClass);
+        PreparedField convFld = prepareField(syncAsyncConverterBeanClass);
+        GoingTypes tt = GoingTypes.extractFromSync(syncClass);
+        String toServer = content.imp(tt.toServer);
+        String fromServer = content.imp(tt.fromServer);
+        String request = content.imp(Request.class);
+        String asyncCallback = content.imp(AsyncCallback.class);
+        String fieldName = "serviceAsync_" + asyncClass.getSimpleName() + "_" + rndId();
+        String asyncClassStr = content.imp(asyncClass);
+        PrintBlock p = content.newPrintBlock();
+        p.pr("private final ");
+        p.pr(asyncClassStr).pr(" ").pr(fieldName).pr(" = new ").pr(asyncClassStr).prn("() {");
+        p.moreIndent();
+        p.prn("@Override");
+        p.pr("public ").pr(request).pr(" invoke(").pr(toServer).pr(" toServer, ");
+        p.pr(asyncCallback).pr("<").pr(fromServer).prn("> callback) {");
+        p.moreIndent();
+        p.pr("return ").pr(convFld.accept()).pr(".convertInvoking(toServer, callback, ");
+        p.pr(syncFld.accept()).prn(");");
+        p.lessIndent();
+        p.prn("}");
+        p.lessIndent();
+        p.prn("};");
+        
+        return new PreparedField(asyncClass, fieldName, null, null);
+      }
+      
+    }
+    
+    {
+      String syncName = content.imp(syncClassName);
+      String asyncName = content.imp(asyncClass);
+      String gwtName = content.imp(GWT.class);
+      String fieldName = "service_" + asyncClass.getSimpleName() + "_" + rndId();
+      
+      PrintBlock p = content.newPrintBlock();
+      p.pr("private final ").pr(asyncName).pr(" ").pr(fieldName).pr(" = ").pr(gwtName);
+      p.pr(".create(").pr(syncName).prn(".class);");
+      
+      return new PreparedField(asyncClass, fieldName, null, null);
+    }
+  }
+  
+  private Class<?> findBeanClassFor(Class<?> fieldType) {
+    if (fieldType == null) throw new NullPointerException();
     
     Class<?> ret = null;
     
     for (Class<?> bean : beanClassSet) {
-      if (beaningClass.isAssignableFrom(bean)) {
-        if (ret != null) throw new MoreThenOneBeanClassIsAssignable(beaningClass, bean, ret);
+      if (fieldType.isAssignableFrom(bean)) {
+        if (ret != null) throw new MoreThenOneBeanClassIsAssignable(fieldType, bean, ret);
         ret = bean;
       }
     }
     
-    if (ret == null) throw new NoMatchingBeanFor(beaningClass);
-    
     return ret;
   }
   
-  private void createField(String fieldName, Class<?> beanClass) {
+  private PreparedField createBeanField(Class<?> fieldType, Class<?> beanClass) throws Exception {
+    
+    if (beanClass != fieldType) {
+      PreparedField fld = prepareField(beanClass);
+      return new PreparedField(fieldType, null, fld.beanClass, fld.getterFieldName);
+    }
+    
+    String fieldName = "getter_" + beanClass.getSimpleName() + "_" + rndId();
+    
     Bean bean = beanClass.getAnnotation(Bean.class);
     boolean singleton = bean.singleton();
     
@@ -224,27 +349,29 @@ public class BeanContainerImplGenerator {
     pb.prn("}");
     pb.lessIndent();
     pb.prn("};");
+    
+    return new PreparedField(beanClass, null, beanClass, fieldName);
   }
   
-  private void injectDependencies(PrintBlock pb, String var, Class<?> beanClass) {
+  private void injectDependencies(PrintBlock pb, String var, Class<?> beanClass) throws Exception {
     for (Field field : beanClass.getFields()) {
       if (field.getType() == BeanGetter.class) {
-        injectField(pb, var, field);
+        injectGetterField(pb, var, field);
       }
     }
   }
   
-  private void injectField(PrintBlock pb, String var, Field field) {
+  private void injectGetterField(PrintBlock pb, String var, Field field) throws Exception {
     ParameterizedType type = (ParameterizedType)field.getGenericType();
     Class<?> inType = (Class<?>)type.getActualTypeArguments()[0];
-    Class<?> beanClass = findBeanClassFor(inType);
     String beanGetterStr = content.imp(BeanGetter.class);
     String inTypeStr = content.imp(inType);
     pb.pr(var).pr(".").pr(field.getName()).pr(" = ");
-    if (inType != beanClass) {
+    PreparedField fld = prepareField(inType);
+    if (fld.needGetterTypeConvert()) {
       pb.pr("(").pr(beanGetterStr).pr("<").pr(inTypeStr).pr(">)(Object)");
     }
-    pb.pr(prepareField(beanClass)).prn(";");
+    pb.pr(fld.getterFieldName()).prn(";");
   }
   
 }

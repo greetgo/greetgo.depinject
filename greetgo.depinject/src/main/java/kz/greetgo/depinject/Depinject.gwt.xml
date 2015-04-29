@@ -7,5 +7,7 @@
   <generate-with class="kz.greetgo.depinject.gen.BeanContainerGenerator">
     <when-type-assignable class="kz.greetgo.depinject.src.BeanContainer" />
   </generate-with>
+  
+  
 
 </module>
