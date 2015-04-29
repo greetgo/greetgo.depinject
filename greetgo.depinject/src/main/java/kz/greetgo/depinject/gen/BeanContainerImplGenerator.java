@@ -224,30 +224,44 @@ public class BeanContainerImplGenerator {
   
   private static final String ASYNC = "Async";
   
-  private PreparedField createServiceField(Class<?> asyncClass) throws Exception {
+  private Class<?> calcSyncClass(Class<?> asyncClass) throws Exception {
     String name = asyncClass.getName();
     if (!name.endsWith(ASYNC)) {
       throw new InvokeServiceAsyncMustEndWithAsync(asyncClass);
     }
     String syncClassName = name.substring(0, name.length() - ASYNC.length());
-    Class<?> syncClass = Class.forName(syncClassName);
+    return Class.forName(syncClassName);
+  }
+  
+  private PreparedField createServiceField(Class<?> asyncClass) throws Exception {
+    String fieldName = "serviceAsync_" + asyncClass.getSimpleName() + "_" + rndId();
+    
+    PrintBlock p = content.newPrintBlock();
+    p.pr("private final ");
+    p.pr(content.imp(asyncClass)).pr(" ").pr(fieldName).pr(" = ");
+    
+    printAsyncValue(p, asyncClass);
+    
+    return new PreparedField(asyncClass, fieldName, null, null);
+  }
+  
+  private void printAsyncValue(PrintBlock p, Class<?> asyncClass) throws Exception {
+    Class<?> syncClass = calcSyncClass(asyncClass);
     
     {
       Class<?> syncBeanClass = findBeanClassFor(syncClass);
       Class<?> syncAsyncConverterBeanClass = findBeanClassFor(SyncAsyncConverter.class);
       if (syncBeanClass != null && syncAsyncConverterBeanClass != null) {
+        
         PreparedField syncFld = prepareField(syncBeanClass);
         PreparedField convFld = prepareField(syncAsyncConverterBeanClass);
-        GoingTypes tt = GoingTypes.extractFromSync(syncClass);
+        GoingTypes tt = GoingTypes.extractFromSync(calcSyncClass(asyncClass));
         String toServer = content.imp(tt.toServer);
         String fromServer = content.imp(tt.fromServer);
-        String request = content.imp(Request.class);
         String asyncCallback = content.imp(AsyncCallback.class);
-        String fieldName = "serviceAsync_" + asyncClass.getSimpleName() + "_" + rndId();
-        String asyncClassStr = content.imp(asyncClass);
-        PrintBlock p = content.newPrintBlock();
-        p.pr("private final ");
-        p.pr(asyncClassStr).pr(" ").pr(fieldName).pr(" = new ").pr(asyncClassStr).prn("() {");
+        String request = content.imp(Request.class);
+        
+        p.pr("new ").pr(content.imp(asyncClass)).prn("() {");
         p.moreIndent();
         p.prn("@Override");
         p.pr("public ").pr(request).pr(" invoke(").pr(toServer).pr(" toServer, ");
@@ -260,22 +274,18 @@ public class BeanContainerImplGenerator {
         p.lessIndent();
         p.prn("};");
         
-        return new PreparedField(asyncClass, fieldName, null, null);
+        return;
       }
       
     }
     
     {
-      String syncName = content.imp(syncClassName);
-      String asyncName = content.imp(asyncClass);
+      String syncName = content.imp(syncClass);
       String gwtName = content.imp(GWT.class);
-      String fieldName = "service_" + asyncClass.getSimpleName() + "_" + rndId();
       
-      PrintBlock p = content.newPrintBlock();
-      p.pr("private final ").pr(asyncName).pr(" ").pr(fieldName).pr(" = ").pr(gwtName);
-      p.pr(".create(").pr(syncName).prn(".class);");
+      p.pr(gwtName).pr(".create(").pr(syncName).prn(".class);");
       
-      return new PreparedField(asyncClass, fieldName, null, null);
+      return;
     }
   }
   
@@ -358,7 +368,15 @@ public class BeanContainerImplGenerator {
       if (field.getType() == BeanGetter.class) {
         injectGetterField(pb, var, field);
       }
+      if (InvokeServiceAsync.class.isAssignableFrom(field.getType())) {
+        injectAsyncField(pb, var, field);
+      }
     }
+  }
+  
+  private void injectAsyncField(PrintBlock p, String var, Field field) throws Exception {
+    p.pr(var).pr(".").pr(field.getName()).pr(" = ");
+    printAsyncValue(p, field.getType());
   }
   
   private void injectGetterField(PrintBlock pb, String var, Field field) throws Exception {
