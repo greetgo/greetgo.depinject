@@ -61,11 +61,7 @@ public class BeanContainerGenerator extends Generator {
     
     PrintWriter writer = context.tryCreate(logger, implTypePackageName, implTypeSimpleName);
     
-    if (writer == null) {
-      logger.log(Type.ERROR, "Cannot create writer: implTypePackageName = " + implTypePackageName
-          + ", implTypeSimpleName = " + implTypeSimpleName);
-      throw new UnableToCompleteException();
-    }
+    if (writer == null) return implTypeName;
     
     try {
       BeanContainerImplGenerator g = new BeanContainerImplGenerator();
