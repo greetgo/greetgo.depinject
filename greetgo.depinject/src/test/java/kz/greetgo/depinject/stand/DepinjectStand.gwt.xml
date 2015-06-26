@@ -8,5 +8,6 @@
   <entry-point class="kz.greetgo.depinject.stand.src.DepinjectStandEP" />
 
   <source path="src" />
+  <source path="remote" />
 
 </module>
