@@ -5,7 +5,7 @@ apply plugin: 'maven'
 group = 'kz.greetgo'
 
 sourceCompatibility = 1.7
-version = '0.0.4'
+version = '0.0.5'
 
 def nowDate = new Date()
 def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
@@ -64,7 +64,6 @@ configurations { repoUpload }
 dependencies {
   compile "com.google.gwt:gwt-user:2.7.0"
   compile "com.google.gwt:gwt-dev:2.7.0"
-  compile "greetgo.3rd-party:smartgwt:5.0p"
   compile 'com.metapossum:metapossum-scanner:1.0.1'
 
   testCompile 'org.testng:testng:6.1.1'
