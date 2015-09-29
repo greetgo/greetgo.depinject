@@ -108,7 +108,7 @@ public class BeanContainerImplGenerator {
     
     String packagePath = packageName.replaceAll("\\.", "/");
     File outFile = new File(srcDir + '/' + packagePath + '/' + implClassName + ".java");
-    outFile.getParentFile().mkdirs();
+    dummyCheck(outFile.getParentFile().mkdirs());
     
     PrintStream out = new PrintStream(outFile, "UTF-8");
     try {
@@ -117,6 +117,8 @@ public class BeanContainerImplGenerator {
       out.close();
     }
   }
+  
+  private static void dummyCheck(boolean tmp) {}
   
   public void generateTo(PrintWriter writer) throws Exception {
     generateContent();
