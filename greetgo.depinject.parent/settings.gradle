@@ -1,2 +1,2 @@
-
 include 'greetgo.depinject'
+include 'greetgo.depinject.gwt'

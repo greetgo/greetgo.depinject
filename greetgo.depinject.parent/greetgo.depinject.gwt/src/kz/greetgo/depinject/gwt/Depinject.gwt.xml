@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN"
+        "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
+<module>
+
+    <inherits name="kz.greetgo.depinject.DepinjectCore"/>
+
+    <source path="src"/>
+
+    <generate-with class="kz.greetgo.depinject.gwt.gen.BeanContainerGenerator">
+        <when-type-assignable class="kz.greetgo.depinject.core.BeanContainer"/>
+    </generate-with>
+
+</module>
