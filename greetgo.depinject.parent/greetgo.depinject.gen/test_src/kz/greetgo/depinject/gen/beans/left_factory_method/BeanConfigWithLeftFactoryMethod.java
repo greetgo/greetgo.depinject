@@ -1,8 +1,9 @@
-package kz.greetgo.depinject.gwt.gen.example.beans2;
+package kz.greetgo.depinject.gen.beans.left_factory_method;
 
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanScanner;
 
 @BeanConfig
 @BeanScanner
-public class Beans2Config {}
+public class BeanConfigWithLeftFactoryMethod {
+}

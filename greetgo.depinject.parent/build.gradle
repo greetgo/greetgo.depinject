@@ -38,8 +38,10 @@ subprojects {
     //ext.jettyVersion = '8.0+'
     ext.jettyVersion = '9.2+'
     ext.springVersion = '4.2.3.RELEASE'
+    ext.metapossumScannerVersion = '1.0.1'
+    ext.findbugsVersion = '2.0.1'
 
-    testCompile 'org.testng:testng:6.1.1'
+    testCompile 'org.testng:testng:6.5.1'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
   }
 

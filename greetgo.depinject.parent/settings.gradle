@@ -1,2 +1,3 @@
 include 'greetgo.depinject'
 include 'greetgo.depinject.gwt'
+include 'greetgo.depinject.gen'

@@ -4,9 +4,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import kz.greetgo.depinject.core.*;
+import kz.greetgo.depinject.gen.errors.*;
+import kz.greetgo.depinject.gen.scanner.ClassScanner;
+import kz.greetgo.depinject.gen.scanner.ClassScannerDef;
 import kz.greetgo.depinject.gwt.gen.ClassContent.PrintBlock;
-import kz.greetgo.depinject.gwt.gen.scanner.ClassScanner;
-import kz.greetgo.depinject.gwt.gen.scanner.ClassScannerDef;
 import kz.greetgo.depinject.gwt.src.InvokeServiceAsync;
 import kz.greetgo.depinject.gwt.src.SyncAsyncConverter;
 
@@ -33,7 +34,7 @@ public class BeanContainerImplGenerator {
 
   void findBeanClassSet() throws IOException {
     if (!beanContainerIface.isInterface()) throw new NoInterface();
-    if (!BeanContainer.class.isAssignableFrom(beanContainerIface)) throw new NoBeanContainer();
+    if (!BeanContainer.class.isAssignableFrom(beanContainerIface)) throw new NoBeanContainer(beanContainerIface);
 
     Include include = beanContainerIface.getAnnotation(Include.class);
     if (include == null) throw new NoInclude(beanContainerIface);
@@ -48,12 +49,12 @@ public class BeanContainerImplGenerator {
 
   private void appendAllBeansFromConfig(Class<?> config) throws IOException {
     BeanConfig beanConfig = config.getAnnotation(BeanConfig.class);
-    if (beanConfig == null) throw new NoBeanConfig();
+    if (beanConfig == null) throw new NoBeanConfig(config);
 
     if (scannedConfigs.contains(config)) return;
     scannedConfigs.add(config);
 
-    ScanBeans scanBeans = config.getAnnotation(ScanBeans.class);
+    BeanScanner scanBeans = config.getAnnotation(BeanScanner.class);
     if (scanBeans != null) {
       scanPathForBeans(config, ".");
     }

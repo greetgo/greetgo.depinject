@@ -10,40 +10,33 @@ eclipse {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
   }
-
-  project {
-    natures 'com.google.gwt.eclipse.core.gwtNature'
-    buildCommand 'com.google.gdt.eclipse.core.webAppProjectValidator'
-    buildCommand 'com.google.gwt.eclipse.core.gwtProjectValidator'
-  }
-  classpath {
-    containers 'com.google.gwt.eclipse.core.GWT_CONTAINER'
-  }
 }
 
 configurations { repoUpload }
 
 dependencies {
   compile project(':greetgo.depinject')
-  compile project(':greetgo.depinject.gen')
 
-  compile "com.google.gwt:gwt-user:2.7.0"
-  compile "com.google.gwt:gwt-dev:2.7.0"
-  compile 'com.metapossum:metapossum-scanner:1.0.1'
+  compile "com.metapossum:metapossum-scanner:${metapossumScannerVersion}"
 
-  compile 'com.google.code.findbugs:annotations:2.0.1'
-
+  compile "com.google.code.findbugs:annotations:${findbugsVersion}"
 }
 
 test { useTestNG() }
 
-task packageSources(type: Jar) {
-  from sourceSets.main.allJava
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+  from javadoc.destinationDir
+  classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar) {
+  from sourceSets.main.allSource
   classifier = 'sources'
 }
 
-jar {
-  from sourceSets.main.allSource
+artifacts {
+  archives javadocJar
+  archives sourcesJar
 }
 
 uploadArchives {

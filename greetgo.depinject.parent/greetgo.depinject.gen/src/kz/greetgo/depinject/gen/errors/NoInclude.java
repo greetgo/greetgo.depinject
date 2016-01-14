@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.gwt.gen;
+package kz.greetgo.depinject.gen.errors;
 
 public class NoInclude extends RuntimeException {
   

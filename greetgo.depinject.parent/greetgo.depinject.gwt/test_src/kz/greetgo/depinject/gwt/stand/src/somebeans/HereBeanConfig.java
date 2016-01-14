@@ -1,8 +1,8 @@
 package kz.greetgo.depinject.gwt.stand.src.somebeans;
 
 import kz.greetgo.depinject.core.BeanConfig;
-import kz.greetgo.depinject.core.ScanBeans;
+import kz.greetgo.depinject.core.BeanScanner;
 
 @BeanConfig
-@ScanBeans
+@BeanScanner
 public class HereBeanConfig {}

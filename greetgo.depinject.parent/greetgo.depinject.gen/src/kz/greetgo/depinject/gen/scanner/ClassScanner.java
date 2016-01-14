@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.gwt.gen.scanner;
+package kz.greetgo.depinject.gen.scanner;
 
 import java.util.Set;
 
