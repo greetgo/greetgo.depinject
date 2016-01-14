@@ -234,8 +234,18 @@ public class BeanContainerGenerator {
       writer.println("  private final " + concretGetterClass + " " + beanDefinition.getterName
           + " = new " + concretGetterClass + "() {"
       );
+
+      if (beanDefinition.singleton) {
+        writer.println("    " + beanClass + " cachedValue = null;");
+      }
+
       writer.println("    @Override");
       writer.println("    public " + beanClass + " get() {");
+
+      if (beanDefinition.singleton) {
+        writer.println("      if (cachedValue != null) return cachedValue;");
+      }
+
       writer.println("      " + beanClass + " localValue = " + beanDefinition.creationCode(usedMap) + ";");
 
       for (Injector injector : beanDefinition.injectors) {
@@ -247,7 +257,11 @@ public class BeanContainerGenerator {
         writer.println("      localValue = (" + beanClass + ")" + prepBD.getterName + ".get().prepareBean(localValue);");
       }
 
-      writer.println("      return localValue;");
+      if (beanDefinition.singleton) {
+        writer.println("      return cachedValue = localValue;");
+      } else {
+        writer.println("      return localValue;");
+      }
       writer.println("    }");
       writer.println("  };");
       writer.println();
