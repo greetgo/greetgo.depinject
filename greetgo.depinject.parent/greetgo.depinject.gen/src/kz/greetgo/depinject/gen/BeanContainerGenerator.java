@@ -248,14 +248,20 @@ public class BeanContainerGenerator {
 
       writer.println("      " + beanClass + " localValue = " + beanDefinition.creationCode(usedMap) + ";");
 
+      writeBeforeInjectors(writer);
+
       for (Injector injector : beanDefinition.injectors) {
         writer.println("      localValue." + injector.field.getName()
-          + " = (" + toCode(injector.field.getGenericType()) + ")(Object)" + injector.to.getterName + ".get();");
+          + " = (" + toCode(injector.field.getGenericType()) + ")(Object)" + injector.to.getterName + ";");
       }
+
+      writeBeforePreparation(writer);
 
       for (BeanDefinition prepBD : beanDefinition.preparingBy) {
         writer.println("      localValue = (" + beanClass + ")" + prepBD.getterName + ".get().prepareBean(localValue);");
       }
+
+      writeBeforeReturn(writer);
 
       if (beanDefinition.singleton) {
         writer.println("      return cachedValue = localValue;");
@@ -268,5 +274,14 @@ public class BeanContainerGenerator {
     }
 
     writer.println("}");
+  }
+
+  protected void writeBeforeReturn(PrintWriter writer) {
+  }
+
+  protected void writeBeforePreparation(PrintWriter writer) {
+  }
+
+  protected void writeBeforeInjectors(PrintWriter writer) {
   }
 }
