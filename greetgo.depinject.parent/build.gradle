@@ -39,8 +39,9 @@ subprojects {
     ext.jettyVersion = '9.2+'
     ext.springVersion = '4.2.3.RELEASE'
     ext.metapossumScannerVersion = '1.0.1'
-    ext.findbugsVersion = '2.0.1'
     ext.gwtVersion = '2.7.0'
+
+    compile 'com.google.code.findbugs:annotations:2.0.1'
 
     testCompile 'org.testng:testng:6.5.1'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'

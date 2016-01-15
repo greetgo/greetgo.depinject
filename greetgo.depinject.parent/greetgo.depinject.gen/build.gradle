@@ -19,7 +19,6 @@ dependencies {
 
   compile "com.metapossum:metapossum-scanner:${metapossumScannerVersion}"
 
-  compile "com.google.code.findbugs:annotations:${findbugsVersion}"
 }
 
 test { useTestNG() }

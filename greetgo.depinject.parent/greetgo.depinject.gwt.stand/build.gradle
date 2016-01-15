@@ -30,8 +30,6 @@ dependencies {
   compile "com.google.gwt:gwt-user:${gwtVersion}"
   compile "com.google.gwt:gwt-dev:${gwtVersion}"
 
-  compile 'com.google.code.findbugs:annotations:2.0.1'
-
 }
 
 test { useTestNG() }
