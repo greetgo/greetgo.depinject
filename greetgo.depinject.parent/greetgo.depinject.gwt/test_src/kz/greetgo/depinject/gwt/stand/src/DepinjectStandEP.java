@@ -10,9 +10,10 @@ public class DepinjectStandEP implements EntryPoint {
     
     TestBeanContainer tbc = GWT.create(TestBeanContainer.class);
     
-    AsdIface asdIface = tbc.getAsd();
-    Window.alert("asdIface = " + asdIface);
+    AsdInterface asdInterface = tbc.getAsd();
+    Window.alert("asdInterface = " + asdInterface);
     
     tbc.getAsd().showHelloWorld();
+
   }
 }

@@ -6,5 +6,5 @@ import kz.greetgo.depinject.gwt.stand.src.somebeans.HereBeanConfig;
 
 @Include(HereBeanConfig.class)
 public interface TestBeanContainer extends BeanContainer {
-  AsdIface getAsd();
+  AsdInterface getAsd();
 }

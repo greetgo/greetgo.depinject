@@ -3,12 +3,12 @@ package kz.greetgo.depinject.gwt.stand.src.somebeans;
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.gwt.stand.remote.SomeGetServiceAsync;
-import kz.greetgo.depinject.gwt.stand.src.AsdIface;
+import kz.greetgo.depinject.gwt.stand.src.AsdInterface;
 
 import com.google.gwt.user.client.Window;
 
 @Bean
-public class OneBean implements AsdIface {
+public class OneBean implements AsdInterface {
   
   public SomeGetServiceAsync someGetService;
   
