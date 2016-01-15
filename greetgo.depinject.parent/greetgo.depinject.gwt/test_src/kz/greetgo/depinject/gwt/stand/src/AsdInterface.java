@@ -1,5 +1,5 @@
 package kz.greetgo.depinject.gwt.stand.src;
 
-public interface AsdIface {
+public interface AsdInterface {
   void showHelloWorld();
 }
