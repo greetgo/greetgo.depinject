@@ -123,6 +123,13 @@ public class BeanContainerGenerator {
     initInjectors(map);
     initPreparations(map);
     initUsing(map);
+    initHasAfterInject(map);
+  }
+
+  private static void initHasAfterInject(Map<Class<?>, BeanDefinition> map) {
+    for (BeanDefinition beanDefinition : map.values()) {
+      beanDefinition.hasAfterInject = HasAfterInject.class.isAssignableFrom(beanDefinition.beanClass);
+    }
   }
 
   private static void initInjectors(Map<Class<?>, BeanDefinition> map) {
@@ -246,28 +253,40 @@ public class BeanContainerGenerator {
         writer.println("      if (cachedValue != null) return cachedValue;");
       }
 
-      writer.println("      " + beanClass + " localValue = " + beanDefinition.creationCode(usedMap) + ";");
+      writer.println("      try {");
+
+      writer.println("        " + beanClass + " localValue = " + beanDefinition.creationCode(usedMap) + ";");
 
       writeBeforeInjectors(writer);
 
       for (Injector injector : beanDefinition.injectors) {
-        writer.println("      localValue." + injector.field.getName()
+        writer.println("        localValue." + injector.field.getName()
           + " = (" + toCode(injector.field.getGenericType()) + ")(Object)" + injector.to.getterName + ";");
+      }
+
+      if (beanDefinition.hasAfterInject) {
+        writer.println("        localValue.afterInject();");
       }
 
       writeBeforePreparation(writer);
 
       for (BeanDefinition prepBD : beanDefinition.preparingBy) {
-        writer.println("      localValue = (" + beanClass + ")" + prepBD.getterName + ".get().prepareBean(localValue);");
+        writer.println("        localValue = (" + beanClass + ")" + prepBD.getterName + ".get().prepareBean(localValue);");
       }
 
       writeBeforeReturn(writer);
 
       if (beanDefinition.singleton) {
-        writer.println("      return cachedValue = localValue;");
+        writer.println("        return cachedValue = localValue;");
       } else {
-        writer.println("      return localValue;");
+        writer.println("        return localValue;");
       }
+
+      writer.println("      } catch(Exception e) {");
+      writer.println("        throw new RuntimeException(e);");
+      writer.println("      }");
+
+
       writer.println("    }");
       writer.println("  };");
       writer.println();

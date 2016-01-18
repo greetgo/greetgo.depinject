@@ -5,6 +5,10 @@ import kz.greetgo.depinject.gen.interfaces.IBeanA1;
 
 @Bean
 public class BeanA1 implements IBeanA1, Transactional {
+
+  public BeanA1() throws Exception {
+  }
+
   @Override
   public void hello() {
     System.out.println("hello from " + BeanA1.class);

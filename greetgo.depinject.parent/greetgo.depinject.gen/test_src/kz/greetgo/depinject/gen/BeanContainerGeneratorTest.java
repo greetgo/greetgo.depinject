@@ -1,10 +1,7 @@
 package kz.greetgo.depinject.gen;
 
 
-import kz.greetgo.depinject.core.BeanContainer;
-import kz.greetgo.depinject.core.BeanGetter;
-import kz.greetgo.depinject.core.BeanPreparation;
-import kz.greetgo.depinject.core.Include;
+import kz.greetgo.depinject.core.*;
 import kz.greetgo.depinject.gen.beans.MainConfig;
 import kz.greetgo.depinject.gen.beans.groupA.*;
 import kz.greetgo.depinject.gen.beans.left_factory_method.BeanConfigWithLeftFactoryMethod;
@@ -317,11 +314,43 @@ public class BeanContainerGeneratorTest {
     assertThat(beanDefinitionFactory.using).isEmpty();
   }
 
-  interface TmpInterface {}
+  abstract class IniBean implements HasAfterInject {
+  }
 
-  abstract class TestPreparation implements BeanPreparation<TmpInterface> {}
+  class NoIniBean {
+  }
 
-  class PreparingTestBean implements TmpInterface {}
+  @Test
+  public void initBeanDefinitions_hasAfterInject() {
+    final Map<Class<?>, BeanDefinition> map = new HashMap<>();
+
+    addBeanDefinition(map, IniBean.class);
+    addBeanDefinition(map, NoIniBean.class);
+
+    //
+    //
+    initBeanDefinitions(map);
+    //
+    //
+
+    {
+      final BeanDefinition beanDefinition = map.get(NoIniBean.class);
+      assertThat(beanDefinition.hasAfterInject).isFalse();
+    }
+    {
+      final BeanDefinition beanDefinition = map.get(IniBean.class);
+      assertThat(beanDefinition.hasAfterInject).isTrue();
+    }
+  }
+
+  interface TmpInterface {
+  }
+
+  abstract class TestPreparation implements BeanPreparation<TmpInterface> {
+  }
+
+  class PreparingTestBean implements TmpInterface {
+  }
 
   @Test
   public void initBeanDefinitions_using_preparation() {

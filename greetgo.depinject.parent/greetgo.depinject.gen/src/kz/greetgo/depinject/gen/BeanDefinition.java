@@ -22,6 +22,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
   public final Class<?> beanClassFactory;
   public final Method factoryMethod;
 
+
   public String creationCode(Map<Class<?>, BeanDefinition> map) {
     if (beanClassFactory == null) {
       return "new " + beanClass.getName() + "()";
@@ -37,6 +38,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
   public final List<BeanDefinition> preparingBy = new ArrayList<>();
   public final Set<BeanDefinition> using = new HashSet<>();
+  public boolean hasAfterInject = false;
 
   public String getterName;
 
