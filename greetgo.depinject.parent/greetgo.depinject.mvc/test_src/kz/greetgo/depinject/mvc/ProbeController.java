@@ -1,4 +1,4 @@
 package kz.greetgo.depinject.mvc;
 
-public interface Controller {
+public class ProbeController {
 }

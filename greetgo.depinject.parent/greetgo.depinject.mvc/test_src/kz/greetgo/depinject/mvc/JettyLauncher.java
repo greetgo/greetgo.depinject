@@ -3,38 +3,40 @@ package kz.greetgo.depinject.mvc;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.webapp.WebAppContext;
+
+import java.io.File;
 
 public class JettyLauncher {
+
   public static void main(String[] args) throws Exception {
 
-    Server server = new Server(8080);
+    String warDir = "test_war"; {
+      String prj = "greetgo.depinject.mvc/";
+      if (new File(prj).isDirectory()) {
+        warDir = prj + warDir;
+      }
+    }
 
     ResourceHandler resourceHandler = new ResourceHandler();
     resourceHandler.setDirectoriesListed(true);
-    resourceHandler.setWelcomeFiles(new String[]{"references.html"});
-    resourceHandler.setResourceBase("/home/pompei/var");
-
-    ResourceHandler resourceHandlerTmp = new ResourceHandler();
-    resourceHandlerTmp.setDirectoriesListed(true);
-    resourceHandlerTmp.setWelcomeFiles(new String[]{"references.html"});
-    resourceHandlerTmp.setResourceBase("/home/pompei/tmp/resources");
-
-    WebAppContext appContext = new WebAppContext();
-    appContext.setContextPath("/");
-    appContext.setWar("/home/pompei/tmp/war");
+    resourceHandler.setWelcomeFiles(new String[]{"index.html"});
+    resourceHandler.setResourceBase(warDir);
 
     HandlerList handlerList = new HandlerList();
     handlerList.addHandler(new MyHandler());
     handlerList.addHandler(resourceHandler);
-    handlerList.addHandler(resourceHandlerTmp);
-    handlerList.addHandler(appContext);
 
-    server.setHandler(handlerList);
+    {
+      Server server = new Server(8080);
 
-    server.start();
-    server.join();
+      server.setHandler(handlerList);
+
+      server.start();
+      server.join();
+    }
 
     System.out.println("Hello world!!!");
+
   }
+
 }
