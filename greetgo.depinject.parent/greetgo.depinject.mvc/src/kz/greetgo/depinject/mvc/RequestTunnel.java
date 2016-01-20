@@ -1,8 +1,6 @@
 package kz.greetgo.depinject.mvc;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 
 public interface RequestTunnel {
 
@@ -13,4 +11,8 @@ public interface RequestTunnel {
   OutputStream getResponseOutputStream();
 
   String[] getParamValues(String name);
+
+  BufferedReader getRequestReader();
+
+  InputStream getRequestInputStream();
 }

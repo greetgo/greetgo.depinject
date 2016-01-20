@@ -1,10 +1,20 @@
 package kz.greetgo.depinject.mvc;
 
+import kz.greetgo.depinject.mvc.error.CannotExtractParamValue;
+import kz.greetgo.depinject.mvc.error.IDoNotKnowHowToConvertRequestContentToType;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import static kz.greetgo.depinject.mvc.MvcUtil.convertStrToType;
+import static kz.greetgo.depinject.mvc.MvcUtil.convertStrsToType;
 
 public class MethodParameterMeta {
 
@@ -38,7 +48,9 @@ public class MethodParameterMeta {
     prepareAnnotations();
   }
 
-  private String parValue = null;
+  private String parValue = null, pathParValue = null;
+
+  private boolean requestInput = false;
 
   private final void prepareAnnotations() {
     for (Annotation annotation : parameterAnnotation) {
@@ -46,20 +58,96 @@ public class MethodParameterMeta {
         parValue = ((Par) annotation).value();
         continue;
       }
+      if (annotation instanceof PathPar) {
+        pathParValue = ((PathPar) annotation).value();
+        continue;
+      }
+      if (annotation instanceof RequestInput) {
+        requestInput = true;
+        continue;
+      }
     }
   }
 
   public MethodParameterValueExtractor createExtractor() {
-    if (parValue != null) {
-      return new MethodParameterValueExtractor() {
-        @Override
-        public Object extract(CatchResult catchResult, RequestTunnel tunnel) {
-          final String[] paramValues = tunnel.getParamValues(parValue);
-          return MvcUtil.convertStrsToType(paramValues, genericParameterType);
-        }
-      };
+    if (parValue != null) return new MethodParameterValueExtractor() {
+      @Override
+      public Object extract(CatchResult catchResult, RequestTunnel tunnel) {
+        final String[] paramValues = tunnel.getParamValues(parValue);
+        return convertStrsToType(paramValues, genericParameterType);
+      }
+    };
+
+    if (pathParValue != null) return new MethodParameterValueExtractor() {
+      @Override
+      public Object extract(CatchResult catchResult, RequestTunnel tunnel) {
+        final String paramValue = catchResult.getParam(pathParValue);
+        return convertStrToType(paramValue, genericParameterType);
+      }
+    };
+
+    if (requestInput) return new MethodParameterValueExtractor() {
+      @Override
+      public Object extract(CatchResult catchResult, RequestTunnel tunnel) throws Exception {
+        return convertRequestContentToType(tunnel, genericParameterType);
+      }
+    };
+
+    throw new CannotExtractParamValue(parameterIndex, method);
+  }
+
+  private static Object convertRequestContentToType(RequestTunnel tunnel, Type type) throws Exception {
+    if (type instanceof Class) return convertRequestContentToClass(tunnel, (Class<?>) type);
+    if (type instanceof ParameterizedType) {
+      return convertRequestContentToParameterizedType(tunnel, (ParameterizedType) type);
     }
-    throw new RuntimeException("Cannot extract parameter value: parameterIndex: " + parameterIndex
-      + "; method: " + method.toGenericString());
+    throw new IDoNotKnowHowToConvertRequestContentToType(type);
+  }
+
+  private static Object convertRequestContentToParameterizedType(RequestTunnel tunnel, ParameterizedType type) throws Exception {
+    final Type rawType = type.getRawType();
+
+    if (rawType.equals(List.class)) {
+      List ret = new ArrayList();
+      try (BufferedReader reader = tunnel.getRequestReader()) {
+        while (true) {
+          final String line = reader.readLine();
+          if (line == null) return ret;
+          ret.add(convertStrToType(line, type.getActualTypeArguments()[0]));
+        }
+      }
+    }
+
+    throw new IDoNotKnowHowToConvertRequestContentToType(type);
+  }
+
+  private static Object convertRequestContentToClass(RequestTunnel tunnel, Class<?> aClass) throws Exception {
+    if (String.class.equals(aClass)) {
+      StringBuilder sb = new StringBuilder();
+      char[] buffer = new char[1024];
+      try (BufferedReader reader = tunnel.getRequestReader()) {
+        while (true) {
+          final int count = reader.read(buffer);
+          if (count < 0) break;
+          sb.append(buffer, 0, count);
+        }
+      }
+      return sb.toString();
+    }
+
+    if (byte[].class.equals(aClass)) {
+      ByteArrayOutputStream bout = new ByteArrayOutputStream();
+      byte[] buffer = new byte[1024 * 4];
+      final InputStream in = tunnel.getRequestInputStream();
+      while (true) {
+        final int count = in.read(buffer);
+        if (count < 0) return bout.toByteArray();
+        bout.write(buffer, 0, count);
+      }
+    }
+
+    if (InputStream.class.equals(aClass)) return tunnel.getRequestInputStream();
+
+    throw new IDoNotKnowHowToConvertRequestContentToType(aClass);
   }
 }

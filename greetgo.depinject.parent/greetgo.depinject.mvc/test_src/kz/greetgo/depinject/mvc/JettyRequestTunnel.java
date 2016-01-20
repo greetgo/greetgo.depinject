@@ -4,10 +4,7 @@ import org.eclipse.jetty.server.Request;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class JettyRequestTunnel implements RequestTunnel {
 
@@ -30,7 +27,7 @@ public class JettyRequestTunnel implements RequestTunnel {
   }
 
   @Override
-  public PrintWriter getResponseWriter()  {
+  public PrintWriter getResponseWriter() {
     try {
       return response.getWriter();
     } catch (IOException e) {
@@ -39,7 +36,7 @@ public class JettyRequestTunnel implements RequestTunnel {
   }
 
   @Override
-  public OutputStream getResponseOutputStream()  {
+  public OutputStream getResponseOutputStream() {
     try {
       return response.getOutputStream();
     } catch (IOException e) {
@@ -48,8 +45,26 @@ public class JettyRequestTunnel implements RequestTunnel {
   }
 
   @Override
+  public InputStream getRequestInputStream() {
+    try {
+      return request.getInputStream();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public String[] getParamValues(String name) {
     return request.getParameterValues(name);
+  }
+
+  @Override
+  public BufferedReader getRequestReader() {
+    try {
+      return request.getReader();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }

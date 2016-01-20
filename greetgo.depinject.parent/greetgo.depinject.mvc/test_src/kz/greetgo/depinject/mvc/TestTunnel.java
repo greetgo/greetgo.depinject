@@ -8,6 +8,7 @@ public class TestTunnel implements RequestTunnel {
 
   public String target;
 
+
   @Override
   public String getTarget() {
     return target;
@@ -35,6 +36,20 @@ public class TestTunnel implements RequestTunnel {
     return paramValues.get(name);
   }
 
+  public String forGetRequestReader;
+
+  @Override
+  public BufferedReader getRequestReader() {
+    return new BufferedReader(new StringReader(forGetRequestReader));
+  }
+
+  public byte[] forGetRequestInputStream;
+
+  @Override
+  public InputStream getRequestInputStream() {
+    return new ByteArrayInputStream(forGetRequestInputStream);
+  }
+
   public String responseCharText() {
     return charArrayWriter.toString();
   }
@@ -54,4 +69,6 @@ public class TestTunnel implements RequestTunnel {
   public void clearParam(String paramName) {
     paramValues.remove(paramName);
   }
+
+
 }

@@ -1,5 +1,8 @@
 package kz.greetgo.depinject.mvc;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 public class RND {
@@ -39,5 +42,26 @@ public class RND {
 
   public static long plusInt(int max) {
     return rnd.nextInt(max);
+  }
+
+  public static Date dateYears(int yearFrom, int yearTo) {
+    Calendar cal = new GregorianCalendar();
+    cal.add(Calendar.YEAR, yearFrom);
+    long from = cal.getTimeInMillis();
+    cal.add(Calendar.YEAR, yearTo - yearFrom);
+    long to = cal.getTimeInMillis();
+    if (from > to) {
+      long tmp = from;
+      from = to;
+      to = tmp;
+    }
+    final long time = from + plusLong(to - from);
+    return new Date(time);
+  }
+
+  public static byte[] byteArray(int len) {
+    final byte[] ret = new byte[len];
+    rnd.nextBytes(ret);
+    return ret;
   }
 }

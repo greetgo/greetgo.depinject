@@ -58,12 +58,12 @@ public class ControllerHandler extends TunnelHandlerList {
           CatchResult catchResult = targetCatcher.catchTarget(tunnel.getTarget());
           if (!catchResult.ok()) return false;
 
-          Object[] paramValues = new Object[extractorList.size()];
-          for (int i = 0, C = extractorList.size(); i < C; i++) {
-            paramValues[i] = extractorList.get(i).extract(catchResult, tunnel);
-          }
-
           try {
+
+            Object[] paramValues = new Object[extractorList.size()];
+            for (int i = 0, C = extractorList.size(); i < C; i++) {
+              paramValues[i] = extractorList.get(i).extract(catchResult, tunnel);
+            }
 
             final Object result = method.invoke(controller, paramValues);
 
