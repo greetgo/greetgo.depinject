@@ -6,6 +6,7 @@ import kz.greetgo.depinject.mvc.error.IDoNotKnowHowToConvertRequestContentToType
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.Reader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -32,7 +33,6 @@ public class MethodParameterMeta {
 
     return extractorList;
   }
-
 
   private final int parameterIndex;
   private final Method method;
@@ -147,6 +147,10 @@ public class MethodParameterMeta {
     }
 
     if (InputStream.class.equals(aClass)) return tunnel.getRequestInputStream();
+
+    if (Reader.class.equals(aClass)) return tunnel.getRequestReader();
+    if (BufferedReader.class.equals(aClass)) return tunnel.getRequestReader();
+    if (RequestTunnel.class.equals(aClass)) return tunnel;
 
     throw new IDoNotKnowHowToConvertRequestContentToType(aClass);
   }

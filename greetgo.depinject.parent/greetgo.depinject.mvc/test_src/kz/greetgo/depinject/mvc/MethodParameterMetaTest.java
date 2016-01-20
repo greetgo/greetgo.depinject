@@ -3,8 +3,7 @@ package kz.greetgo.depinject.mvc;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -345,6 +344,7 @@ public class MethodParameterMetaTest {
     assertThat(actualParamValue).isInstanceOf(InputStream.class);
 
     ByteArrayOutputStream actual = new ByteArrayOutputStream();
+
     {
       byte[] buffer = new byte[1024 * 4];
       InputStream in = (InputStream) actualParamValue;
@@ -357,4 +357,71 @@ public class MethodParameterMetaTest {
 
     assertThat(actual.toByteArray()).isEqualTo(tunnel.forGetRequestInputStream);
   }
+
+  class ForRequestInput_BufferedReader {
+    public void forTest1(@RequestInput BufferedReader requestContentReader) {
+    }
+
+    public void forTest2(@RequestInput Reader requestContentReader) {
+    }
+  }
+
+  @DataProvider
+  public Object[][] methodsIn_ForRequestInput_BufferedReader() {
+    return new Object[][]{
+      new Object[]{"forTest1"}, new Object[]{"forTest2"},
+    };
+  }
+
+  @Test(dataProvider = "methodsIn_ForRequestInput_BufferedReader")
+  public void requestInput_BufferedReader(String methodName) throws Exception {
+    final Method method1 = getMethod(ForRequestInput_BufferedReader.class, methodName);
+    final MethodParameterValueExtractor e1 = MethodParameterMeta.create(method1).get(0);
+
+    final CatchResult catchResult = new CatchResult();
+
+    TestTunnel tunnel = new TestTunnel();
+    tunnel.forGetRequestReader = RND.str(100);
+
+    final Object actualParamValue = e1.extract(catchResult, tunnel);
+
+    assertThat(actualParamValue).isInstanceOf(Reader.class);
+
+    CharArrayWriter actual=new CharArrayWriter();
+
+    {
+      char[] buffer = new char[1024 ];
+      Reader in = (Reader) actualParamValue;
+      while (true) {
+        final int count = in.read(buffer);
+        if (count < 0) break;
+        actual.write(buffer, 0, count);
+      }
+    }
+
+    assertThat(actual.toString()).isEqualTo(tunnel.forGetRequestReader);
+  }
+
+  class ForRequestInput_RequestTunnel {
+    public void forTest(@RequestInput RequestTunnel requestTunnel) {
+    }
+  }
+
+  @Test
+  public void requestInput_RequestTunnel() throws Exception {
+    final Method method = getMethod(ForRequestInput_RequestTunnel.class, "forTest");
+
+    final MethodParameterValueExtractor e = MethodParameterMeta.create(method).get(0);
+
+    final CatchResult catchResult = new CatchResult();
+
+    TestTunnel tunnel = new TestTunnel();
+
+    final Object actualParamValue = e.extract(catchResult, tunnel);
+
+    assertThat(actualParamValue).isInstanceOf(RequestTunnel.class);
+
+    assertThat(System.identityHashCode(actualParamValue)).isEqualTo(System.identityHashCode(tunnel));
+  }
+
 }
