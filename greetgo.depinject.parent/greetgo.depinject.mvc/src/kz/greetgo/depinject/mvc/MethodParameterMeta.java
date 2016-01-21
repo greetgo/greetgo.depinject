@@ -72,7 +72,7 @@ public class MethodParameterMeta {
   public MethodParamExtractor createExtractor() {
     if (parValue != null) return new MethodParamExtractor() {
       @Override
-      public Object extract(CatchResult catchResult, RequestTunnel tunnel) {
+      public Object extract(CatchResult catchResult, RequestTunnel tunnel, MvcModel model) {
         final String[] paramValues = tunnel.getParamValues(parValue);
         return convertStrsToType(paramValues, genericParameterType);
       }
@@ -80,7 +80,7 @@ public class MethodParameterMeta {
 
     if (pathParValue != null) return new MethodParamExtractor() {
       @Override
-      public Object extract(CatchResult catchResult, RequestTunnel tunnel) {
+      public Object extract(CatchResult catchResult, RequestTunnel tunnel, MvcModel model) {
         final String paramValue = catchResult.getParam(pathParValue);
         return convertStrToType(paramValue, genericParameterType);
       }
@@ -88,8 +88,15 @@ public class MethodParameterMeta {
 
     if (requestInput) return new MethodParamExtractor() {
       @Override
-      public Object extract(CatchResult catchResult, RequestTunnel tunnel) throws Exception {
+      public Object extract(CatchResult catchResult, RequestTunnel tunnel, MvcModel model) throws Exception {
         return convertRequestContentToType(tunnel, genericParameterType);
+      }
+    };
+
+    if (MvcModel.class.equals(genericParameterType)) return new MethodParamExtractor() {
+      @Override
+      public Object extract(CatchResult catchResult, RequestTunnel tunnel, MvcModel model) throws Exception {
+        return model;
       }
     };
 

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.System.identityHashCode;
 import static kz.greetgo.depinject.mvc.TestUtil.getMethod;
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -34,7 +35,7 @@ public class MethodParameterMetaTest {
 
     tunnel.setParam("strParam", paramValue, "left value");
 
-    final Object actualParamValue = e.extract(catchResult, tunnel);
+    final Object actualParamValue = e.extract(catchResult, tunnel, null);
 
     assertThat(actualParamValue).isEqualTo(paramValue);
   }
@@ -52,8 +53,6 @@ public class MethodParameterMetaTest {
     MethodParamExtractor e1 = ee.get(0);
     MethodParamExtractor e2 = ee.get(1);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
 
     String param1 = "" + RND.plusLong(1000000000);
@@ -62,14 +61,14 @@ public class MethodParameterMetaTest {
     tunnel.setParam("param1", param1, "left value 1");
     tunnel.setParam("param2", param2, "left value 2");
 
-    assertThat(e1.extract(catchResult, tunnel)).isEqualTo(Long.valueOf(param1));
-    assertThat(e2.extract(catchResult, tunnel)).isEqualTo(Long.valueOf(param2));
+    assertThat(e1.extract(null, tunnel, null)).isEqualTo(Long.valueOf(param1));
+    assertThat(e2.extract(null, tunnel, null)).isEqualTo(Long.valueOf(param2));
 
     tunnel.clearParam("param1");
     tunnel.clearParam("param2");
 
-    assertThat(e1.extract(catchResult, tunnel)).isEqualTo(0L);
-    assertThat(e2.extract(catchResult, tunnel)).isNull();
+    assertThat(e1.extract(null, tunnel, null)).isEqualTo(0L);
+    assertThat(e2.extract(null, tunnel, null)).isNull();
 
   }
 
@@ -86,8 +85,6 @@ public class MethodParameterMetaTest {
     MethodParamExtractor e1 = ee.get(0);
     MethodParamExtractor e2 = ee.get(1);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
 
     String param1 = "" + RND.plusInt(1000000000);
@@ -96,14 +93,14 @@ public class MethodParameterMetaTest {
     tunnel.setParam("param1", param1, "left value 1");
     tunnel.setParam("param2", param2, "left value 2");
 
-    assertThat(e1.extract(catchResult, tunnel)).isEqualTo(Integer.valueOf(param1));
-    assertThat(e2.extract(catchResult, tunnel)).isEqualTo(Integer.valueOf(param2));
+    assertThat(e1.extract(null, tunnel, null)).isEqualTo(Integer.valueOf(param1));
+    assertThat(e2.extract(null, tunnel, null)).isEqualTo(Integer.valueOf(param2));
 
     tunnel.clearParam("param1");
     tunnel.clearParam("param2");
 
-    assertThat(e1.extract(catchResult, tunnel)).isEqualTo(0);
-    assertThat(e2.extract(catchResult, tunnel)).isNull();
+    assertThat(e1.extract(null, tunnel, null)).isEqualTo(0);
+    assertThat(e2.extract(null, tunnel, null)).isNull();
 
   }
 
@@ -136,8 +133,6 @@ public class MethodParameterMetaTest {
     final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
     MethodParamExtractor e1 = ee.get(0);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
 
     final Date date = RND.dateYears(-100, 0);
@@ -146,13 +141,13 @@ public class MethodParameterMetaTest {
 
     tunnel.setParam("param", dateStr, "left value");
 
-    final Object actualDate = e1.extract(catchResult, tunnel);
+    final Object actualDate = e1.extract(null, tunnel, null);
     assertThat(actualDate).isInstanceOf(Date.class);
     assertThat(sdf.format(actualDate)).isEqualTo(dateStr);
 
     tunnel.clearParam("param");
 
-    assertThat(e1.extract(catchResult, tunnel)).isNull();
+    assertThat(e1.extract(null, tunnel, null)).isNull();
 
   }
 
@@ -168,8 +163,6 @@ public class MethodParameterMetaTest {
     final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
     MethodParamExtractor e = ee.get(0);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
 
     String param1 = "" + RND.str(10);
@@ -178,7 +171,7 @@ public class MethodParameterMetaTest {
     tunnel.setParam("param", param1, param2);
 
     {
-      final Object actual = e.extract(catchResult, tunnel);
+      final Object actual = e.extract(null, tunnel, null);
       assertThat(actual).isInstanceOf(List.class);
       assertThat((List<String>) actual).containsExactly(param1, param2);
     }
@@ -186,7 +179,7 @@ public class MethodParameterMetaTest {
     tunnel.clearParam("param");
 
     {
-      final Object actual = e.extract(catchResult, tunnel);
+      final Object actual = e.extract(null, tunnel, null);
       assertThat(actual).isInstanceOf(List.class);
       assertThat((List) actual).isEmpty();
     }
@@ -204,8 +197,6 @@ public class MethodParameterMetaTest {
     final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
     MethodParamExtractor e = ee.get(0);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
 
     String param1 = "" + RND.str(10);
@@ -214,7 +205,7 @@ public class MethodParameterMetaTest {
     tunnel.setParam("param", param1, param2);
 
     {
-      final Object actual = e.extract(catchResult, tunnel);
+      final Object actual = e.extract(null, tunnel, null);
       assertThat(actual).isInstanceOf(Set.class);
       assertThat((Set<String>) actual).containsOnly(param1, param2);
     }
@@ -222,7 +213,7 @@ public class MethodParameterMetaTest {
     tunnel.clearParam("param");
 
     {
-      final Object actual = e.extract(catchResult, tunnel);
+      final Object actual = e.extract(null, tunnel, null);
       assertThat(actual).isInstanceOf(Set.class);
       assertThat((Set) actual).isEmpty();
     }
@@ -241,13 +232,11 @@ public class MethodParameterMetaTest {
 
     final CatchResult catchResult = new CatchResult();
 
-    TestTunnel tunnel = new TestTunnel();
-
     String paramValue = RND.str(10);
 
     catchResult.setParam("param", paramValue);
 
-    final Object actualParamValue = e.extract(catchResult, tunnel);
+    final Object actualParamValue = e.extract(catchResult, null, null);
 
     assertThat(actualParamValue).isEqualTo(paramValue);
   }
@@ -263,12 +252,10 @@ public class MethodParameterMetaTest {
 
     final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
     tunnel.forGetRequestReader = RND.str(10);
 
-    final Object actualParamValue = e.extract(catchResult, tunnel);
+    final Object actualParamValue = e.extract(null, tunnel, null);
 
     assertThat(actualParamValue).isInstanceOf(String.class);
     assertThat(actualParamValue).isEqualTo(tunnel.forGetRequestReader);
@@ -285,8 +272,6 @@ public class MethodParameterMetaTest {
 
     final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
-    final CatchResult catchResult = new CatchResult();
-
     String line1 = RND.str(10);
     String line2 = RND.str(10);
     String line3 = RND.str(10);
@@ -294,7 +279,7 @@ public class MethodParameterMetaTest {
     TestTunnel tunnel = new TestTunnel();
     tunnel.forGetRequestReader = line1 + '\n' + line2 + '\n' + line3;
 
-    final Object actualParamValue = e.extract(catchResult, tunnel);
+    final Object actualParamValue = e.extract(null, tunnel, null);
 
     assertThat(actualParamValue).isInstanceOf(List.class);
     List actual = (List) actualParamValue;
@@ -312,12 +297,10 @@ public class MethodParameterMetaTest {
 
     final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
     tunnel.forGetRequestInputStream = RND.byteArray(100);
 
-    final Object actualParamValue = e.extract(catchResult, tunnel);
+    final Object actualParamValue = e.extract(null, tunnel, null);
 
     assertThat(actualParamValue).isInstanceOf(byte[].class);
     assertThat(actualParamValue).isEqualTo(tunnel.forGetRequestInputStream);
@@ -334,12 +317,10 @@ public class MethodParameterMetaTest {
 
     final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
     tunnel.forGetRequestInputStream = RND.byteArray(100);
 
-    final Object actualParamValue = e.extract(catchResult, tunnel);
+    final Object actualParamValue = e.extract(null, tunnel, null);
 
     assertThat(actualParamValue).isInstanceOf(InputStream.class);
 
@@ -378,19 +359,17 @@ public class MethodParameterMetaTest {
     final Method method1 = getMethod(ForRequestInput_BufferedReader.class, methodName);
     final MethodParamExtractor e1 = MethodParameterMeta.create(method1).get(0);
 
-    final CatchResult catchResult = new CatchResult();
-
     TestTunnel tunnel = new TestTunnel();
     tunnel.forGetRequestReader = RND.str(100);
 
-    final Object actualParamValue = e1.extract(catchResult, tunnel);
+    final Object actualParamValue = e1.extract(null, tunnel, null);
 
     assertThat(actualParamValue).isInstanceOf(Reader.class);
 
-    CharArrayWriter actual=new CharArrayWriter();
+    CharArrayWriter actual = new CharArrayWriter();
 
     {
-      char[] buffer = new char[1024 ];
+      char[] buffer = new char[1024];
       Reader in = (Reader) actualParamValue;
       while (true) {
         final int count = in.read(buffer);
@@ -417,11 +396,29 @@ public class MethodParameterMetaTest {
 
     TestTunnel tunnel = new TestTunnel();
 
-    final Object actualParamValue = e.extract(catchResult, tunnel);
+    final Object actualParamValue = e.extract(null, tunnel, null);
 
     assertThat(actualParamValue).isInstanceOf(RequestTunnel.class);
 
-    assertThat(System.identityHashCode(actualParamValue)).isEqualTo(System.identityHashCode(tunnel));
+    assertThat(identityHashCode(actualParamValue)).isEqualTo(identityHashCode(tunnel));
   }
 
+  class ForMvcModel {
+    public void forTest(MvcModel model) {
+    }
+  }
+
+  @Test
+  public void mvcModel() throws Exception {
+    final Method method = getMethod(ForMvcModel.class, "forTest");
+
+    final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
+    final MethodParamExtractor e = ee.get(0);
+
+    MvcModel model = new MvcModel();
+
+    final Object actualParamValue = e.extract(null, null, model);
+
+    assertThat(identityHashCode(actualParamValue)).isEqualTo(identityHashCode(model));
+  }
 }

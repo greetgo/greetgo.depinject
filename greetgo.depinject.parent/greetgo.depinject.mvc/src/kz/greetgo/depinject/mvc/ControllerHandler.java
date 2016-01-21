@@ -60,9 +60,11 @@ public class ControllerHandler extends TunnelHandlerList {
 
           try {
 
+            MvcModel model=new MvcModel();
             Object[] paramValues = new Object[extractorList.size()];
             for (int i = 0, C = extractorList.size(); i < C; i++) {
-              paramValues[i] = extractorList.get(i).extract(catchResult, tunnel);
+              final MethodParamExtractor e = extractorList.get(i);
+              paramValues[i] = e.extract(catchResult, tunnel, model);
             }
 
             final Object result = method.invoke(controller, paramValues);
