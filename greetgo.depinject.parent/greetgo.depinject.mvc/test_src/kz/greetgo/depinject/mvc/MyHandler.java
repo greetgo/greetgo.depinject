@@ -6,6 +6,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
@@ -17,6 +18,7 @@ public class MyHandler extends AbstractHandler {
   @Override
   public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
+
 
     final RequestTunnel tunnel = new JettyRequestTunnel(target, baseRequest, request, response);
 
@@ -64,11 +66,22 @@ public class MyHandler extends AbstractHandler {
         }
       }
 
+      for (Part part : request.getParts()) {
+        System.out.println("part.name = " + part.getName() + ", part.contentType = "
+          + part.getContentType() + " : " + part);
+      }
+
+      final Part fileA = request.getPart("fileA");
+      System.out.println("fileA.SubmittedFileName = " + fileA.getSubmittedFileName()
+        + ", ContentType = " + fileA.getContentType() + ", Size = " + fileA.getSize());
+      for (String headerName : fileA.getHeaderNames()) {
+        System.out.println("fileA:  " + headerName + " = " + fileA.getHeaders(headerName));
+      }
+
       final String surname = request.getParameter("surname");
       System.out.println("surname = " + surname);
 
       final String[] options = request.getParameterValues("options");
-      System.out.println("options = " + options);
       if (options != null) for (String option : options) {
         System.out.println("option = " + option);
       }
@@ -79,6 +92,8 @@ public class MyHandler extends AbstractHandler {
 
       return;
     }
+
+    System.out.println("skip");
 
   }
 }

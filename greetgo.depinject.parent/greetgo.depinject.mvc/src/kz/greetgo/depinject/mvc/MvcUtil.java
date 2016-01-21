@@ -79,6 +79,7 @@ public class MvcUtil {
         if (str.length() == 0) return null;
 
         for (String x : SIMPLE_DATE_FORMATS) {
+          //noinspection EmptyCatchBlock
           try {
             return new SimpleDateFormat(x).parse(str);
           } catch (ParseException e) {
@@ -92,7 +93,7 @@ public class MvcUtil {
     CONVERTERS = unmodifiableMap(x);
   }
 
-  public static String first(String[] strs) {
+  private static String first(String[] strs) {
     if (strs == null) return null;
     if (strs.length == 0) return null;
     return strs[0];
@@ -123,17 +124,13 @@ public class MvcUtil {
       if (strs == null) return collection;
 
       for (String str : strs) {
+        //noinspection unchecked
         collection.add(convertStrToType(str, type.getActualTypeArguments()[0]));
       }
 
       return collection;
 
     }
-
-    Collection<String> c = new ArrayList<>();
-
-    final Type ownerType = type.getOwnerType();
-    System.out.println("rawType = " + rawType + ", ownerType = " + ownerType);
 
     throw new IllegalArgumentException("Cannot convert strings to " + type);
   }

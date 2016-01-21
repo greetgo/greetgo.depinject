@@ -17,6 +17,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class MethodParameterMetaTest {
 
   class ForStrRequestParam {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@Par("strParam") String strParam) {
     }
   }
@@ -40,7 +41,9 @@ public class MethodParameterMetaTest {
     assertThat(actualParamValue).isEqualTo(paramValue);
   }
 
+  @SuppressWarnings("unused")
   class ForLongRequestParam {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@Par("param1") long param1, @Par("param2") Long param2) {
     }
   }
@@ -72,7 +75,9 @@ public class MethodParameterMetaTest {
 
   }
 
+  @SuppressWarnings("unused")
   class ForIntRequestParam {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@Par("param1") int param1, @Par("param2") Integer param2) {
     }
   }
@@ -104,6 +109,7 @@ public class MethodParameterMetaTest {
 
   }
 
+  @SuppressWarnings("unused")
   @DataProvider
   public Object[][] simpleDateFormats() {
     return new Object[][]{
@@ -121,7 +127,9 @@ public class MethodParameterMetaTest {
     };
   }
 
+  @SuppressWarnings("unused")
   class ForDateRequestParam {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@Par("param") Date param) {
     }
   }
@@ -151,7 +159,9 @@ public class MethodParameterMetaTest {
 
   }
 
+  @SuppressWarnings("unused")
   class ForStrListRequestParam {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@Par("param") List<String> param) {
     }
   }
@@ -173,6 +183,7 @@ public class MethodParameterMetaTest {
     {
       final Object actual = e.extract(null, tunnel, null);
       assertThat(actual).isInstanceOf(List.class);
+      //noinspection unchecked
       assertThat((List<String>) actual).containsExactly(param1, param2);
     }
 
@@ -185,7 +196,9 @@ public class MethodParameterMetaTest {
     }
   }
 
+  @SuppressWarnings("unused")
   class ForStrSetRequestParam {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@Par("param") Set<String> param) {
     }
   }
@@ -207,6 +220,7 @@ public class MethodParameterMetaTest {
     {
       final Object actual = e.extract(null, tunnel, null);
       assertThat(actual).isInstanceOf(Set.class);
+      //noinspection unchecked
       assertThat((Set<String>) actual).containsOnly(param1, param2);
     }
 
@@ -219,7 +233,9 @@ public class MethodParameterMetaTest {
     }
   }
 
+  @SuppressWarnings("unused")
   class ForStrPathParam {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@PathPar("param") String param) {
     }
   }
@@ -241,7 +257,9 @@ public class MethodParameterMetaTest {
     assertThat(actualParamValue).isEqualTo(paramValue);
   }
 
+  @SuppressWarnings("unused")
   class ForRequestInput_String {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@RequestInput String content) {
     }
   }
@@ -261,7 +279,9 @@ public class MethodParameterMetaTest {
     assertThat(actualParamValue).isEqualTo(tunnel.forGetRequestReader);
   }
 
+  @SuppressWarnings("unused")
   class ForRequestInput_StringList {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@RequestInput List<String> contentLines) {
     }
   }
@@ -282,11 +302,14 @@ public class MethodParameterMetaTest {
     final Object actualParamValue = e.extract(null, tunnel, null);
 
     assertThat(actualParamValue).isInstanceOf(List.class);
-    List actual = (List) actualParamValue;
+    //noinspection unchecked
+    List<String> actual = (List<String>) actualParamValue;
     assertThat(actual).containsExactly(line1, line2, line3);
   }
 
+  @SuppressWarnings("unused")
   class ForRequestInput_byteArray {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@RequestInput byte[] content) {
     }
   }
@@ -304,9 +327,12 @@ public class MethodParameterMetaTest {
 
     assertThat(actualParamValue).isInstanceOf(byte[].class);
     assertThat(actualParamValue).isEqualTo(tunnel.forGetRequestInputStream);
+
   }
 
+  @SuppressWarnings("unused")
   class ForRequestInput_InputStream {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@RequestInput InputStream requestContentInputStream) {
     }
   }
@@ -337,16 +363,21 @@ public class MethodParameterMetaTest {
     }
 
     assertThat(actual.toByteArray()).isEqualTo(tunnel.forGetRequestInputStream);
+
   }
 
+  @SuppressWarnings("unused")
   class ForRequestInput_BufferedReader {
+    @SuppressWarnings({"EmptyMethod", "unused"})
     public void forTest1(@RequestInput BufferedReader requestContentReader) {
     }
 
+    @SuppressWarnings({"EmptyMethod", "unused"})
     public void forTest2(@RequestInput Reader requestContentReader) {
     }
   }
 
+  @SuppressWarnings("unused")
   @DataProvider
   public Object[][] methodsIn_ForRequestInput_BufferedReader() {
     return new Object[][]{
@@ -379,9 +410,12 @@ public class MethodParameterMetaTest {
     }
 
     assertThat(actual.toString()).isEqualTo(tunnel.forGetRequestReader);
+
   }
 
+  @SuppressWarnings("unused")
   class ForRequestInput_RequestTunnel {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(@RequestInput RequestTunnel requestTunnel) {
     }
   }
@@ -392,8 +426,6 @@ public class MethodParameterMetaTest {
 
     final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
-    final TestMappingResult catchResult = new TestMappingResult();
-
     TestTunnel tunnel = new TestTunnel();
 
     final Object actualParamValue = e.extract(null, tunnel, null);
@@ -403,7 +435,9 @@ public class MethodParameterMetaTest {
     assertThat(identityHashCode(actualParamValue)).isEqualTo(identityHashCode(tunnel));
   }
 
+  @SuppressWarnings("unused")
   class ForMvcModel {
+    @SuppressWarnings({"unused", "EmptyMethod"})
     public void forTest(MvcModel model) {
     }
   }
@@ -420,5 +454,6 @@ public class MethodParameterMetaTest {
     final Object actualParamValue = e.extract(null, null, model);
 
     assertThat(identityHashCode(actualParamValue)).isEqualTo(identityHashCode(model));
+
   }
 }

@@ -10,7 +10,8 @@ public class JettyLauncher {
 
   public static void main(String[] args) throws Exception {
 
-    String warDir = "test_war"; {
+    String warDir = "test_war";
+    {
       String prj = "greetgo.depinject.mvc/";
       if (new File(prj).isDirectory()) {
         warDir = prj + warDir;
@@ -22,8 +23,11 @@ public class JettyLauncher {
     resourceHandler.setWelcomeFiles(new String[]{"index.html"});
     resourceHandler.setResourceBase(warDir);
 
+    MultipartInjectionHandler mih = new MultipartInjectionHandler();
+    mih.setHandler(new MyHandler());
+
     HandlerList handlerList = new HandlerList();
-    handlerList.addHandler(new MyHandler());
+    handlerList.addHandler(mih);
     handlerList.addHandler(resourceHandler);
 
     {

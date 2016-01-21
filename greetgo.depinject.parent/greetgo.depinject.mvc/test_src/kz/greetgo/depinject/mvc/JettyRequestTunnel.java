@@ -9,6 +9,7 @@ import java.io.*;
 public class JettyRequestTunnel implements RequestTunnel {
 
   private final String target;
+  @SuppressWarnings({"FieldCanBeLocal", "unused"})
   private final Request baseRequest;
   private final HttpServletRequest request;
   private final HttpServletResponse response;

@@ -13,6 +13,7 @@ public class ControllerHandlerTest {
   private static final String MODEL_PARAMETER_NAME = RND.str(10);
   private static final String MODEL_PARAMETER_VALUE = RND.str(10);
 
+  @SuppressWarnings("unused")
   @Mapping("/test")
   public static class TestController {
 

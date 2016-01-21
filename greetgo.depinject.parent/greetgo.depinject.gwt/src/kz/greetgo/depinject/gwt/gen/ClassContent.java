@@ -8,6 +8,7 @@ import java.util.Map;
 public class ClassContent {
   public String packageName, name;
   
+  @SuppressWarnings("Convert2Diamond")
   private final List<Class<?>> implementList = new ArrayList<Class<?>>();
   
   private final Map<String, String> importMap = new HashMap<>();
@@ -103,7 +104,8 @@ public class ClassContent {
   @Override
   public String toString() {
     StringBuilder ret = new StringBuilder(10000);
-    
+
+    //noinspection Convert2Diamond
     List<String> implList = new ArrayList<String>();
     
     for (Class<?> cl : implementList) {

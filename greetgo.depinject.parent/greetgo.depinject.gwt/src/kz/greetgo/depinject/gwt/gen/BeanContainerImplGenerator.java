@@ -26,8 +26,10 @@ public class BeanContainerImplGenerator {
 
   public Class<?> beanContainerIface;
 
+  @SuppressWarnings("Convert2Diamond")
   final Set<Class<?>> beanClassSet = new HashSet<Class<?>>();
 
+  @SuppressWarnings("Convert2Diamond")
   private final Set<Class<?>> scannedConfigs = new HashSet<Class<?>>();
 
   public String srcDir, packageName, implClassName;
@@ -90,6 +92,7 @@ public class BeanContainerImplGenerator {
 
   private final ClassContent content = new ClassContent();
 
+  @SuppressWarnings("TryFinallyCanBeTryWithResources")
   public void generate() throws Exception {
 
     generateContent();

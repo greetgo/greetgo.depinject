@@ -26,6 +26,7 @@ public class RND {
     return new String(charArray);
   }
 
+  @SuppressWarnings("unused")
   public static String intStr(int len) {
     char[] charArray = new char[len];
     for (int i = 0; i < len; i++) {

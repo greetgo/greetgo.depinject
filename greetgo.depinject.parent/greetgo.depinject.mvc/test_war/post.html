@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="forms.css" type="text/css">
 </head>
 <body>
-<form action="lot/save" method="post">
+<form action="lot/save" method="post" enctype="multipart/form-data">
   <div class="field">
     <span>Фамилия:</span> <input type="text" name="surname" value="Иванов">
   </div>
@@ -20,6 +20,14 @@
     <input type="checkbox" name="options" value="glasses" checked>Очкаст,
     <input type="checkbox" name="options" value="bald">Лысый,
     <input type="checkbox" name="options" value="red">Рыжий
+  </div>
+
+  <div class="field">
+    <span>Файл А:</span> <input type="file" name="fileA">
+  </div>
+
+  <div class="field">
+    <span>Файл Б:</span> <input type="file" name="fileB">
   </div>
 
   <button type="submit">Send</button>

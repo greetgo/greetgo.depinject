@@ -39,8 +39,8 @@ public class MethodParameterMeta {
   private final Type genericParameterType;
   private final Annotation[] parameterAnnotation;
 
-  public MethodParameterMeta(int parameterIndex, Method method,
-                             Type genericParameterType, Annotation[] parameterAnnotation) {
+  private MethodParameterMeta(int parameterIndex, Method method,
+                              Type genericParameterType, Annotation[] parameterAnnotation) {
     this.parameterIndex = parameterIndex;
     this.method = method;
     this.genericParameterType = genericParameterType;
@@ -52,7 +52,7 @@ public class MethodParameterMeta {
 
   private boolean requestInput = false;
 
-  private final void prepareAnnotations() {
+  private void prepareAnnotations() {
     for (Annotation annotation : parameterAnnotation) {
       if (annotation instanceof Par) {
         parValue = ((Par) annotation).value();
@@ -64,12 +64,13 @@ public class MethodParameterMeta {
       }
       if (annotation instanceof RequestInput) {
         requestInput = true;
+        //noinspection UnnecessaryContinue
         continue;
       }
     }
   }
 
-  public MethodParamExtractor createExtractor() {
+  private MethodParamExtractor createExtractor() {
     if (parValue != null) return new MethodParamExtractor() {
       @Override
       public Object extract(MappingResult mappingResult, RequestTunnel tunnel, MvcModel model) {
@@ -93,7 +94,7 @@ public class MethodParameterMeta {
       }
     };
 
-    if (MvcModel.class.equals(genericParameterType)) return new MethodParamExtractor() {
+    if (MvcModel.class == genericParameterType) return new MethodParamExtractor() {
       @Override
       public Object extract(MappingResult mappingResult, RequestTunnel tunnel, MvcModel model) throws Exception {
         return model;
@@ -114,12 +115,13 @@ public class MethodParameterMeta {
   private static Object convertRequestContentToParameterizedType(RequestTunnel tunnel, ParameterizedType type) throws Exception {
     final Type rawType = type.getRawType();
 
-    if (rawType.equals(List.class)) {
+    if (rawType == List.class) {
       List ret = new ArrayList();
       try (BufferedReader reader = tunnel.getRequestReader()) {
         while (true) {
           final String line = reader.readLine();
           if (line == null) return ret;
+          //noinspection unchecked
           ret.add(convertStrToType(line, type.getActualTypeArguments()[0]));
         }
       }
