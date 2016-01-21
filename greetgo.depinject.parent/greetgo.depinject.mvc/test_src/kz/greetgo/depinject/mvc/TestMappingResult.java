@@ -6,17 +6,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CatchResult {
+public class TestMappingResult implements MappingResult {
+  @Override
   public boolean ok() {
     return false;
   }
 
-  private final Map<String, String> params = new HashMap<>();
+  public final Map<String, String> params = new HashMap<>();
 
-  public void setParam(String name, String value) {
-    params.put(name, value);
-  }
-
+  @Override
   public String getParam(String name) {
     if (params.containsKey(name)) return params.get(name);
     throw new NoPathParam(name, Collections.unmodifiableMap(params));

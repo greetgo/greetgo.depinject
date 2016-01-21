@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.mvc;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -48,28 +49,30 @@ public class ControllerHandler extends TunnelHandlerList {
     private void appendHandlerForMethod(final Method method) {
       final Mapping mapping = method.getAnnotation(Mapping.class);
       if (mapping == null) return;
-      final TargetCatcher targetCatcher = new TargetCatcher(parentMapping + mapping.value());
+
+      final TargetMapper targetMapper = new TargetMapper(parentMapping + mapping.value());
 
       final List<MethodParamExtractor> extractorList = MethodParameterMeta.create(method);
 
       result.add(new TunnelHandler() {
         @Override
         public boolean handleTunnel(RequestTunnel tunnel) {
-          CatchResult catchResult = targetCatcher.catchTarget(tunnel.getTarget());
-          if (!catchResult.ok()) return false;
+          MappingResult mappingResult = targetMapper.mapTarget(tunnel.getTarget());
+          if (!mappingResult.ok()) return false;
 
           try {
 
-            MvcModel model=new MvcModel();
+            MvcModel model = new MvcModel();
+
             Object[] paramValues = new Object[extractorList.size()];
-            for (int i = 0, C = extractorList.size(); i < C; i++) {
+            for (int i = 0, n = extractorList.size(); i < n; i++) {
               final MethodParamExtractor e = extractorList.get(i);
-              paramValues[i] = e.extract(catchResult, tunnel, model);
+              paramValues[i] = e.extract(mappingResult, tunnel, model);
             }
 
             final Object result = method.invoke(controller, paramValues);
 
-            executeView(result, tunnel, catchResult, method);
+            executeView(result, model, tunnel, mappingResult, method);
 
             return true;
 
@@ -82,10 +85,25 @@ public class ControllerHandler extends TunnelHandlerList {
       });
     }
 
-    private void executeView(Object controllerMethodResult, RequestTunnel tunnel, CatchResult catchResult, Method method) {
+    private void executeView(Object controllerMethodResult, MvcModel model,
+                             RequestTunnel tunnel, MappingResult mappingResult,
+                             Method method) {
 
+      if (method.getAnnotation(ToJson.class) != null) {
+        final String content = views.toJson(controllerMethodResult);
+        try (final PrintWriter writer = tunnel.getResponseWriter()) {
+          writer.print(content);
+        }
+      }
+
+      if (method.getAnnotation(ToXml.class) != null) {
+        final String content = views.toXml(controllerMethodResult);
+        try (final PrintWriter writer = tunnel.getResponseWriter()) {
+          writer.print(content);
+        }
+      }
+
+      views.defaultView(tunnel.getResponseOutputStream(), controllerMethodResult, model, mappingResult);
     }
-
   }
-
 }

@@ -7,7 +7,7 @@ public interface Views {
 
   String toXml(Object object);
 
-  void defaultView(OutputStream outputStream, Object returnValue, MvcModel model);
+  void defaultView(OutputStream outputStream, Object returnValue, MvcModel model, MappingResult mappingResult);
 
   void errorView(OutputStream outputStream, String target, Exception error);
 }

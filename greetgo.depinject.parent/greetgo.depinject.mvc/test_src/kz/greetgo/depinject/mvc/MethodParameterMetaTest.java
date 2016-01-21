@@ -27,7 +27,7 @@ public class MethodParameterMetaTest {
 
     final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
-    final CatchResult catchResult = new CatchResult();
+    final TestMappingResult catchResult = new TestMappingResult();
 
     TestTunnel tunnel = new TestTunnel();
 
@@ -230,11 +230,11 @@ public class MethodParameterMetaTest {
 
     final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
-    final CatchResult catchResult = new CatchResult();
+    final TestMappingResult catchResult = new TestMappingResult();
 
     String paramValue = RND.str(10);
 
-    catchResult.setParam("param", paramValue);
+    catchResult.params.put("param", paramValue);
 
     final Object actualParamValue = e.extract(catchResult, null, null);
 
@@ -392,7 +392,7 @@ public class MethodParameterMetaTest {
 
     final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
-    final CatchResult catchResult = new CatchResult();
+    final TestMappingResult catchResult = new TestMappingResult();
 
     TestTunnel tunnel = new TestTunnel();
 

@@ -16,12 +16,14 @@ public class TestViews implements Views {
 
   public Object returnValue = null;
   public MvcModel model = null;
+  public MappingResult mappingResult = null;
 
   @Override
-  public void defaultView(OutputStream outputStream, Object returnValue, MvcModel model) {
+  public void defaultView(OutputStream outputStream, Object returnValue, MvcModel model, MappingResult mappingResult) {
 
     this.returnValue = returnValue;
     this.model = model;
+    this.mappingResult = mappingResult;
 
     try (PrintStream pr = new PrintStream(outputStream, false, "UTF-8")) {
       pr.print("view of " + returnValue);
