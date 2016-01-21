@@ -10,9 +10,11 @@ public interface RequestTunnel {
 
   OutputStream getResponseOutputStream();
 
-  String[] getParamValues(String name);
+  String[] getParamValues(String paramName);
 
   BufferedReader getRequestReader();
 
   InputStream getRequestInputStream();
+
+  Upload getUpload(String paramName);
 }

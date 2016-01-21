@@ -2,6 +2,7 @@ package kz.greetgo.depinject.mvc;
 
 import kz.greetgo.depinject.mvc.error.CannotExtractParamValue;
 import kz.greetgo.depinject.mvc.error.IDoNotKnowHowToConvertRequestContentToType;
+import kz.greetgo.depinject.mvc.error.NoAnnotationParInUploadParam;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -71,6 +72,17 @@ public class MethodParameterMeta {
   }
 
   private MethodParamExtractor createExtractor() {
+    if (Upload.class == genericParameterType) {
+      if (parValue == null) throw new NoAnnotationParInUploadParam(parameterIndex, method);
+
+      return new MethodParamExtractor() {
+        @Override
+        public Object extract(MappingResult mappingResult, RequestTunnel tunnel, MvcModel model) throws Exception {
+          return tunnel.getUpload(parValue);
+        }
+      };
+    }
+
     if (parValue != null) return new MethodParamExtractor() {
       @Override
       public Object extract(MappingResult mappingResult, RequestTunnel tunnel, MvcModel model) {

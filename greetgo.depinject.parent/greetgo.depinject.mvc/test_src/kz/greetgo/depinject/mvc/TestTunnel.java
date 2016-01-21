@@ -70,5 +70,17 @@ public class TestTunnel implements RequestTunnel {
     paramValues.remove(paramName);
   }
 
+  private final Map<String, TestUpload> uploadMap = new HashMap<>();
 
+  public void appendTestUpload(TestUpload testUpload) {
+    if (uploadMap.containsKey(testUpload.getName())) throw new IllegalArgumentException("Test upload with name "
+      + testUpload.getName() + " already exists");
+
+    uploadMap.put(testUpload.getName(), testUpload);
+  }
+
+  @Override
+  public Upload getUpload(String paramName) {
+    return uploadMap.get(paramName);
+  }
 }

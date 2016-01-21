@@ -2,6 +2,7 @@ package kz.greetgo.depinject.mvc;
 
 import org.eclipse.jetty.server.Request;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -50,6 +51,15 @@ public class JettyRequestTunnel implements RequestTunnel {
     try {
       return request.getInputStream();
     } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public Upload getUpload(String paramName) {
+    try {
+      return new UploadOnPartBridge(request.getPart(paramName));
+    } catch (ServletException | IOException e) {
       throw new RuntimeException(e);
     }
   }

@@ -456,4 +456,29 @@ public class MethodParameterMetaTest {
     assertThat(identityHashCode(actualParamValue)).isEqualTo(identityHashCode(model));
 
   }
+
+  class ForUpload {
+    @SuppressWarnings({"unused", "EmptyMethod"})
+    public void forTest(@Par("abra") Upload upload) {
+    }
+  }
+
+  @Test
+  public void upload() throws Exception {
+    final Method method = getMethod(ForUpload.class, "forTest");
+
+    final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
+    final MethodParamExtractor e = ee.get(0);
+
+    TestUpload abra = new TestUpload("abra");
+
+    TestTunnel tunnel = new TestTunnel();
+    tunnel.appendTestUpload(abra);
+    tunnel.appendTestUpload(new TestUpload("left"));
+
+    final Object actualParamValue = e.extract(null, tunnel, null);
+
+    assertThat(identityHashCode(actualParamValue)).isEqualTo(identityHashCode(abra));
+
+  }
 }
