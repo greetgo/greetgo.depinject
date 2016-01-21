@@ -50,7 +50,7 @@ public class ControllerHandler extends TunnelHandlerList {
       if (mapping == null) return;
       final TargetCatcher targetCatcher = new TargetCatcher(parentMapping + mapping.value());
 
-      final List<MethodParameterValueExtractor> extractorList = MethodParameterMeta.create(method);
+      final List<MethodParamExtractor> extractorList = MethodParameterMeta.create(method);
 
       result.add(new TunnelHandler() {
         @Override

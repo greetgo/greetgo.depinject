@@ -24,7 +24,7 @@ public class MethodParameterMetaTest {
   public void strRequestParam() throws Exception {
     final Method method = getMethod(ForStrRequestParam.class, "forTest");
 
-    final MethodParameterValueExtractor e = MethodParameterMeta.create(method).get(0);
+    final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -48,9 +48,9 @@ public class MethodParameterMetaTest {
   public void longRequestParam() throws Exception {
     final Method method = getMethod(ForLongRequestParam.class, "forTest");
 
-    final List<MethodParameterValueExtractor> ee = MethodParameterMeta.create(method);
-    MethodParameterValueExtractor e1 = ee.get(0);
-    MethodParameterValueExtractor e2 = ee.get(1);
+    final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
+    MethodParamExtractor e1 = ee.get(0);
+    MethodParamExtractor e2 = ee.get(1);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -82,9 +82,9 @@ public class MethodParameterMetaTest {
   public void intRequestParam() throws Exception {
     final Method method = getMethod(ForIntRequestParam.class, "forTest");
 
-    final List<MethodParameterValueExtractor> ee = MethodParameterMeta.create(method);
-    MethodParameterValueExtractor e1 = ee.get(0);
-    MethodParameterValueExtractor e2 = ee.get(1);
+    final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
+    MethodParamExtractor e1 = ee.get(0);
+    MethodParamExtractor e2 = ee.get(1);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -133,8 +133,8 @@ public class MethodParameterMetaTest {
   public void dateRequestParam(String sdfFormat) throws Exception {
     final Method method = getMethod(ForDateRequestParam.class, "forTest");
 
-    final List<MethodParameterValueExtractor> ee = MethodParameterMeta.create(method);
-    MethodParameterValueExtractor e1 = ee.get(0);
+    final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
+    MethodParamExtractor e1 = ee.get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -165,8 +165,8 @@ public class MethodParameterMetaTest {
   public void listRequestParam() throws Exception {
     final Method method = getMethod(ForStrListRequestParam.class, "forTest");
 
-    final List<MethodParameterValueExtractor> ee = MethodParameterMeta.create(method);
-    MethodParameterValueExtractor e = ee.get(0);
+    final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
+    MethodParamExtractor e = ee.get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -201,8 +201,8 @@ public class MethodParameterMetaTest {
   public void setRequestParam() throws Exception {
     final Method method = getMethod(ForStrSetRequestParam.class, "forTest");
 
-    final List<MethodParameterValueExtractor> ee = MethodParameterMeta.create(method);
-    MethodParameterValueExtractor e = ee.get(0);
+    final List<MethodParamExtractor> ee = MethodParameterMeta.create(method);
+    MethodParamExtractor e = ee.get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -237,7 +237,7 @@ public class MethodParameterMetaTest {
   public void strPathParam() throws Exception {
     final Method method = getMethod(ForStrPathParam.class, "forTest");
 
-    final MethodParameterValueExtractor e = MethodParameterMeta.create(method).get(0);
+    final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -261,7 +261,7 @@ public class MethodParameterMetaTest {
   public void requestInput_String() throws Exception {
     final Method method = getMethod(ForRequestInput_String.class, "forTest");
 
-    final MethodParameterValueExtractor e = MethodParameterMeta.create(method).get(0);
+    final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -283,7 +283,7 @@ public class MethodParameterMetaTest {
   public void requestInput_StringList() throws Exception {
     final Method method = getMethod(ForRequestInput_StringList.class, "forTest");
 
-    final MethodParameterValueExtractor e = MethodParameterMeta.create(method).get(0);
+    final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -310,7 +310,7 @@ public class MethodParameterMetaTest {
   public void requestInput_byteArray() throws Exception {
     final Method method = getMethod(ForRequestInput_byteArray.class, "forTest");
 
-    final MethodParameterValueExtractor e = MethodParameterMeta.create(method).get(0);
+    final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -332,7 +332,7 @@ public class MethodParameterMetaTest {
   public void requestInput_InputStream() throws Exception {
     final Method method = getMethod(ForRequestInput_InputStream.class, "forTest");
 
-    final MethodParameterValueExtractor e = MethodParameterMeta.create(method).get(0);
+    final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -376,7 +376,7 @@ public class MethodParameterMetaTest {
   @Test(dataProvider = "methodsIn_ForRequestInput_BufferedReader")
   public void requestInput_BufferedReader(String methodName) throws Exception {
     final Method method1 = getMethod(ForRequestInput_BufferedReader.class, methodName);
-    final MethodParameterValueExtractor e1 = MethodParameterMeta.create(method1).get(0);
+    final MethodParamExtractor e1 = MethodParameterMeta.create(method1).get(0);
 
     final CatchResult catchResult = new CatchResult();
 
@@ -411,7 +411,7 @@ public class MethodParameterMetaTest {
   public void requestInput_RequestTunnel() throws Exception {
     final Method method = getMethod(ForRequestInput_RequestTunnel.class, "forTest");
 
-    final MethodParameterValueExtractor e = MethodParameterMeta.create(method).get(0);
+    final MethodParamExtractor e = MethodParameterMeta.create(method).get(0);
 
     final CatchResult catchResult = new CatchResult();
 

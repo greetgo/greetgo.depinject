@@ -19,8 +19,8 @@ import static kz.greetgo.depinject.mvc.MvcUtil.convertStrsToType;
 
 public class MethodParameterMeta {
 
-  public static List<MethodParameterValueExtractor> create(Method method) {
-    final List<MethodParameterValueExtractor> extractorList = new ArrayList<>();
+  public static List<MethodParamExtractor> create(Method method) {
+    final List<MethodParamExtractor> extractorList = new ArrayList<>();
 
     final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
     final Type[] genericParameterTypes = method.getGenericParameterTypes();
@@ -69,8 +69,8 @@ public class MethodParameterMeta {
     }
   }
 
-  public MethodParameterValueExtractor createExtractor() {
-    if (parValue != null) return new MethodParameterValueExtractor() {
+  public MethodParamExtractor createExtractor() {
+    if (parValue != null) return new MethodParamExtractor() {
       @Override
       public Object extract(CatchResult catchResult, RequestTunnel tunnel) {
         final String[] paramValues = tunnel.getParamValues(parValue);
@@ -78,7 +78,7 @@ public class MethodParameterMeta {
       }
     };
 
-    if (pathParValue != null) return new MethodParameterValueExtractor() {
+    if (pathParValue != null) return new MethodParamExtractor() {
       @Override
       public Object extract(CatchResult catchResult, RequestTunnel tunnel) {
         final String paramValue = catchResult.getParam(pathParValue);
@@ -86,7 +86,7 @@ public class MethodParameterMeta {
       }
     };
 
-    if (requestInput) return new MethodParameterValueExtractor() {
+    if (requestInput) return new MethodParamExtractor() {
       @Override
       public Object extract(CatchResult catchResult, RequestTunnel tunnel) throws Exception {
         return convertRequestContentToType(tunnel, genericParameterType);
