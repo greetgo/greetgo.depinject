@@ -1,4 +1,6 @@
-package kz.greetgo.depinject.mvc;
+package kz.greetgo.depinject.mvc.utils;
+
+import kz.greetgo.depinject.mvc.Upload;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

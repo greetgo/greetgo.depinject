@@ -1,5 +1,9 @@
 package kz.greetgo.depinject.mvc;
 
+import kz.greetgo.depinject.mvc.utils.RND;
+import kz.greetgo.depinject.mvc.utils.TestMappingResult;
+import kz.greetgo.depinject.mvc.utils.TestTunnel;
+import kz.greetgo.depinject.mvc.utils.TestUpload;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -11,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.lang.System.identityHashCode;
-import static kz.greetgo.depinject.mvc.TestUtil.getMethod;
+import static kz.greetgo.depinject.mvc.utils.TestUtil.getMethod;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class MethodParameterMetaTest {

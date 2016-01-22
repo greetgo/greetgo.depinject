@@ -1,4 +1,8 @@
-package kz.greetgo.depinject.mvc;
+package kz.greetgo.depinject.mvc.utils;
+
+import kz.greetgo.depinject.mvc.MappingResult;
+import kz.greetgo.depinject.mvc.MvcModel;
+import kz.greetgo.depinject.mvc.Views;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

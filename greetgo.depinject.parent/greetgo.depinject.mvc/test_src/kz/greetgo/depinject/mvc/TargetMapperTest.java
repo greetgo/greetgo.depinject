@@ -1,5 +1,7 @@
 package kz.greetgo.depinject.mvc;
 
+import kz.greetgo.depinject.mvc.MappingResult;
+import kz.greetgo.depinject.mvc.TargetMapper;
 import org.testng.annotations.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;

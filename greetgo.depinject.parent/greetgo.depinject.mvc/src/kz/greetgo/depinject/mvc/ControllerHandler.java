@@ -40,7 +40,6 @@ public class ControllerHandler extends TunnelHandlerList {
       }
     }
 
-
     private void prepareParentMapping() {
       final Mapping mapping = controllerClass.getAnnotation(Mapping.class);
       if (mapping != null) parentMapping = mapping.value();

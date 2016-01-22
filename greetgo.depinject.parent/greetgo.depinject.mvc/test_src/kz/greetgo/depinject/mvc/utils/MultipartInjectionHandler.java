@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.mvc;
+package kz.greetgo.depinject.mvc.utils;
 
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.server.Request;

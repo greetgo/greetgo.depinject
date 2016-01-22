@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.mvc;
+package kz.greetgo.depinject.mvc.utils;
 
 import java.lang.reflect.Method;
 

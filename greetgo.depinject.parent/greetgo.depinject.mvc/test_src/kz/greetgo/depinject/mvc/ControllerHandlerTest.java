@@ -1,5 +1,8 @@
 package kz.greetgo.depinject.mvc;
 
+import kz.greetgo.depinject.mvc.utils.RND;
+import kz.greetgo.depinject.mvc.utils.TestTunnel;
+import kz.greetgo.depinject.mvc.utils.TestViews;
 import org.testng.annotations.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -13,8 +16,8 @@ public class ControllerHandlerTest {
   private static final String MODEL_PARAMETER_NAME = RND.str(10);
   private static final String MODEL_PARAMETER_VALUE = RND.str(10);
 
-  @SuppressWarnings("unused")
   @Mapping("/test")
+  @SuppressWarnings("unused")
   public static class TestController {
 
     public String strParam;
