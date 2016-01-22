@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.mvc.probes;
+package kz.greetgo.depinject.mvc.probes.controllers;
 
 public class ControllerForJettyLauncherWithMvc2 {
 }

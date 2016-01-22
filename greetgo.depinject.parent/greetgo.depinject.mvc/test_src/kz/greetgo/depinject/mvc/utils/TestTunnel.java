@@ -10,6 +10,7 @@ import java.util.Map;
 public class TestTunnel implements RequestTunnel {
 
   public String target;
+  public String redirectedTo;
 
 
   @Override
@@ -85,5 +86,10 @@ public class TestTunnel implements RequestTunnel {
   @Override
   public Upload getUpload(String paramName) {
     return uploadMap.get(paramName);
+  }
+
+  @Override
+  public void sendRedirect(String reference) {
+    redirectedTo = reference;
   }
 }

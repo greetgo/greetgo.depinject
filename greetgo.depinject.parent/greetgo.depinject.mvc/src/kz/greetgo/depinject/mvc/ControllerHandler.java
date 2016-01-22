@@ -76,17 +76,35 @@ public class ControllerHandler extends TunnelHandlerList {
             return true;
 
           } catch (Exception e) {
-            views.errorView(tunnel.getResponseOutputStream(), tunnel.getTarget(), e);
-            e.printStackTrace();
-            return true;
+            {
+              //noinspection ThrowableResultOfMethodCallIgnored
+              final Redirect redirect = MvcUtil.extractRedirect(e, 4);
+              if (redirect != null) {
+                tunnel.sendRedirect(redirect.reference);
+                return true;
+              }
+            }
+
+            {
+              views.errorView(tunnel.getResponseOutputStream(), tunnel.getTarget(), e);
+              e.printStackTrace();
+              return true;
+            }
           }
         }
       });
     }
 
+
     private void executeView(Object controllerMethodResult, MvcModel model,
                              RequestTunnel tunnel, MappingResult mappingResult,
                              Method method) {
+
+      if (controllerMethodResult instanceof Redirect) {
+        Redirect r = (Redirect) controllerMethodResult;
+        tunnel.sendRedirect(r.reference);
+        return;
+      }
 
       if (method.getAnnotation(ToJson.class) != null) {
         final String content = views.toJson(controllerMethodResult);
@@ -105,4 +123,5 @@ public class ControllerHandler extends TunnelHandlerList {
       views.defaultView(tunnel.getResponseOutputStream(), controllerMethodResult, model, mappingResult);
     }
   }
+
 }

@@ -45,6 +45,81 @@ public class ControllerHandlerTest {
       return RETURN_DEFAULT_STR;
     }
 
+    public boolean calledReturnRedirect = false;
+
+    @Mapping("/return_redirect")
+    public Redirect returnRedirect() {
+      calledReturnRedirect = true;
+      return Redirect.to(RETURN_REDIRECT_TO);
+    }
+
+    public boolean calledThrowRedirect = false;
+
+    @Mapping("/throw_redirect")
+    public Redirect throwRedirect() {
+      calledThrowRedirect = true;
+      throw Redirect.to(THROW_REDIRECT_TO);
+    }
+
+  }
+
+  private static final String RETURN_REDIRECT_TO = RND.str(10);
+  private static final String THROW_REDIRECT_TO = RND.str(10);
+
+  @Test
+  public void create_handleTunnel_return_redirect() throws Exception {
+
+    final TestViews views = new TestViews();
+
+    final TestController controller = new TestController();
+
+    //
+    //
+    final ControllerHandler handler = ControllerHandler.create(controller, views);
+    //
+    //
+
+    final TestTunnel tunnel = new TestTunnel();
+    tunnel.target = "/test/return_redirect";
+
+    //
+    //
+    final boolean handled = handler.handleTunnel(tunnel);
+    //
+    //
+
+    assertThat(handled).isTrue();
+    assertThat(controller.calledReturnRedirect).isTrue();
+    assertThat(tunnel.redirectedTo).isEqualTo(RETURN_REDIRECT_TO);
+
+  }
+
+  @Test
+  public void create_handleTunnel_throw_redirect() throws Exception {
+
+    final TestViews views = new TestViews();
+
+    final TestController controller = new TestController();
+
+    //
+    //
+    final ControllerHandler handler = ControllerHandler.create(controller, views);
+    //
+    //
+
+    final TestTunnel tunnel = new TestTunnel();
+    tunnel.target = "/test/throw_redirect";
+
+    //
+    //
+    final boolean handled = handler.handleTunnel(tunnel);
+    //
+    //
+
+    assertThat(handled).isTrue();
+    assertThat(controller.calledThrowRedirect).isTrue();
+    assertThat(tunnel.redirectedTo).isEqualTo(THROW_REDIRECT_TO);
+
   }
 
   @Test

@@ -68,6 +68,15 @@ public class JettyRequestTunnel implements RequestTunnel {
   }
 
   @Override
+  public void sendRedirect(String reference) {
+    try {
+      response.sendRedirect(reference);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public String[] getParamValues(String name) {
     return request.getParameterValues(name);
   }

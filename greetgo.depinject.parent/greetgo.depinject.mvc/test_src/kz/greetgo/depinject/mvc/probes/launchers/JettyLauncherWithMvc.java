@@ -1,8 +1,8 @@
 package kz.greetgo.depinject.mvc.probes.launchers;
 
 import kz.greetgo.depinject.mvc.ControllerHandler;
-import kz.greetgo.depinject.mvc.probes.ControllerForJettyLauncherWithMvc1;
-import kz.greetgo.depinject.mvc.probes.ControllerForJettyLauncherWithMvc2;
+import kz.greetgo.depinject.mvc.probes.controllers.ControllerForJettyLauncherWithMvc1;
+import kz.greetgo.depinject.mvc.probes.controllers.ControllerForJettyLauncherWithMvc2;
 import kz.greetgo.depinject.mvc.probes.MyHandler;
 import kz.greetgo.depinject.mvc.probes.ProbeViews;
 import kz.greetgo.depinject.mvc.utils.MultipartInjectionHandler;

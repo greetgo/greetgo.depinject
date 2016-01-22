@@ -17,4 +17,6 @@ public interface RequestTunnel {
   InputStream getRequestInputStream();
 
   Upload getUpload(String paramName);
+
+  void sendRedirect(String reference);
 }
