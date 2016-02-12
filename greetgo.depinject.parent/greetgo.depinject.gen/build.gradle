@@ -19,6 +19,8 @@ dependencies {
 
   compile "com.metapossum:metapossum-scanner:${metapossumScannerVersion}"
 
+  testCompile("kz.greetgo:greetgo.util:0.0.16");
+
 }
 
 test { useTestNG() }
