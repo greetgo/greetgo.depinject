@@ -40,6 +40,7 @@ subprojects {
     ext.springVersion = '4.2.3.RELEASE'
     ext.metapossumScannerVersion = '1.0.1'
     ext.gwtVersion = '2.7.0'
+    ext.greetgoUtilVersion = '0.0.19'
 
     compile 'com.google.code.findbugs:annotations:2.0.1'
 

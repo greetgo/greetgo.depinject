@@ -4,6 +4,7 @@ import kz.greetgo.depinject.core.*;
 import kz.greetgo.depinject.gen.errors.*;
 import kz.greetgo.depinject.gen.scanner.ClassScanner;
 import kz.greetgo.depinject.gen.scanner.ClassScannerDef;
+import kz.greetgo.util.ServerUtil;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -12,8 +13,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static kz.greetgo.depinject.gen.BeanDefinition.findBeanDefinition;
-import static kz.greetgo.depinject.gen.DepinjectUtil.dummyCheck;
 import static kz.greetgo.depinject.gen.DepinjectUtil.toCode;
+import static kz.greetgo.util.ServerUtil.dummyCheck;
 
 public class BeanContainerGenerator {
 

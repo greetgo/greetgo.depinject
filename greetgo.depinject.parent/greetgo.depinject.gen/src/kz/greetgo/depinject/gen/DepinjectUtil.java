@@ -13,14 +13,6 @@ public class DepinjectUtil {
     return null;
   }
 
-  public static void dummyCheck(boolean tmp) {
-  }
-
-  public static <T> T notNull(T t) {
-    if (t == null) throw new NullPointerException();
-    return t;
-  }
-
   public static String toCode(Type type) {
     return toCode0(type).replaceAll("\\$", ".");
   }

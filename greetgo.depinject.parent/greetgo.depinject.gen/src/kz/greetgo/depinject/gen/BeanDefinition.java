@@ -12,8 +12,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
-import static kz.greetgo.depinject.gen.DepinjectUtil.notNull;
 import static kz.greetgo.depinject.gen.DepinjectUtil.typeToClass;
+import static kz.greetgo.util.ServerUtil.notNull;
 
 public class BeanDefinition implements Comparable<BeanDefinition> {
   public final Class<?> beanClass;
@@ -73,6 +73,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
     if (singleton != that.singleton) return false;
     if (beanClass != null ? !beanClass.equals(that.beanClass) : that.beanClass != null) return false;
+    //noinspection SimplifiableIfStatement
     if (beanClassFactory != null ? !beanClassFactory.equals(that.beanClassFactory) : that.beanClassFactory != null)
       return false;
     return !(factoryMethod != null ? !factoryMethod.equals(that.factoryMethod) : that.factoryMethod != null);
@@ -146,7 +147,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
     for (Type type : aClass.getGenericInterfaces()) {
       if (type instanceof ParameterizedType) {
         ParameterizedType parameterizedType = (ParameterizedType) type;
-        if (parameterizedType.getRawType().equals(BeanPreparation.class)) {
+        if (parameterizedType.getRawType() == BeanPreparation.class) {
           return typeToClass(parameterizedType.getActualTypeArguments()[0]);
         }
       }
@@ -184,6 +185,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
   }
 
+  @SuppressWarnings("NullableProblems")
   @Override
   public int compareTo(BeanDefinition o) {
     return beanClass.getSimpleName().compareTo(o.beanClass.getSimpleName());
