@@ -16,6 +16,7 @@ import java.util.Map;
 import static kz.greetgo.depinject.gen.BeanContainerGenerator.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
+@SuppressWarnings("unused")
 public class BeanContainerGeneratorTest {
 
 
@@ -33,7 +34,7 @@ public class BeanContainerGeneratorTest {
     list.add(new BeanContainerMethod(null, null, map.get(aClass)));
   }
 
-  interface BeanContainerWithoutInclude extends BeanContainer {
+  private interface BeanContainerWithoutInclude extends BeanContainer {
   }
 
 
@@ -46,11 +47,11 @@ public class BeanContainerGeneratorTest {
     //
   }
 
-  class LeftBeanConfig {
+  private class LeftBeanConfig {
   }
 
   @Include({LeftBeanConfig.class})
-  interface BeanContainerWithoutBeanConfig extends BeanContainer {
+  private interface BeanContainerWithoutBeanConfig extends BeanContainer {
   }
 
   @Test(expectedExceptions = NoBeanConfig.class)
@@ -64,7 +65,7 @@ public class BeanContainerGeneratorTest {
 
 
   @Include({BeanConfigWithLeftFactoryMethod.class})
-  interface BeanContainerWithLeftFactoryMethod extends BeanContainer {
+  private interface BeanContainerWithLeftFactoryMethod extends BeanContainer {
   }
 
   @Test(expectedExceptions = BeanFactoryMethodCannotHasAnyArguments.class)
@@ -77,7 +78,7 @@ public class BeanContainerGeneratorTest {
   }
 
   @Include({MainConfig.class})
-  interface TestBeanContainer extends BeanContainer {
+  private interface TestBeanContainer extends BeanContainer {
   }
 
   @Test
@@ -154,15 +155,15 @@ public class BeanContainerGeneratorTest {
     map.put(beanDefinition.beanClass, beanDefinition);
   }
 
-  interface ToBeanInterface {
+  private interface ToBeanInterface {
   }
 
-  class ToBean implements ToBeanInterface {
+  private class ToBean implements ToBeanInterface {
     public BeanGetter<ToBean> fieldB;
     public BeanGetter<ToBean> fieldA;
   }
 
-  class SourceBean {
+  private class SourceBean {
     public BeanGetter<ToBeanInterface> fieldToBean;
   }
 
@@ -182,29 +183,35 @@ public class BeanContainerGeneratorTest {
     {
       final List<Injector> injectors = map.get(SourceBean.class).injectors;
       assertThat(injectors).hasSize(1);
-      assertThat(injectors.get(0).field.getName()).isEqualTo("fieldToBean");
-      assertThat(injectors.get(0).source).isEqualTo(map.get(SourceBean.class));
-      assertThat(injectors.get(0).to).isEqualTo(map.get(ToBean.class));
+      assertThat(injectors.get(0)).isInstanceOf(InjectorSingle.class);
+      InjectorSingle i = (InjectorSingle) injectors.get(0);
+      assertThat(i.field.getName()).isEqualTo("fieldToBean");
+      assertThat(i.owner).isEqualTo(map.get(SourceBean.class));
+      assertThat(i.source).isEqualTo(map.get(ToBean.class));
     }
     {
       final List<Injector> injectors = map.get(ToBean.class).injectors;
       assertThat(injectors).hasSize(2);
-      assertThat(injectors.get(0).field.getName()).isEqualTo("fieldA");
-      assertThat(injectors.get(1).field.getName()).isEqualTo("fieldB");
+      assertThat(injectors.get(0)).isInstanceOf(InjectorSingle.class);
+      assertThat(injectors.get(1)).isInstanceOf(InjectorSingle.class);
+      InjectorSingle i0 = (InjectorSingle) injectors.get(0);
+      InjectorSingle i1 = (InjectorSingle) injectors.get(1);
+      assertThat(i0.field.getName()).isEqualTo("fieldA");
+      assertThat(i1.field.getName()).isEqualTo("fieldB");
     }
   }
 
   interface PreparingFactor {
   }
 
-  class PreparingBean implements PreparingFactor {
+  private class PreparingBean implements PreparingFactor {
   }
 
-  class NotPreparingBean {
+  private class NotPreparingBean {
   }
 
 
-  abstract class PreparationBean implements BeanPreparation<PreparingFactor> {
+  private abstract class PreparationBean implements BeanPreparation<PreparingFactor> {
   }
 
   interface PreparingFactor2 {
@@ -213,16 +220,16 @@ public class BeanContainerGeneratorTest {
   abstract class ParentPreparation implements BeanPreparation<PreparingFactor2> {
   }
 
-  abstract class PreparationBean2 extends ParentPreparation {
+  private abstract class PreparationBean2 extends ParentPreparation {
   }
 
-  interface IParentPreparation extends BeanPreparation<PreparingFactor2> {
+  private interface IParentPreparation extends BeanPreparation<PreparingFactor2> {
   }
 
   abstract class PreparationBean3 implements IParentPreparation {
   }
 
-  abstract class PreparationBean4 extends PreparationBean3 {
+  private abstract class PreparationBean4 extends PreparationBean3 {
   }
 
   @Test
@@ -277,13 +284,13 @@ public class BeanContainerGeneratorTest {
     assertThat(preparationBeanDefinition4.preparingBy).isEmpty();
   }
 
-  class BeanFactory {
+  private class BeanFactory {
   }
 
-  class BeanA {
+  private class BeanA {
   }
 
-  class BeanB {
+  private class BeanB {
     public BeanGetter<BeanA> a;
   }
 
@@ -314,10 +321,10 @@ public class BeanContainerGeneratorTest {
     assertThat(beanDefinitionFactory.using).isEmpty();
   }
 
-  abstract class IniBean implements HasAfterInject {
+  private abstract class IniBean implements HasAfterInject {
   }
 
-  class NoIniBean {
+  private class NoIniBean {
   }
 
   @Test
@@ -346,10 +353,10 @@ public class BeanContainerGeneratorTest {
   interface TmpInterface {
   }
 
-  abstract class TestPreparation implements BeanPreparation<TmpInterface> {
+  private abstract class TestPreparation implements BeanPreparation<TmpInterface> {
   }
 
-  class PreparingTestBean implements TmpInterface {
+  private class PreparingTestBean implements TmpInterface {
   }
 
   @Test
@@ -371,7 +378,7 @@ public class BeanContainerGeneratorTest {
     assertThat(preparingTestBeanDefinition.using).containsOnly(testPreparationDefinition);
   }
 
-  interface BeanContainerErrorTest {
+  private interface BeanContainerErrorTest {
     BeanX asd(int x);
   }
 
@@ -392,7 +399,7 @@ public class BeanContainerGeneratorTest {
   class BeanX implements BeanXInterface {
   }
 
-  interface BeanContainerTest {
+  private interface BeanContainerTest {
     BeanXInterface getBeanXName();
   }
 
@@ -415,7 +422,7 @@ public class BeanContainerGeneratorTest {
     assertThat(list.get(0).beanDefinition.beanClass.getName()).isEqualTo(BeanX.class.getName());
   }
 
-  interface BeanContainerForSortTest {
+  private interface BeanContainerForSortTest {
     BeanXInterface getB();
 
     BeanXInterface getZ();
@@ -445,15 +452,16 @@ public class BeanContainerGeneratorTest {
     assertThat(list.get(3).name).isEqualTo("getZ");
   }
 
-  class BeanX1 {
+  private class BeanX1 {
 
   }
 
-  class BeanX2 {
+  private class BeanX2 {
     public BeanGetter<BeanX1> x1;
   }
 
-  class BeanX3 {
+
+  private class BeanX3 {
     public BeanGetter<BeanX2> x2;
   }
 

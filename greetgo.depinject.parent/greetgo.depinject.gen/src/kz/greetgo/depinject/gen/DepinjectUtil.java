@@ -21,4 +21,12 @@ public class DepinjectUtil {
     if (type instanceof Class) return ((Class<?>) type).getName();
     return type.toString();
   }
+
+  public static String spaces(int spaces) {
+    char s[] = new char[spaces];
+    for (int i = 0, n = s.length; i < n; i++) {
+      s[i] = ' ';
+    }
+    return new String(s);
+  }
 }

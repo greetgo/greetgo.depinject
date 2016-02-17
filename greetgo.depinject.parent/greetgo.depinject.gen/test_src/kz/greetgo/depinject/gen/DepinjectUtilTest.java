@@ -11,7 +11,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class DepinjectUtilTest {
 
 
-  class A {
+  private class A {
+    @SuppressWarnings("unused")
     public List<String> x;
   }
 
@@ -41,7 +42,8 @@ public class DepinjectUtilTest {
 
   }
 
-  interface ForTestingOfToCode {
+  @SuppressWarnings("unused")
+  private interface ForTestingOfToCode {
     List<String> generic();
 
     String simple();

@@ -4,7 +4,6 @@ import kz.greetgo.depinject.core.*;
 import kz.greetgo.depinject.gen.errors.*;
 import kz.greetgo.depinject.gen.scanner.ClassScanner;
 import kz.greetgo.depinject.gen.scanner.ClassScannerDef;
-import kz.greetgo.util.ServerUtil;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -32,6 +31,7 @@ public class BeanContainerGenerator {
     try (PrintWriter writer = new PrintWriter(file, "UTF-8")) {
       writeTo(writer);
     } catch (Exception e) {
+      if (e instanceof RuntimeException) throw (RuntimeException) e;
       throw new RuntimeException(e);
     }
   }
@@ -79,7 +79,6 @@ public class BeanContainerGenerator {
       createAndPutBeanAndItsFactoredBeans(definitionMap, possibleBeanClass, bean.singleton());
     }
   }
-
 
   private static void putBeanDefinition(Map<Class<?>, BeanDefinition> definitionMap, BeanDefinition beanDefinition) {
     final BeanDefinition existsBeanDefinition = definitionMap.get(beanDefinition.beanClass);
@@ -148,7 +147,6 @@ public class BeanContainerGenerator {
     }
   }
 
-
   private static void initUsing(Map<Class<?>, BeanDefinition> map) {
     for (BeanDefinition beanDefinition : map.values()) {
       beanDefinition.initUsing(map);
@@ -177,7 +175,7 @@ public class BeanContainerGenerator {
     }
 
     final Type referenceType = method.getGenericReturnType();
-    final BeanDefinition beanDefinition = findBeanDefinition(referenceType, map);
+    final BeanDefinition beanDefinition = findBeanDefinition(referenceType, map, method.getDeclaringClass().toString());
 
     return new BeanContainerMethod(method.getName(), referenceType, beanDefinition);
   }
@@ -258,24 +256,23 @@ public class BeanContainerGenerator {
 
       writer.println("        " + beanClass + " localValue = " + beanDefinition.creationCode(usedMap) + ";");
 
-      writeBeforeInjectors(writer);
+      //writeBeforeInjectors(writer);
 
       for (Injector injector : beanDefinition.injectors) {
-        writer.println("        localValue." + injector.field.getName()
-          + " = (" + toCode(injector.field.getGenericType()) + ")(Object)" + injector.to.getterName + ";");
+        injector.intoVariable(writer, "localValue", 8);
       }
 
       if (beanDefinition.hasAfterInject) {
         writer.println("        localValue.afterInject();");
       }
 
-      writeBeforePreparation(writer);
+      //writeBeforePreparation(writer);
 
       for (BeanDefinition prepBD : beanDefinition.preparingBy) {
         writer.println("        localValue = (" + beanClass + ")" + prepBD.getterName + ".get().prepareBean(localValue);");
       }
 
-      writeBeforeReturn(writer);
+      //writeBeforeReturn(writer);
 
       if (beanDefinition.singleton) {
         writer.println("        return cachedValue = localValue;");
@@ -296,12 +293,5 @@ public class BeanContainerGenerator {
     writer.println("}");
   }
 
-  protected void writeBeforeReturn(PrintWriter writer) {
-  }
 
-  protected void writeBeforePreparation(PrintWriter writer) {
-  }
-
-  protected void writeBeforeInjectors(PrintWriter writer) {
-  }
 }

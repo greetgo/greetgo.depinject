@@ -1,20 +1,17 @@
 package kz.greetgo.depinject.gen;
 
-import java.lang.reflect.Field;
+import java.io.PrintWriter;
+import java.util.List;
 
-public class Injector implements Comparable<Injector> {
-  public final BeanDefinition source;
-  public final Field field;
-  public final BeanDefinition to;
+public abstract class Injector implements Comparable<Injector> {
+  public abstract String compareStr();
 
-  public Injector(BeanDefinition source, Field field, BeanDefinition to) {
-    this.source = source;
-    this.field = field;
-    this.to = to;
-  }
+  public abstract void intoVariable(PrintWriter writer, String variableName, int spaces);
+
+  public abstract List<BeanDefinition> sourceList();
 
   @Override
-  public int compareTo(Injector o) {
-    return field.getName().compareTo(o.field.getName());
+  public int compareTo(@SuppressWarnings("NullableProblems") Injector o) {
+    return compareStr().compareTo(o.compareStr());
   }
 }

@@ -2,6 +2,7 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.BeanPreparation;
+import kz.greetgo.depinject.gen.errors.CannotInjectTo;
 import kz.greetgo.depinject.gen.errors.MoreThenOneBeanClassIsAssignable;
 import kz.greetgo.depinject.gen.errors.NoMatchingBeanFor;
 import kz.greetgo.depinject.gen.errors.NotParametrisedBeanGetter;
@@ -91,7 +92,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
   public void initInjectors(Map<Class<?>, BeanDefinition> map) {
     for (Field field : beanClass.getFields()) {
-      if (field.getType().equals(BeanGetter.class)) {
+      if (field.getType() == BeanGetter.class) {
         addInjectorFor(field, map);
       }
     }
@@ -99,17 +100,48 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
   }
 
   private void addInjectorFor(Field field, Map<Class<?>, BeanDefinition> map) {
-    final Type fieldGenericType = field.getGenericType();
-    if (!(fieldGenericType instanceof ParameterizedType)) {
+    final Type beanGetterGenericType = field.getGenericType();
+    if (!(beanGetterGenericType instanceof ParameterizedType)) {
       throw new NotParametrisedBeanGetter(field, beanClass);
     }
-    ParameterizedType fieldType = (ParameterizedType) fieldGenericType;
+    ParameterizedType beanGetterParameterizedType = (ParameterizedType) beanGetterGenericType;
 
-    final BeanDefinition to = findBeanDefinition(fieldType.getActualTypeArguments()[0], map);
-    injectors.add(new Injector(this, field, to));
+    final Type destinationType = beanGetterParameterizedType.getActualTypeArguments()[0];
+    if (destinationType instanceof ParameterizedType) {
+      ParameterizedType parameterizedDestinationType = (ParameterizedType) destinationType;
+
+      if (parameterizedDestinationType.getRawType() == List.class) {
+        final List<BeanDefinition> sourceList = findAllBeanDefinitions(
+          parameterizedDestinationType.getActualTypeArguments()[0], map, beanClass.toString());
+        injectors.add(new InjectorList(this, field, sourceList));
+        return;
+      }
+
+      throw new CannotInjectTo(field);
+    }
+
+
+    final BeanDefinition source = findBeanDefinition(destinationType, map, beanClass.toString());
+    injectors.add(new InjectorSingle(this, field, source));
   }
 
-  public static BeanDefinition findBeanDefinition(Type referenceType, Map<Class<?>, BeanDefinition> map) {
+  private static List<BeanDefinition> findAllBeanDefinitions(Type referenceType,
+                                                             Map<Class<?>, BeanDefinition> map,
+                                                             String place) {
+    List<BeanDefinition> ret = new ArrayList<>();
+
+    for (BeanDefinition beanDefinition : map.values()) {
+      if (beanDefinition.isFor(referenceType)) {
+        ret.add(beanDefinition);
+      }
+    }
+
+    if (ret.isEmpty()) throw new NoMatchingBeanFor(referenceType, place);
+
+    return ret;
+  }
+
+  public static BeanDefinition findBeanDefinition(Type referenceType, Map<Class<?>, BeanDefinition> map, String place) {
 
     BeanDefinition ret = null;
 
@@ -123,7 +155,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
       }
     }
 
-    if (ret == null) throw new NoMatchingBeanFor(referenceType);
+    if (ret == null) throw new NoMatchingBeanFor(referenceType, place);
 
     return ret;
   }
@@ -176,7 +208,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
     if (beanClassFactory != null) using.add(notNull(map.get(beanClassFactory)));
 
     for (Injector injector : injectors) {
-      using.add(injector.to);
+      using.addAll(injector.sourceList());
     }
 
     for (BeanDefinition beanDefinition : preparingBy) {

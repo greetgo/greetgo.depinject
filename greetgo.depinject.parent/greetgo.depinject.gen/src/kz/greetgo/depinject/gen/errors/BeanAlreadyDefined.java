@@ -3,8 +3,8 @@ package kz.greetgo.depinject.gen.errors;
 import kz.greetgo.depinject.gen.BeanDefinition;
 
 public class BeanAlreadyDefined extends RuntimeException {
-  private BeanDefinition beanDefinition;
-  private BeanDefinition existsBeanDefinition;
+  public final BeanDefinition beanDefinition;
+  public final BeanDefinition existsBeanDefinition;
 
   public BeanAlreadyDefined(BeanDefinition beanDefinition, BeanDefinition existsBeanDefinition) {
     super(createMessage(beanDefinition, existsBeanDefinition));

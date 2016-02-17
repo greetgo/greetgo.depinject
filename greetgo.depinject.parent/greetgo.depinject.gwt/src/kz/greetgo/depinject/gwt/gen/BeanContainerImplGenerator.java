@@ -214,7 +214,7 @@ public class BeanContainerImplGenerator {
       return createServiceField(fieldType);
     }
 
-    throw new NoMatchingBeanFor(fieldType);
+    throw new NoMatchingBeanFor(fieldType, beanContainerIface.toString());
   }
 
   private static final String ASYNC = "Async";

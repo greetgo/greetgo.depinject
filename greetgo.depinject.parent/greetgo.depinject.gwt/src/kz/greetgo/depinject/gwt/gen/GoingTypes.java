@@ -24,7 +24,7 @@ public class GoingTypes {
       if (ret != null) return ret;
     }
     
-    throw new IllegalArgumentException("Ooops");
+    throw new IllegalArgumentException("Oops");
   }
   
   private static GoingTypes findInType(Type type) {

@@ -15,4 +15,11 @@ public class Sinus {
   public String goodBy() {
     return "Sinus byes.";
   }
+
+  public String checkValue;
+
+  public void acceptCheckValue(String checkValue) {
+    this.checkValue = checkValue;
+    cosines.get().acceptCheckValue(checkValue);
+  }
 }

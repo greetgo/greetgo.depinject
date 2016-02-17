@@ -8,8 +8,9 @@ import kz.greetgo.depinject.gen.interfaces.IBeanB2;
 import java.io.File;
 
 public class BeanContainerGeneratorProbe {
+  @SuppressWarnings("unused")
   @Include({MainConfig.class})
-  public interface TestBeanContainer extends BeanContainer {
+  private interface TestBeanContainer extends BeanContainer {
     IBeanB2 getIBeanB2();
   }
 

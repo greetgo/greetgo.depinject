@@ -7,12 +7,18 @@ import kz.greetgo.depinject.core.BeanGetter;
 public class Kampala {
 
   public BeanGetter<Picador> picador;
+  public String checkValue;
 
   public String hello() {
     return "And Kampala says 'Hello'.";
   }
 
   public String goodBy() {
-    return "Kampala byes. "+picador.get().goodBy();
+    return "Kampala byes. " + picador.get().goodBy();
+  }
+
+  public void acceptCheckValue(String checkValue) {
+    this.checkValue = checkValue;
+
   }
 }
