@@ -17,9 +17,9 @@ configurations { repoUpload }
 dependencies {
   compile project(':greetgo.depinject')
 
-  compile "com.metapossum:metapossum-scanner:${metapossumScannerVersion}"
+  compile "kz.greetgo.class_scanner:greetgo.class_scanner:${classScannerVersion}"
 
-  compile("kz.greetgo:greetgo.util:${greetgoUtilVersion}");
+  compile "kz.greetgo:greetgo.util:${greetgoUtilVersion}"
 
 }
 

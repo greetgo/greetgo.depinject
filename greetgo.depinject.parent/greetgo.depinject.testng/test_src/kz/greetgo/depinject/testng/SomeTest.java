@@ -5,6 +5,7 @@ import kz.greetgo.depinject.testng.SomeTestBeans.SomeTestBeans;
 import kz.greetgo.depinject.testng.SomeTestBeans.beans001.Kampala;
 import kz.greetgo.depinject.testng.SomeTestBeans.beans001.Picador;
 import kz.greetgo.depinject.testng.SomeTestBeans.beans002.Cosines;
+import kz.greetgo.depinject.testng.SomeTestBeans.beans002.QwertyServiceStorage;
 import kz.greetgo.depinject.testng.SomeTestBeans.beans002.Sinus;
 import kz.greetgo.depinject.testng.SomeTestBeans.beans002.dogs.Nadia;
 import kz.greetgo.depinject.testng.SomeTestBeans.beans002.dogs.Sharia;
@@ -60,5 +61,12 @@ public class SomeTest extends AbstractDepinjectTestNg {
     assertThat(dogSharia.get().checkValue).isEqualTo(checkValue);
     assertThat(picador.get().checkValue).isEqualTo(checkValue);
     assertThat(kampala.get().checkValue).isEqualTo(checkValue);
+  }
+
+  public BeanGetter<QwertyServiceStorage> qwertyServiceStorage;
+
+  @Test
+  public void beanPreparation() {
+    qwertyServiceStorage.get().hiAll();
   }
 }

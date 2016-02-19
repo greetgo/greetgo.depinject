@@ -37,6 +37,21 @@ jar {
   from sourceSets.main.allSource
 }
 
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+  from javadoc.destinationDir
+  classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar) {
+  from sourceSets.main.allSource
+  classifier = 'sources'
+}
+
+artifacts {
+  archives javadocJar
+  archives sourcesJar
+}
+
 uploadArchives {
   repositories.mavenDeployer {
     configuration = configurations.archives

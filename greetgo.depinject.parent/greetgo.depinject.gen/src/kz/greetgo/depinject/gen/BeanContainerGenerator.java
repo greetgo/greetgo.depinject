@@ -1,9 +1,9 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.class_scanner.ClassScanner;
+import kz.greetgo.class_scanner.ClassScannerDef;
 import kz.greetgo.depinject.core.*;
 import kz.greetgo.depinject.gen.errors.*;
-import kz.greetgo.depinject.gen.scanner.ClassScanner;
-import kz.greetgo.depinject.gen.scanner.ClassScannerDef;
 
 import java.io.File;
 import java.io.PrintWriter;

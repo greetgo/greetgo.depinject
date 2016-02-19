@@ -19,7 +19,7 @@ dependencies {
 
   compile "org.testng:testng:${testNgVersion}"
 
-  compile "com.metapossum:metapossum-scanner:${metapossumScannerVersion}"
+  compile "kz.greetgo.class_scanner:greetgo.class_scanner:${classScannerVersion}"
 
   compile("kz.greetgo:greetgo.util:${greetgoUtilVersion}");
 
