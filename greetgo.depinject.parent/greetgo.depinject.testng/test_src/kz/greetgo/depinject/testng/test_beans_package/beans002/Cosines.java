@@ -1,9 +1,9 @@
-package kz.greetgo.depinject.testng.SomeTestBeans.beans002;
+package kz.greetgo.depinject.testng.test_beans_package.beans002;
 
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans001.Picador;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans002.dogs.Dog;
+import kz.greetgo.depinject.testng.test_beans_package.beans001.Picador;
+import kz.greetgo.depinject.testng.test_beans_package.beans002.dogs.Dog;
 
 import java.util.List;
 

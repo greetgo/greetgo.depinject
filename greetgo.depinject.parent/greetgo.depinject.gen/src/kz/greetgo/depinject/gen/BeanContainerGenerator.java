@@ -61,7 +61,16 @@ public class BeanContainerGenerator {
     if (include != null) appendInclude(definitionMap, include);
 
     if (beanConfigClass.getAnnotation(BeanScanner.class) != null) {
-      appendScannedBeanDefinitionsAround(definitionMap, beanConfigClass);
+      appendPackage(definitionMap, beanConfigClass.getPackage().getName());
+    }
+
+    {
+      final BeanScannerPackage beanScannerPackage = beanConfigClass.getAnnotation(BeanScannerPackage.class);
+      if (beanScannerPackage != null) {
+        for (String packageName : beanScannerPackage.value()) {
+          appendPackage(definitionMap, packageName);
+        }
+      }
     }
   }
 
@@ -71,9 +80,8 @@ public class BeanContainerGenerator {
     }
   }
 
-  private static void appendScannedBeanDefinitionsAround(Map<Class<?>, BeanDefinition> definitionMap,
-                                                         Class<?> beanConfigClass) {
-    for (Class<?> possibleBeanClass : classScanner.scanPackage(beanConfigClass.getPackage().getName())) {
+  private static void appendPackage(Map<Class<?>, BeanDefinition> definitionMap, String packageName) {
+    for (Class<?> possibleBeanClass : classScanner.scanPackage(packageName)) {
       final Bean bean = possibleBeanClass.getAnnotation(Bean.class);
       if (bean == null) continue;
       createAndPutBeanAndItsFactoredBeans(definitionMap, possibleBeanClass, bean.singleton());

@@ -1,7 +1,7 @@
-package kz.greetgo.depinject.testng.SomeTestBeans.beans001;
+package kz.greetgo.depinject.testng.test_beans_package.beans001;
 
 import kz.greetgo.depinject.core.Bean;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans002.QwertyService;
+import kz.greetgo.depinject.testng.test_beans_package.beans002.QwertyService;
 
 @Bean
 public class ServiceOne implements QwertyService {

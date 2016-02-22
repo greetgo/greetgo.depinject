@@ -1,22 +1,25 @@
-package kz.greetgo.depinject.testng;
+package kz.greetgo.depinject.testng.tests;
 
 import kz.greetgo.depinject.core.BeanGetter;
-import kz.greetgo.depinject.testng.SomeTestBeans.SomeTestBeans;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans001.Kampala;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans001.Picador;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans002.Cosines;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans002.QwertyServiceStorage;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans002.Sinus;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans002.dogs.Nadia;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans002.dogs.Sharia;
-import kz.greetgo.depinject.testng.SomeTestBeans.beans002.dogs.Sophia;
+import kz.greetgo.depinject.testng.AbstractDepinjectTestNg;
+import kz.greetgo.depinject.testng.ContainerConfig;
+import kz.greetgo.depinject.testng.test_beans_package.AbstractDepinjectTestNgTestBeans;
+import kz.greetgo.depinject.testng.test_beans_package.beans001.Kampala;
+import kz.greetgo.depinject.testng.test_beans_package.beans001.Picador;
+import kz.greetgo.depinject.testng.test_beans_package.beans002.Cosines;
+import kz.greetgo.depinject.testng.test_beans_package.beans002.QwertyServiceStorage;
+import kz.greetgo.depinject.testng.test_beans_package.beans002.Sinus;
+import kz.greetgo.depinject.testng.test_beans_package.beans002.dogs.Nadia;
+import kz.greetgo.depinject.testng.test_beans_package.beans002.dogs.Sharia;
+import kz.greetgo.depinject.testng.test_beans_package.beans002.dogs.Sophia;
+import kz.greetgo.depinject.testng.test_beans_package.for_include_by_str.OnSideBean;
 import kz.greetgo.util.RND;
 import org.testng.annotations.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@ContainerConfig(SomeTestBeans.class)
-public class SomeTest extends AbstractDepinjectTestNg {
+@ContainerConfig(AbstractDepinjectTestNgTestBeans.class)
+public class AbstractDepinjectTestNgTest extends AbstractDepinjectTestNg {
 
   public BeanGetter<Sinus> sinus;
 
@@ -29,17 +32,17 @@ public class SomeTest extends AbstractDepinjectTestNg {
 
   @Override
   protected boolean needToRemoveSrcDir() {
-    return true;
+    return false;
   }
 
   @Test
   public void testHello() {
-    System.out.println("from sinus: " + sinus.get().hello());
+    System.out.println("From sinus: " + sinus.get().hello());
   }
 
   @Test
   public void testGoodBy() {
-    System.out.println("from kampala: " + kampala.get().goodBy());
+    System.out.println("From kampala: " + kampala.get().goodBy());
   }
 
   public BeanGetter<Cosines> cosines;
@@ -68,5 +71,13 @@ public class SomeTest extends AbstractDepinjectTestNg {
   @Test
   public void beanPreparation() {
     qwertyServiceStorage.get().hiAll();
+  }
+
+  public BeanGetter<OnSideBean> onSideBean;
+
+  @Test
+  public void onSideBeanTest() {
+    assertThat(onSideBean).isNotNull();
+    assertThat(onSideBean.get().hi("asd")).isEqualTo("Hi asd");
   }
 }

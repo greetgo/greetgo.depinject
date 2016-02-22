@@ -1,9 +1,9 @@
-package kz.greetgo.depinject.testng.SomeTestBeans.beans001;
+package kz.greetgo.depinject.testng.test_beans_package.beans002;
 
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanScanner;
 
 @BeanConfig
 @BeanScanner
-public class Beans001config {
+public class Beans002config {
 }

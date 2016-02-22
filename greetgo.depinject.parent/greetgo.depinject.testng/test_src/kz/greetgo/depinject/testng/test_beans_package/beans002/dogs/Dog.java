@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.testng.SomeTestBeans.beans002.dogs;
+package kz.greetgo.depinject.testng.test_beans_package.beans002.dogs;
 
 public interface Dog {
   void sayGave();
