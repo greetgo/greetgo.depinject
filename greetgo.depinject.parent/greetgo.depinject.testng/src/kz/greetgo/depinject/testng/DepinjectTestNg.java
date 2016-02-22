@@ -2,11 +2,10 @@ package kz.greetgo.depinject.testng;
 
 import kz.greetgo.depinject.core.*;
 import kz.greetgo.depinject.gen.BeanContainerGenerator;
+import kz.greetgo.java_compiler.JavaCompiler;
+import kz.greetgo.java_compiler.JavaCompilerFactory;
 import kz.greetgo.util.RND;
-import kz.greetgo.util.ServerUtil;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
@@ -16,10 +15,12 @@ import java.util.Date;
 import java.util.List;
 
 import static kz.greetgo.util.ServerUtil.*;
-import static kz.greetgo.util.ServerUtil.extractPackage;
 
 public class DepinjectTestNg {
+
   public static String prepareDepinjectTestNg(AbstractDepinjectTestNg testNgTest, String srcTempDir) throws Exception {
+    final JavaCompiler compiler = JavaCompilerFactory.createDefault();
+
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
 
     String srcDir = srcTempDir + "/" + sdf.format(new Date()) + "-" + RND.intStr(10);
@@ -44,11 +45,13 @@ public class DepinjectTestNg {
     final File containerInterfaceJava = writeTestNgTestConfig(srcDir, containerInterface,
       testNgTestClass, testNgTestConfig, classList);
 
-    compileOneFile(srcDir, testNgTestConfigJava);
-    compileOneFile(srcDir, containerInterfaceJava);
-    compileOneFile(srcDir, testNgTestStaticFactoryJava);
+    addToClasspath(srcDir);
 
-    ServerUtil.addToClasspath(new File(srcDir));
+    compiler.compile(testNgTestConfigJava);
+
+    compiler.compile(containerInterfaceJava);
+
+    compiler.compile(testNgTestStaticFactoryJava);
 
     {
       BeanContainerGenerator g = new BeanContainerGenerator();
@@ -62,7 +65,7 @@ public class DepinjectTestNg {
 
     final File containerInterfaceImplJava = resolveFile(srcDir, containerInterfaceImpl, ".java");
 
-    compileOneFile(srcDir, containerInterfaceImplJava);
+    compiler.compile(containerInterfaceImplJava);
 
     final Class<?> containerInterfaceImplClass = Class.forName(containerInterfaceImpl);
 
@@ -75,16 +78,7 @@ public class DepinjectTestNg {
 
     return srcDir;
   }
-
-  private static void compileOneFile(String srcDir, File fileJava) {
-    final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
-    String classPath = System.getProperty("java.class.path") + File.pathSeparatorChar + srcDir;
-
-    final int exitCode = compiler.run(System.in, System.out, System.err, "-classpath", classPath, fileJava.getPath());
-    if (exitCode != 0) throw new RuntimeException("exitCode = " + exitCode);
-  }
-
+  
   private static File writeTestNgTestConfig(String srcDir, String containerInterface, Class<?> testNgTestClass,
                                             String testNgTestConfig, List<Class<?>> classList) throws Exception {
 

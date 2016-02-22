@@ -40,9 +40,10 @@ subprojects {
     ext.jettyVersion = '9.2+'
     ext.springVersion = '4.2.3.RELEASE'
     ext.gwtVersion = '2.7.0'
-    ext.greetgoUtilVersion = '0.0.19'
+    ext.greetgoUtilVersion = '0.0.21'
     ext.testNgVersion = '6.5.1'
     ext.classScannerVersion = '0.0.1'
+    ext.greetgoJavaCompilerVersion = "0.0.1"
 
     compile 'com.google.code.findbugs:annotations:2.0.1'
 

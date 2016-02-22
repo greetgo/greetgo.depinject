@@ -13,7 +13,12 @@ public abstract class AbstractDepinjectTestNg {
 
   @BeforeClass
   public void prepareDepinject() throws Exception {
+    beforeGenerateTestSources();
     srcDir = DepinjectTestNg.prepareDepinjectTestNg(this, getSrcTempDir());
+  }
+
+  protected void beforeGenerateTestSources() throws Exception {
+    //override it
   }
 
   @AfterClass

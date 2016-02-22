@@ -1,13 +1,14 @@
 package kz.greetgo.depinject.gen;
 
+import com.sun.xml.internal.ws.developer.JAXBContextFactory;
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.beans.MainConfig;
 import kz.greetgo.depinject.gen.interfaces.IBeanB2;
+import kz.greetgo.java_compiler.JavaCompiler;
+import kz.greetgo.java_compiler.JavaCompilerFactory;
 import kz.greetgo.util.ServerUtil;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 import java.io.File;
 
 public class BeanContainerGeneratorRunProbe {
@@ -37,14 +38,11 @@ public class BeanContainerGeneratorRunProbe {
 
     System.out.println("java.class.path = " + System.getProperty("java.class.path"));
 
-    final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+    final JavaCompiler compiler = JavaCompilerFactory.createDefault();
 
-    final int exitCode = compiler.run(System.in, System.out, System.err,
-      src + "/kz/greetgo/depinject/gen/test/TestBeanContainerImpl.java");
+    compiler.compile(src + "/kz/greetgo/depinject/gen/test/TestBeanContainerImpl.java");
 
-    System.out.println("exitCode = " + exitCode);
-
-    ServerUtil.addToClasspath(new File(src));
+    ServerUtil.addToClasspath(src);
 
     final Class<?> containerClass = Class.forName("kz.greetgo.depinject.gen.test.TestBeanContainerImpl");
     System.out.println("containerClass = " + containerClass);
