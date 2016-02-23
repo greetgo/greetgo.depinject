@@ -23,7 +23,7 @@ public class BeanContainerGenerator {
   public String implClassName;
   public String packageName;
 
-  public void writeToSourceDir(String sourceDir) {
+  public File writeToSourceDir(String sourceDir) {
     final String packagePath = packageName.replace('.', '/');
     File file = new File(sourceDir + '/' + packagePath + '/' + implClassName + ".java");
     dummyCheck(file.getParentFile().mkdirs());
@@ -34,6 +34,8 @@ public class BeanContainerGenerator {
       if (e instanceof RuntimeException) throw (RuntimeException) e;
       throw new RuntimeException(e);
     }
+
+    return file;
   }
 
 

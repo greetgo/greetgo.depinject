@@ -1,5 +1,8 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.Depinject;
+import kz.greetgo.depinject.gen.impl_and_use_bean_containers.BeanContainerForTestingUtil;
+import kz.greetgo.util.ServerUtil;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
@@ -69,5 +72,27 @@ public class DepinjectUtilTest {
     //
     //
     assertThat(s).isEqualTo("java.lang.String");
+  }
+
+  @Test
+  public void implementAndUseBeanContainers() throws Exception {
+    final String srcDir = "build/implementAndUseBeanContainers";
+
+    //
+    //
+    //
+    DepinjectUtil.implementAndUseBeanContainers(
+      "kz.greetgo.depinject.gen.impl_and_use_bean_containers",
+      srcDir
+    );
+    //
+    //
+    //
+
+    final BeanContainerForTestingUtil impl = Depinject.newInstance(BeanContainerForTestingUtil.class);
+
+    impl.getIBeanB1().privet();
+
+    ServerUtil.deleteRecursively(srcDir);
   }
 }
