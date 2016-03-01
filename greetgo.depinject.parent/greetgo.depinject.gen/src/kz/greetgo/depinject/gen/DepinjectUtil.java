@@ -40,7 +40,7 @@ public class DepinjectUtil {
     return new String(s);
   }
 
-  public static void implementAndUseBeanContainers(String packageName, String srcDir) throws Exception {
+  public static void implementBeanContainers(String packageName, String srcDir) throws Exception {
     List<File> filesToCompile = new ArrayList<>();
 
     {
@@ -63,6 +63,10 @@ public class DepinjectUtil {
     for (File file : filesToCompile) {
       compiler.compile(file);
     }
+  }
+
+  public static void implementAndUseBeanContainers(String packageName, String srcDir) throws Exception {
+    implementBeanContainers(packageName, srcDir);
 
     ServerUtil.addToClasspath(srcDir);
 

@@ -4,7 +4,7 @@ public class NoBeanConfig extends RuntimeException {
   public final Class<?> beanConfigClass;
 
   public NoBeanConfig(Class<?> beanConfigClass) {
-    super(beanConfigClass.getName());
+    super("Add annotation BeanConfig to " + beanConfigClass.getName());
     this.beanConfigClass = beanConfigClass;
   }
 }
