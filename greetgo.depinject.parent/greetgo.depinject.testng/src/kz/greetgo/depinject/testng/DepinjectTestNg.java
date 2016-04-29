@@ -32,18 +32,24 @@ public class DepinjectTestNg {
 
     if (classList.isEmpty()) return srcDir;
 
-    String containerInterface = testNgTestClass.getName() + "_ContainerInterface_" + RND.intStr(10);
-    String containerInterfaceImpl = testNgTestClass.getName() + "_ContainerInterfaceImpl_" + RND.intStr(10);
+    String outerPackage = "a" + RND.intStr(10) + ".";
 
-    String testNgTestStaticFactory = testNgTestClass.getName() + "_StaticFactory_" + RND.intStr(10);
-    String testNgTestConfig = testNgTestClass.getName() + "_Config_" + RND.intStr(10);
+    String containerInterface 
+        = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterface_" + RND.intStr(10);
+    String containerInterfaceImpl 
+        = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterfaceImpl_" + RND.intStr(10);
+
+    String testNgTestStaticFactory 
+        = outerPackage + testNgTestClass.getSimpleName() + "_StaticFactory_" + RND.intStr(10);
+    String testNgTestConfig 
+        = outerPackage + testNgTestClass.getSimpleName() + "_Config_" + RND.intStr(10);
 
     final File testNgTestConfigJava = writeTestNgTestConfig(srcDir, testNgTestConfig);
 
     final File testNgTestStaticFactoryJava = writeTestNgStaticFactory(srcDir, testNgTestStaticFactory, testNgTestClass);
 
     final File containerInterfaceJava = writeTestNgTestConfig(srcDir, containerInterface,
-      testNgTestClass, testNgTestConfig, classList);
+        testNgTestClass, testNgTestConfig, classList);
 
     addToClasspath(srcDir);
 
@@ -78,7 +84,7 @@ public class DepinjectTestNg {
 
     return srcDir;
   }
-  
+
   private static File writeTestNgTestConfig(String srcDir, String containerInterface, Class<?> testNgTestClass,
                                             String testNgTestConfig, List<Class<?>> classList) throws Exception {
 
@@ -109,7 +115,7 @@ public class DepinjectTestNg {
   }
 
   private static File writeTestNgStaticFactory(String srcDir, String testNgTestStaticFactory, Class<?> testNgTestClass)
-    throws Exception {
+      throws Exception {
 
     final File file = resolveFile(srcDir, testNgTestStaticFactory, ".java");
     dummyCheck(file.getParentFile().mkdirs());
