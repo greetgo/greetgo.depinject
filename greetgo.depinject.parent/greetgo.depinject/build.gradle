@@ -56,7 +56,7 @@ uploadArchives {
   repositories.mavenDeployer {
     configuration = configurations.archives
     repository(
-      url: System.getenv('GG_REPO')
+        url: System.getenv('GG_REPO')
     )
 
     pom.project {
