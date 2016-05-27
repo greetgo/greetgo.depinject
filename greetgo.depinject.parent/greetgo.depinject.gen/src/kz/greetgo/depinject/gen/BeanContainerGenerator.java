@@ -178,10 +178,10 @@ public class BeanContainerGenerator {
     final String getterClass = BeanGetter.class.getName();
 
     for (BeanDefinition beanDefinition : beanDefinitionList) {
-      String beanClass = beanDefinition.beanClass.getName();
-      String concretGetterClass = getterClass + "<" + beanClass + ">";
-      writer.println("  private final " + concretGetterClass + " " + beanDefinition.getterName
-          + " = new " + concretGetterClass + "() {"
+      String beanClass = toCode(beanDefinition.beanClass);
+      String concreteGetterClass = getterClass + "<" + beanClass + ">";
+      writer.println("  private final " + concreteGetterClass + " " + beanDefinition.getterName
+          + " = new " + concreteGetterClass + "() {"
       );
 
       if (beanDefinition.singleton) {

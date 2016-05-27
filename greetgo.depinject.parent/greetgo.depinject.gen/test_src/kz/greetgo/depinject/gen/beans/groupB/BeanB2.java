@@ -26,8 +26,11 @@ public class BeanB2 implements IBeanB2, HasAfterInject {
     System.out.println("Has after inject in BeanB2");
   }
 
+  public class ConcreteDefaultInterfaceFactory extends DefaultInterfaceFactory {
+  }
+
   @Bean
-  public DefaultInterfaceFactory createDefaultInterfaceFactory() {
-    return new DefaultInterfaceFactory();
+  public ConcreteDefaultInterfaceFactory createDefaultInterfaceFactory() {
+    return new ConcreteDefaultInterfaceFactory();
   }
 }

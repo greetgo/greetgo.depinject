@@ -24,13 +24,8 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
   public String creationCode(Map<Class<?>, BeanDefinition> map) throws Exception {
     if (beanClassFactory == null) {
 
-      if (useDefaultBeanFactory) {
-        final BeanDefinition defaultFactoryDefinition = map.get(defaultBeanFactory);
-        if (defaultFactoryDefinition == null) {
-          throw new NoMatchingBeanFor(defaultBeanFactory, beanClass.toString());
-        }
-
-        return "(" + toCode(beanClass) + ")" + defaultFactoryDefinition.getterName
+      if (beanDefinitionForDefaultBeanFactory != null) {
+        return "(" + toCode(beanClass) + ")" + beanDefinitionForDefaultBeanFactory.getterName
             + ".get().createBean(" + toCode(beanClass) + ".class)";
       }
 
@@ -236,7 +231,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
   }
 
-  private boolean useDefaultBeanFactory = false;
+  private BeanDefinition beanDefinitionForDefaultBeanFactory = null;
 
   public void initUsing(Map<Class<?>, BeanDefinition> map) {
     if (beanClassFactory == null) {
@@ -247,8 +242,9 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
           throw new NoDefaultBeanFactory(beanClass);
         }
 
-        useDefaultBeanFactory = true;
-        using.add(notNull(map.get(defaultBeanFactory)));
+        BeanDefinition beanDefinition = findBeanDefinition(defaultBeanFactory, map, beanClass.toString());
+        beanDefinitionForDefaultBeanFactory = beanDefinition;
+        using.add(beanDefinition);
       }
 
     } else {

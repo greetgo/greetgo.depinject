@@ -3,7 +3,7 @@ package kz.greetgo.depinject.gen.beans.groupB;
 import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.gen.beans.using_default_factory.CreatingByDefaultFactory;
 
-public class DefaultInterfaceFactory implements BeanFactory {
+public abstract class DefaultInterfaceFactory implements BeanFactory {
   @Override
   public Object createBean(Class<?> beanClass) {
     if (beanClass == CreatingByDefaultFactory.class) {
