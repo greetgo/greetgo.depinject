@@ -1,18 +1,14 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.BeanPreparation;
-import kz.greetgo.depinject.gen.errors.CannotInjectTo;
-import kz.greetgo.depinject.gen.errors.MoreThenOneBeanClassIsAssignable;
-import kz.greetgo.depinject.gen.errors.NoMatchingBeanFor;
-import kz.greetgo.depinject.gen.errors.NotParametrisedBeanGetter;
+import kz.greetgo.depinject.gen.errors.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
+import static kz.greetgo.depinject.gen.DepinjectUtil.toCode;
 import static kz.greetgo.depinject.gen.DepinjectUtil.typeToClass;
 import static kz.greetgo.util.ServerUtil.notNull;
 
@@ -23,15 +19,41 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
   public final Class<?> beanClassFactory;
   public final Method factoryMethod;
 
+  public final Class<? extends BeanFactory> defaultBeanFactory;
 
-  public String creationCode(Map<Class<?>, BeanDefinition> map) {
+  public String creationCode(Map<Class<?>, BeanDefinition> map) throws Exception {
     if (beanClassFactory == null) {
+
+      if (useDefaultBeanFactory) {
+        final BeanDefinition defaultFactoryDefinition = map.get(defaultBeanFactory);
+        if (defaultFactoryDefinition == null) {
+          throw new NoMatchingBeanFor(defaultBeanFactory, beanClass.toString());
+        }
+
+        return "(" + toCode(beanClass) + ")" + defaultFactoryDefinition.getterName
+            + ".get().createBean(" + toCode(beanClass) + ".class)";
+      }
+
       return "new " + beanClass.getName() + "()";
     }
-    final BeanDefinition factoryDefinition = map.get(beanClassFactory);
-    return factoryDefinition.getterName + ".get()." + factoryMethod.getName() + "()";
-  }
 
+    {
+      final BeanDefinition factoryDefinition = map.get(beanClassFactory);
+
+      Class<?>[] types = factoryMethod.getParameterTypes();
+
+      if (types.length == 0) {
+        return factoryDefinition.getterName + ".get()." + factoryMethod.getName() + "()";
+      }
+
+      if (types.length == 1 && types[0] == Class.class) {
+        return "(" + toCode(beanClass) + ")" + factoryDefinition.getterName + ".get()."
+            + factoryMethod.getName() + "(" + toCode(beanClass) + ".class)";
+      }
+    }
+
+    throw new RuntimeException("Cannot write code for call method: " + factoryMethod);
+  }
 
   public final List<Injector> injectors = new ArrayList<>();
 
@@ -43,12 +65,18 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
   public String getterName;
 
-  public BeanDefinition(Class<?> beanClass, boolean singleton, Class<?> beanClassFactory, Method factoryMethod) {
+  public BeanDefinition(Class<?> beanClass,
+                        boolean singleton,
+                        Class<?> beanClassFactory,
+                        Method factoryMethod,
+                        Class<? extends BeanFactory> defaultBeanFactory) {
     notNull(beanClass);
+    notNull(defaultBeanFactory);
     this.beanClass = beanClass;
     this.singleton = singleton;
     this.beanClassFactory = beanClassFactory;
     this.factoryMethod = factoryMethod;
+    this.defaultBeanFactory = defaultBeanFactory;
   }
 
   @Override
@@ -61,6 +89,10 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
       sb.append(" factored from ");
       sb.append(beanClassFactory.getSimpleName());
       sb.append(" with ").append(factoryMethod.getName());
+    }
+    if (defaultBeanFactory != BeanFactory.class) {
+      sb.append(" default factored from ");
+      sb.append(defaultBeanFactory.getSimpleName());
     }
     return sb.append('}').toString();
   }
@@ -112,7 +144,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
       if (parameterizedDestinationType.getRawType() == List.class) {
         final List<BeanDefinition> sourceList = findAllBeanDefinitions(
-          parameterizedDestinationType.getActualTypeArguments()[0], map, beanClass.toString());
+            parameterizedDestinationType.getActualTypeArguments()[0], map, beanClass.toString());
         injectors.add(new InjectorList(this, field, sourceList));
         return;
       }
@@ -204,8 +236,24 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
   }
 
+  private boolean useDefaultBeanFactory = false;
+
   public void initUsing(Map<Class<?>, BeanDefinition> map) {
-    if (beanClassFactory != null) using.add(notNull(map.get(beanClassFactory)));
+    if (beanClassFactory == null) {
+
+      if (beanClass.isInterface() || Modifier.isAbstract(beanClass.getModifiers())) {
+
+        if (defaultBeanFactory == BeanFactory.class) {
+          throw new NoDefaultBeanFactory(beanClass);
+        }
+
+        useDefaultBeanFactory = true;
+        using.add(notNull(map.get(defaultBeanFactory)));
+      }
+
+    } else {
+      using.add(notNull(map.get(beanClassFactory)));
+    }
 
     for (Injector injector : injectors) {
       using.addAll(injector.sourceList());

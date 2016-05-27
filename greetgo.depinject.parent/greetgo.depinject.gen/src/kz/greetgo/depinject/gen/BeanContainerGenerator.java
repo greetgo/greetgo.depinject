@@ -1,9 +1,12 @@
 package kz.greetgo.depinject.gen;
 
-import kz.greetgo.class_scanner.ClassScanner;
-import kz.greetgo.class_scanner.ClassScannerDef;
-import kz.greetgo.depinject.core.*;
-import kz.greetgo.depinject.gen.errors.*;
+import kz.greetgo.depinject.core.BeanContainer;
+import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.core.HasAfterInject;
+import kz.greetgo.depinject.core.Include;
+import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainsAnyArguments;
+import kz.greetgo.depinject.gen.errors.NoBeanContainer;
+import kz.greetgo.depinject.gen.errors.NoInclude;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -16,8 +19,6 @@ import static kz.greetgo.depinject.gen.DepinjectUtil.toCode;
 import static kz.greetgo.util.ServerUtil.dummyCheck;
 
 public class BeanContainerGenerator {
-
-  private final static ClassScanner classScanner = new ClassScannerDef();
 
   public Class<?> beanContainerInterface;
   public String implClassName;
@@ -38,95 +39,27 @@ public class BeanContainerGenerator {
     return file;
   }
 
-
   public static Map<Class<?>, BeanDefinition> collectBeanDefinitionsForBeanContainer(Class<?> beanContainerInterface) {
+    try {
 
-    if (!BeanContainer.class.isAssignableFrom(beanContainerInterface)) {
-      throw new NoBeanContainer(beanContainerInterface);
-    }
-
-    final Include include = beanContainerInterface.getAnnotation(Include.class);
-    if (include == null) throw new NoInclude(beanContainerInterface);
-
-    {
-      Map<Class<?>, BeanDefinition> ret = new HashMap<>();
-      appendInclude(ret, include);
-      return ret;
-    }
-  }
-
-  private static void appendBeanDefinitions(Map<Class<?>, BeanDefinition> definitionMap, Class<?> beanConfigClass) {
-    final BeanConfig beanConfig = beanConfigClass.getAnnotation(BeanConfig.class);
-    if (beanConfig == null) throw new NoBeanConfig(beanConfigClass);
-
-    final Include include = beanConfigClass.getAnnotation(Include.class);
-    if (include != null) appendInclude(definitionMap, include);
-
-    if (beanConfigClass.getAnnotation(BeanScanner.class) != null) {
-      appendPackage(definitionMap, beanConfigClass.getPackage().getName());
-    }
-
-    {
-      final BeanScannerPackage beanScannerPackage = beanConfigClass.getAnnotation(BeanScannerPackage.class);
-      if (beanScannerPackage != null) {
-        for (String packageName : beanScannerPackage.value()) {
-          appendPackage(definitionMap, packageName);
-        }
+      if (!BeanContainer.class.isAssignableFrom(beanContainerInterface)) {
+        throw new NoBeanContainer(beanContainerInterface);
       }
+
+      final Include include = beanContainerInterface.getAnnotation(Include.class);
+      if (include == null) throw new NoInclude(beanContainerInterface);
+
+      {
+        BeanDefinitionCollector collector = new BeanDefinitionCollector();
+        collector.appendInclude(include);
+        collector.showDefinitionMap();
+        return collector.getDefinitionMap();
+      }
+
+    } catch (Exception e) {
+      if (e instanceof RuntimeException) throw (RuntimeException) e;
+      throw new RuntimeException(e);
     }
-  }
-
-  private static void appendInclude(Map<Class<?>, BeanDefinition> definitionMap, Include include) {
-    for (Class<?> beanConfigClass : include.value()) {
-      appendBeanDefinitions(definitionMap, beanConfigClass);
-    }
-  }
-
-  private static void appendPackage(Map<Class<?>, BeanDefinition> definitionMap, String packageName) {
-    for (Class<?> possibleBeanClass : classScanner.scanPackage(packageName)) {
-      final Bean bean = possibleBeanClass.getAnnotation(Bean.class);
-      if (bean == null) continue;
-      createAndPutBeanAndItsFactoredBeans(definitionMap, possibleBeanClass, bean.singleton());
-    }
-  }
-
-  private static void putBeanDefinition(Map<Class<?>, BeanDefinition> definitionMap, BeanDefinition beanDefinition) {
-    final BeanDefinition existsBeanDefinition = definitionMap.get(beanDefinition.beanClass);
-    if (existsBeanDefinition == null) {
-      definitionMap.put(beanDefinition.beanClass, beanDefinition);
-      return;
-    }
-
-    if (existsBeanDefinition.equals(beanDefinition)) return;
-
-    throw new BeanAlreadyDefined(beanDefinition, existsBeanDefinition);
-  }
-
-  private static void createAndPutBeanAndItsFactoredBeans(Map<Class<?>, BeanDefinition> definitionMap,
-                                                          Class<?> beanClass, boolean singleton) {
-    putBeanDefinition(definitionMap, new BeanDefinition(beanClass, singleton, null, null));
-
-    for (Method method : beanClass.getMethods()) {
-      final Bean bean = method.getAnnotation(Bean.class);
-      if (bean == null) continue;
-      createAndPutFactoredBean(definitionMap, bean.singleton(), beanClass, method);
-    }
-  }
-
-  private static void createAndPutFactoredBean(Map<Class<?>, BeanDefinition> definitionMap,
-                                               boolean singleton,
-                                               Class<?> factoryBeanClass,
-                                               Method factoryMethod) {
-
-    if (factoryMethod.getParameterTypes().length > 0) {
-      throw new BeanFactoryMethodCannotHasAnyArguments(factoryMethod);
-    }
-
-    final Class<?> beanClass = factoryMethod.getReturnType();
-
-    final BeanDefinition beanDefinition = new BeanDefinition(beanClass, singleton, factoryBeanClass, factoryMethod);
-
-    putBeanDefinition(definitionMap, beanDefinition);
   }
 
   public static void initBeanDefinitions(Map<Class<?>, BeanDefinition> map) {
@@ -222,9 +155,9 @@ public class BeanContainerGenerator {
     beanDefinitionList.addAll(usedMap.values());
     Collections.sort(beanDefinitionList);
     {
-      int nomer = 1;
+      int number = 1;
       for (BeanDefinition beanDefinition : beanDefinitionList) {
-        beanDefinition.getterName = "getter" + beanDefinition.beanClass.getSimpleName() + "_" + nomer++;
+        beanDefinition.getterName = "getter" + beanDefinition.beanClass.getSimpleName() + "_" + number++;
       }
     }
 

@@ -82,8 +82,8 @@ public class DepinjectUtilTest {
     //
     //
     DepinjectUtil.implementAndUseBeanContainers(
-      "kz.greetgo.depinject.gen.impl_and_use_bean_containers",
-      srcDir
+        "kz.greetgo.depinject.gen.impl_and_use_bean_containers",
+        srcDir
     );
     //
     //
@@ -91,7 +91,17 @@ public class DepinjectUtilTest {
 
     final BeanContainerForTestingUtil impl = Depinject.newInstance(BeanContainerForTestingUtil.class);
 
-    impl.getIBeanB1().privet();
+    String privet = impl.getIBeanB1().privet();
+    assertThat(privet).isEqualTo("Privet");
+
+    String callInterfaceCreatingWithA = impl.getIBeanB1().callInterfaceCreatingWithA();
+    assertThat(callInterfaceCreatingWithA).isEqualTo("Hello from interface creating with A");
+
+    String callAnotherInterfaceCreatingWithA = impl.getIBeanB1().callAnotherInterfaceCreatingWithA();
+    assertThat(callAnotherInterfaceCreatingWithA).isEqualTo("Hello from another interface creating with A");
+
+    String callCreatingByDefaultFactory = impl.getIBeanB1().callCreatingByDefaultFactory();
+    assertThat(callCreatingByDefaultFactory).isEqualTo("Hello from CreatingByDefaultFactory");
 
     ServerUtil.deleteRecursively(srcDir);
   }

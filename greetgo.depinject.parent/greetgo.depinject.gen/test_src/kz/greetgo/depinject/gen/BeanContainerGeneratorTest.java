@@ -151,7 +151,8 @@ public class BeanContainerGeneratorTest {
   }
 
   private static void addBeanDefinition(Map<Class<?>, BeanDefinition> map, Class<?> beanClass, Class<?> factoryBeanClass) {
-    final BeanDefinition beanDefinition = new BeanDefinition(beanClass, true, factoryBeanClass, null);
+    final BeanDefinition beanDefinition = new BeanDefinition(beanClass, true, factoryBeanClass, null,
+        kz.greetgo.depinject.core.BeanFactory.class);
     map.put(beanDefinition.beanClass, beanDefinition);
   }
 
@@ -260,7 +261,7 @@ public class BeanContainerGeneratorTest {
     assertThat(preparingBeanDefinition.prepareReferenceClass).isNull();
     assertThat(preparingBeanDefinition.preparingBy).hasSize(1);
     assertThat(preparingBeanDefinition.preparingBy.get(0).beanClass.getName())
-      .isEqualTo(PreparationBean.class.getName());
+        .isEqualTo(PreparationBean.class.getName());
 
     assertThat(notPreparingBeanDefinition.prepareReferenceClass).isNull();
     assertThat(notPreparingBeanDefinition.preparingBy).hasSize(0);

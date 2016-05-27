@@ -25,4 +25,9 @@ public class BeanB2 implements IBeanB2, HasAfterInject {
   public void afterInject() throws Exception {
     System.out.println("Has after inject in BeanB2");
   }
+
+  @Bean
+  public DefaultInterfaceFactory createDefaultInterfaceFactory() {
+    return new DefaultInterfaceFactory();
+  }
 }
