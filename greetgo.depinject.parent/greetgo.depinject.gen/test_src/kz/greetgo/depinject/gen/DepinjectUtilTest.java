@@ -1,6 +1,7 @@
 package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.Depinject;
+import kz.greetgo.depinject.gen.beans.afterInject_sync.DependsOnAlone;
 import kz.greetgo.depinject.gen.impl_and_use_bean_containers.BeanContainerForTestingUtil;
 import kz.greetgo.util.ServerUtil;
 import org.testng.annotations.Test;
@@ -103,6 +104,18 @@ public class DepinjectUtilTest {
     String callCreatingByDefaultFactory = impl.getIBeanB1().callCreatingByDefaultFactory();
     assertThat(callCreatingByDefaultFactory).isEqualTo("Hello from CreatingByDefaultFactory");
 
+    DependsOnAlone dependsOnAlone = impl.getDependsOnAlone();
+    assertThat(dependsOnAlone.valueInitiatedWhileAfterInject)
+        .isEqualTo("DependsOnAlone value : Value while after inject");
+
     ServerUtil.deleteRecursively(srcDir);
+  }
+
+  @Test(enabled = false)
+  public void simpleCall() throws Exception {
+    final BeanContainerForTestingUtil impl = Depinject.newInstance(BeanContainerForTestingUtil.class);
+
+    DependsOnAlone dependsOnAlone = impl.getDependsOnAlone();
+    System.out.println(dependsOnAlone.valueInitiatedWhileAfterInject);
   }
 }

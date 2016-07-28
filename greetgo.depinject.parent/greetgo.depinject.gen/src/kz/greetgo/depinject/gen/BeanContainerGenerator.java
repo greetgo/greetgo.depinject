@@ -166,6 +166,8 @@ public class BeanContainerGenerator {
     writer.println("public class " + implClassName + " implements " + toCode(beanContainerInterface) + " {");
 
     writer.println("");
+    writer.println("  private final java.lang.Object synchronizes = new java.lang.Object();");
+    writer.println("");
 
     for (BeanContainerMethod method : methods) {
       writer.println("  @Override");
@@ -185,14 +187,24 @@ public class BeanContainerGenerator {
       );
 
       if (beanDefinition.singleton) {
-        writer.println("    " + beanClass + " cachedValue = null;");
+        writer.println("    java.util.concurrent.atomic.AtomicReference<" + beanClass + "> cachedValue" +
+            " = new java.util.concurrent.atomic.AtomicReference<>(null);");
       }
 
       writer.println("    @Override");
       writer.println("    public " + beanClass + " get() {");
 
       if (beanDefinition.singleton) {
-        writer.println("      if (cachedValue != null) return cachedValue;");
+        writer.println("      {");
+        writer.println("        " + beanClass + " x = cachedValue.get();");
+        writer.println("        if (x != null) return x;");
+        writer.println("      }");
+
+        writer.println("      synchronized (synchronizes) {");
+        writer.println("        {");
+        writer.println("          " + beanClass + " x = cachedValue.get();");
+        writer.println("          if (x != null) return x;");
+        writer.println("        }");
       }
 
       writer.println("      try {");
@@ -218,14 +230,17 @@ public class BeanContainerGenerator {
       //writeBeforeReturn(writer);
 
       if (beanDefinition.singleton) {
-        writer.println("        return cachedValue = localValue;");
-      } else {
-        writer.println("        return localValue;");
+        writer.println("        cachedValue.set(localValue);");
       }
+      writer.println("        return localValue;");
 
       writer.println("      } catch(Exception e) {");
       writer.println("        throw new RuntimeException(e);");
       writer.println("      }");
+
+      if (beanDefinition.singleton) {
+        writer.println("      }");
+      }
 
 
       writer.println("    }");
