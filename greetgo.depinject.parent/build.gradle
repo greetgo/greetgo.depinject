@@ -17,7 +17,7 @@ allprojects {
   apply plugin: 'eclipse'
   apply plugin: 'maven'
 
-  version = '0.1.9'
+  version = '0.1.10'
 
   sourceCompatibility = 1.7
   targetCompatibility = 1.7
@@ -48,7 +48,7 @@ subprojects {
     ext.classScannerVersion = '0.0.1'
     ext.greetgoJavaCompilerVersion = "0.0.1"
 
-    compile 'com.google.code.findbugs:annotations:2.0.1'
+    //compile 'com.google.code.findbugs:annotations:2.0.1'
 
     testCompile "org.testng:testng:${testNgVersion}"
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
@@ -81,11 +81,11 @@ subprojects {
 
   sourceSets {
     main {
-      java.srcDirs = ["src", "src_resources"]
+      java.srcDirs = ["src"]
       resources.srcDirs = ["src", "src_resources"]
     }
     test {
-      java.srcDirs = ["test_src", "test_src_resources"]
+      java.srcDirs = ["test_src"]
       resources.srcDirs = ["test_src", "test_src_resources"]
     }
   }
