@@ -1,22 +1,16 @@
 package kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean;
 
 import kz.greetgo.depinject.core.BeanGetter;
-import kz.greetgo.depinject.testng.AbstractDepinjectTestNg;
 import kz.greetgo.depinject.testng.ContainerConfig;
-import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.BeanConfigUsingBeanFactory;
-import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.UsingBeanFactoryRoom;
+import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.bean_factory_big.BeanConfigSmallBeanFactory;
+import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.core.BeanConfigUsingBeanFactory;
+import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.core.UsingBeanFactoryRoom;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@ContainerConfig(BeanConfigUsingBeanFactory.class)
-public class UsingBeanFactoryTest extends AbstractDepinjectTestNg {
-
-  public static final List<String> log = new ArrayList<>();
-
+@ContainerConfig({BeanConfigUsingBeanFactory.class, BeanConfigSmallBeanFactory.class})
+public class UsingSmallBeanFactoryTest extends AbstractUsingBeanFactoryTest {
   public BeanGetter<UsingBeanFactoryRoom> room;
 
   @Test
