@@ -297,7 +297,7 @@ public class BeanContainerImplGenerator {
 
     for (Class<?> bean : beanClassSet) {
       if (fieldType.isAssignableFrom(bean)) {
-        if (ret != null) throw new MoreThenOneBeanClassIsAssignable(fieldType, bean, ret);
+        if (ret != null) throw new MoreThenOneCandidates(fieldType, bean, ret);
         ret = bean;
       }
     }

@@ -177,7 +177,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
         if (ret == null) {
           ret = beanDefinition;
         } else {
-          throw new MoreThenOneBeanClassIsAssignable(referenceType, ret.beanClass, beanDefinition.beanClass);
+          throw new MoreThenOneCandidates(referenceType, ret.beanClass, beanDefinition.beanClass);
         }
       }
     }

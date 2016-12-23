@@ -52,7 +52,6 @@ public class DepinjectUtil {
         bcg.beanContainerInterface = aClass;
         bcg.implClassName = aClass.getSimpleName() + BeanContainer.IMPL_POSTFIX;
         bcg.packageName = aClass.getPackage().getName();
-        bcg.writeToSourceDir(srcDir);
 
         filesToCompile.add(bcg.writeToSourceDir(srcDir));
       }
