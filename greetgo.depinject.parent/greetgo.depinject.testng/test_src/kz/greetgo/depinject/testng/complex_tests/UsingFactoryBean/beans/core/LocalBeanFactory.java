@@ -1,7 +1,7 @@
 package kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.core;
 
 import kz.greetgo.depinject.core.BeanFactory;
-import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.AbstractUsingBeanFactoryTest;
+import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.util.UsingBeanFactory;
 
 public abstract class LocalBeanFactory implements BeanFactory {
 
@@ -17,7 +17,7 @@ public abstract class LocalBeanFactory implements BeanFactory {
 
       @Override
       public void lookOut() {
-        AbstractUsingBeanFactoryTest.log.add("Look out window " + myNumber);
+        UsingBeanFactory.log.add("Look out window " + myNumber);
       }
     };
 
@@ -26,7 +26,7 @@ public abstract class LocalBeanFactory implements BeanFactory {
 
       @Override
       public void turnOn() {
-        AbstractUsingBeanFactoryTest.log.add("Turn on computer " + myNumber);
+        UsingBeanFactory.log.add("Turn on computer " + myNumber);
       }
     };
 

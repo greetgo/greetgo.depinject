@@ -1,16 +1,17 @@
 package kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean;
 
 import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.testng.AbstractDepinjectTestNg;
 import kz.greetgo.depinject.testng.ContainerConfig;
-import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.bean_factory_small.BeanConfigBigBeanFactory;
-import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.core.BeanConfigUsingBeanFactory;
 import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.core.UsingBeanFactoryRoom;
+import kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.util.BeanConfigUsingBigBeanFactory;
 import org.testng.annotations.Test;
 
+import static kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.util.UsingBeanFactory.log;
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@ContainerConfig({BeanConfigUsingBeanFactory.class, BeanConfigBigBeanFactory.class})
-public class UsingBigBeanFactoryTest extends AbstractUsingBeanFactoryTest {
+@ContainerConfig(BeanConfigUsingBigBeanFactory.class)
+public class UsingBigBeanFactoryTest extends AbstractDepinjectTestNg {
   public BeanGetter<UsingBeanFactoryRoom> room;
 
   @Test
