@@ -2,9 +2,17 @@ package kz.greetgo.depinject.gen2;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
+import kz.greetgo.depinject.gen.errors.FactoryMethodCannotHaveAnyArguments;
+import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoInclude;
 import kz.greetgo.depinject.gen2.test_beans001.BeanConfig001;
+import kz.greetgo.depinject.gen2.test_beans002.BeanConfig002;
+import kz.greetgo.depinject.gen2.test_beans003.Bean1;
+import kz.greetgo.depinject.gen2.test_beans003.Bean2;
+import kz.greetgo.depinject.gen2.test_beans003.BeanConfig003;
+import kz.greetgo.depinject.gen2.test_beans003.BeanFactory;
+import kz.greetgo.depinject.gen2.test_beans004.BeanConfig004;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -19,10 +27,10 @@ public class BeanCreationCollectorTest {
   }
 
   @Test(expectedExceptions = NoBeanContainer.class)
-  public void collect_NoBeanContainer() throws Exception {
+  public void collectFrom_NoBeanContainer() throws Exception {
     //
     //
-    BeanCreationCollector.collect(BeanContainerWithoutNoBeanContainer.class);
+    BeanCreationCollector.collectFrom(BeanContainerWithoutNoBeanContainer.class);
     //
     //
   }
@@ -31,10 +39,26 @@ public class BeanCreationCollectorTest {
   }
 
   @Test(expectedExceptions = NoInclude.class)
-  public void collect_NoInclude() throws Exception {
+  public void collectFrom_NoInclude() throws Exception {
     //
     //
-    BeanCreationCollector.collect(BeanContainerWithoutInclude.class);
+    BeanCreationCollector.collectFrom(BeanContainerWithoutInclude.class);
+    //
+    //
+  }
+
+  class BeanConfigWithoutBeanConfig {
+  }
+
+  @Include(BeanConfigWithoutBeanConfig.class)
+  public interface ForNoBeanConfigError extends BeanContainer {
+  }
+
+  @Test(expectedExceptions = NoBeanConfig.class)
+  public void collectFrom_NoBeanConfig() throws Exception {
+    //
+    //
+    BeanCreationCollector.collectFrom(ForNoBeanConfigError.class);
     //
     //
   }
@@ -50,10 +74,10 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collect_BeanWithDefaultConstructor() throws Exception {
+  public void collectFrom_BeanWithDefaultConstructor() throws Exception {
     //
     //
-    List<BeanCreation> list = BeanCreationCollector.collect(HasBeanWithDefaultConstructor.class);
+    List<BeanCreation> list = BeanCreationCollector.collectFrom(HasBeanWithDefaultConstructor.class);
     //
     //
 
@@ -61,9 +85,68 @@ public class BeanCreationCollectorTest {
 
     Map<String, BeanCreation> map = toMapSimple(list);
 
+    assertThat(map.get("BeanWithDefaultConstructor1")).isInstanceOf(BeanCreationWithDefaultConstructor.class);
+    assertThat(map.get("BeanWithDefaultConstructor2")).isInstanceOf(BeanCreationWithDefaultConstructor.class);
+
     assertThat(map.get("BeanWithDefaultConstructor1").singleton).isTrue();
     assertThat(map.get("BeanWithDefaultConstructor2").singleton).isFalse();
-
   }
 
+  @Include(BeanConfig002.class)
+  interface WithoutBeanScanner extends BeanContainer {
+  }
+
+  @Test
+  public void collectFrom_withoutBeanScanner() throws Exception {
+    //
+    //
+    List<BeanCreation> list = BeanCreationCollector.collectFrom(WithoutBeanScanner.class);
+    //
+    //
+
+    assertThat(list).isEmpty();
+  }
+
+  @Include(BeanConfig003.class)
+  interface FactoryMethodBeanContainer extends BeanContainer {
+  }
+
+  @Test
+  public void collectFrom_factoryMethod() {
+    //
+    //
+    List<BeanCreation> list = BeanCreationCollector.collectFrom(FactoryMethodBeanContainer.class);
+    //
+    //
+
+    assertThat(list).hasSize(3);
+
+    Map<String, BeanCreation> map = toMapSimple(list);
+
+    assertThat(map.get(BeanFactory.class.getSimpleName())).isInstanceOf(BeanCreationWithDefaultConstructor.class);
+    assertThat(map.get(Bean1.class.getSimpleName())).isInstanceOf(BeanCreationWithFactoryMethod.class);
+    assertThat(map.get(Bean2.class.getSimpleName())).isInstanceOf(BeanCreationWithFactoryMethod.class);
+
+    BeanCreationWithFactoryMethod bc = (BeanCreationWithFactoryMethod) map.get(Bean1.class.getSimpleName());
+
+    assertThat(bc.factorySource.beanClass.getName()).isEqualTo(BeanFactory.class.getName());
+    assertThat(bc.factoryMethod.getName()).isEqualTo("createBean1");
+
+    assertThat(map.get(BeanFactory.class.getSimpleName()).singleton).isTrue();
+    assertThat(map.get(Bean1.class.getSimpleName()).singleton).isTrue();
+    assertThat(map.get(Bean2.class.getSimpleName()).singleton).isFalse();
+  }
+
+  @Include(BeanConfig004.class)
+  interface BeanFactoryMethodCannotHasAnyArgumentsBeanContainer extends BeanContainer {
+  }
+
+  @Test(expectedExceptions = FactoryMethodCannotHaveAnyArguments.class)
+  public void collectFrom_BeanFactoryMethodCannotHasAnyArguments() throws Exception {
+    //
+    //
+    BeanCreationCollector.collectFrom(BeanFactoryMethodCannotHasAnyArgumentsBeanContainer.class);
+    //
+    //
+  }
 }

@@ -14,7 +14,7 @@ import kz.greetgo.depinject.gen.beans.groupA.FactoredBean2;
 import kz.greetgo.depinject.gen.beans.groupA.FactoredBean3;
 import kz.greetgo.depinject.gen.beans.left_factory_method.BeanConfigWithLeftFactoryMethod;
 import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainsAnyArguments;
-import kz.greetgo.depinject.gen.errors.BeanFactoryMethodCannotHasAnyArguments;
+import kz.greetgo.depinject.gen.errors.FactoryMethodCannotHaveAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoInclude;
@@ -80,7 +80,7 @@ public class BeanContainerGeneratorTest {
   private interface BeanContainerWithLeftFactoryMethod extends BeanContainer {
   }
 
-  @Test(expectedExceptions = BeanFactoryMethodCannotHasAnyArguments.class)
+  @Test(expectedExceptions = FactoryMethodCannotHaveAnyArguments.class)
   public void collectBeanDefinitionsForBeanContainer_BeanFactoryMethodCannotHasAnyArguments() {
     //
     //

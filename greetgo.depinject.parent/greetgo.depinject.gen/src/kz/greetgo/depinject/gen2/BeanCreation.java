@@ -8,6 +8,9 @@ public abstract class BeanCreation {
     this.beanClass = beanClass;
     this.singleton = singleton;
   }
-  
-  
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName() + '{' + (singleton ? "singleton" : "multiple") + " " + beanClass + '}';
+  }
 }

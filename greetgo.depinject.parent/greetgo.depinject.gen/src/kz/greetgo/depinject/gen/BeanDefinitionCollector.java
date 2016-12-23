@@ -4,7 +4,7 @@ import kz.greetgo.class_scanner.ClassScanner;
 import kz.greetgo.class_scanner.ClassScannerDef;
 import kz.greetgo.depinject.core.*;
 import kz.greetgo.depinject.gen.errors.BeanAlreadyDefined;
-import kz.greetgo.depinject.gen.errors.BeanFactoryMethodCannotHasAnyArguments;
+import kz.greetgo.depinject.gen.errors.FactoryMethodCannotHaveAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 
 import java.lang.reflect.Method;
@@ -109,7 +109,7 @@ public class BeanDefinitionCollector {
                                         Method factoryMethod) {
 
     if (factoryMethod.getParameterTypes().length > 0) {
-      throw new BeanFactoryMethodCannotHasAnyArguments(factoryMethod);
+      throw new FactoryMethodCannotHaveAnyArguments(factoryMethod);
     }
 
     final Class<?> beanClass = factoryMethod.getReturnType();
