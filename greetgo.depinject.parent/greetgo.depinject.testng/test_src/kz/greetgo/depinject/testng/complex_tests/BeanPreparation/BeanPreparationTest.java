@@ -26,10 +26,17 @@ public class BeanPreparationTest extends AbstractDepinjectTestNg {
 
     room.get().lookOutWindow();
 
+    log.add("--- Checkpoint");
+
     room.get().lookOutWindowImpl();
 
     log.forEach(System.out::println);
 
     assertThat(log.get(0)).isEqualTo("--- Start");
+    assertThat(log.get(1)).isEqualTo("Before look out");
+    assertThat(log.get(2)).isEqualTo("Look out window");
+    assertThat(log.get(3)).isEqualTo("After look out");
+    assertThat(log.get(4)).isEqualTo("--- Checkpoint");
+    assertThat(log.get(5)).isEqualTo("Look out window");
   }
 }
