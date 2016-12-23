@@ -1,11 +1,23 @@
 package kz.greetgo.depinject.gen;
 
 
-import kz.greetgo.depinject.core.*;
+import kz.greetgo.depinject.core.BeanContainer;
+import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.core.BeanPreparation;
+import kz.greetgo.depinject.core.HasAfterInject;
+import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.beans.MainConfig;
-import kz.greetgo.depinject.gen.beans.groupA.*;
+import kz.greetgo.depinject.gen.beans.groupA.BeanA1;
+import kz.greetgo.depinject.gen.beans.groupA.BeanA2;
+import kz.greetgo.depinject.gen.beans.groupA.FactoredBean1;
+import kz.greetgo.depinject.gen.beans.groupA.FactoredBean2;
+import kz.greetgo.depinject.gen.beans.groupA.FactoredBean3;
 import kz.greetgo.depinject.gen.beans.left_factory_method.BeanConfigWithLeftFactoryMethod;
-import kz.greetgo.depinject.gen.errors.*;
+import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainsAnyArguments;
+import kz.greetgo.depinject.gen.errors.BeanFactoryMethodCannotHasAnyArguments;
+import kz.greetgo.depinject.gen.errors.NoBeanConfig;
+import kz.greetgo.depinject.gen.errors.NoBeanContainer;
+import kz.greetgo.depinject.gen.errors.NoInclude;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -152,7 +164,7 @@ public class BeanContainerGeneratorTest {
 
   private static void addBeanDefinition(Map<Class<?>, BeanDefinition> map, Class<?> beanClass, Class<?> factoryBeanClass) {
     final BeanDefinition beanDefinition = new BeanDefinition(beanClass, true, factoryBeanClass, null,
-        kz.greetgo.depinject.core.BeanFactory.class);
+      kz.greetgo.depinject.core.BeanFactory.class);
     map.put(beanDefinition.beanClass, beanDefinition);
   }
 
@@ -212,7 +224,11 @@ public class BeanContainerGeneratorTest {
   }
 
 
-  private abstract class PreparationBean implements BeanPreparation<PreparingFactor> {
+  private class PreparationBean implements BeanPreparation<PreparingFactor> {
+    @Override
+    public PreparingFactor prepareBean(PreparingFactor bean) {
+      return null;
+    }
   }
 
   interface PreparingFactor2 {
@@ -221,16 +237,28 @@ public class BeanContainerGeneratorTest {
   abstract class ParentPreparation implements BeanPreparation<PreparingFactor2> {
   }
 
-  private abstract class PreparationBean2 extends ParentPreparation {
+  private class PreparationBean2 extends ParentPreparation {
+    @Override
+    public PreparingFactor2 prepareBean(PreparingFactor2 bean) {
+      return null;
+    }
   }
 
   private interface IParentPreparation extends BeanPreparation<PreparingFactor2> {
   }
 
-  abstract class PreparationBean3 implements IParentPreparation {
+  class PreparationBean3 implements IParentPreparation {
+    @Override
+    public PreparingFactor2 prepareBean(PreparingFactor2 bean) {
+      return null;
+    }
   }
 
-  private abstract class PreparationBean4 extends PreparationBean3 {
+  private class PreparationBean4 extends PreparationBean3 {
+    @Override
+    public PreparingFactor2 prepareBean(PreparingFactor2 bean) {
+      return null;
+    }
   }
 
   @Test
@@ -261,7 +289,7 @@ public class BeanContainerGeneratorTest {
     assertThat(preparingBeanDefinition.prepareReferenceClass).isNull();
     assertThat(preparingBeanDefinition.preparingBy).hasSize(1);
     assertThat(preparingBeanDefinition.preparingBy.get(0).beanClass.getName())
-        .isEqualTo(PreparationBean.class.getName());
+      .isEqualTo(PreparationBean.class.getName());
 
     assertThat(notPreparingBeanDefinition.prepareReferenceClass).isNull();
     assertThat(notPreparingBeanDefinition.preparingBy).hasSize(0);
@@ -322,7 +350,10 @@ public class BeanContainerGeneratorTest {
     assertThat(beanDefinitionFactory.using).isEmpty();
   }
 
-  private abstract class IniBean implements HasAfterInject {
+  private class IniBean implements HasAfterInject {
+    @Override
+    public void afterInject() throws Exception {
+    }
   }
 
   private class NoIniBean {
@@ -354,7 +385,11 @@ public class BeanContainerGeneratorTest {
   interface TmpInterface {
   }
 
-  private abstract class TestPreparation implements BeanPreparation<TmpInterface> {
+  private class TestPreparation implements BeanPreparation<TmpInterface> {
+    @Override
+    public TmpInterface prepareBean(TmpInterface bean) {
+      return null;
+    }
   }
 
   private class PreparingTestBean implements TmpInterface {
