@@ -54,13 +54,13 @@ public class BeanCreationCollector {
   private static void collectFromPackage(List<BeanCreation> ret, String packageName) {
     new ClassScannerDef().scanPackage(packageName).forEach(someClass -> {
       Bean bean = someClass.getAnnotation(Bean.class);
-      if (bean != null) addClassAsBeanAndViewItOnAnotherBeans(ret, someClass, bean.singleton());
+      if (bean != null) addClassAsBeanAndViewItForAnotherBeans(ret, someClass, bean.singleton());
     });
   }
 
-  private static void addClassAsBeanAndViewItOnAnotherBeans(List<BeanCreation> ret,
-                                                            Class<?> parentBeanClass,
-                                                            boolean singleton
+  private static void addClassAsBeanAndViewItForAnotherBeans(List<BeanCreation> ret,
+                                                             Class<?> parentBeanClass,
+                                                             boolean singleton
   ) {
 
     //boolean isInterface = parentBeanClass.isInterface();
