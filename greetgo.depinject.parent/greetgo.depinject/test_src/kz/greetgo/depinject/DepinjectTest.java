@@ -8,7 +8,7 @@ public class DepinjectTest {
   class TestBeanContainer implements BeanContainer {
   }
 
-  @Test(expectedExceptions = ClassNotFoundException.class)
+  @Test(expectedExceptions = NoImplementor.class)
   public void newInstance_ClassNotFoundException() throws Exception {
     Depinject.newInstance(TestBeanContainer.class);
   }

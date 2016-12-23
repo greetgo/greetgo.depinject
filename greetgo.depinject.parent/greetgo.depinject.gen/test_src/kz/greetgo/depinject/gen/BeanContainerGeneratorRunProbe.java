@@ -1,6 +1,5 @@
 package kz.greetgo.depinject.gen;
 
-import com.sun.xml.internal.ws.developer.JAXBContextFactory;
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.beans.MainConfig;
