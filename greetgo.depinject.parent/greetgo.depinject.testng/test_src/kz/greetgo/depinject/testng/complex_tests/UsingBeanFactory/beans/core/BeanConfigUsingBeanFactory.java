@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.beans.core;
+package kz.greetgo.depinject.testng.complex_tests.UsingBeanFactory.beans.core;
 
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanScanner;

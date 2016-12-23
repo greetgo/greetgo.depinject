@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.testng.complex_tests.UsingFactoryBean.util;
+package kz.greetgo.depinject.testng.complex_tests.UsingBeanFactory.util;
 
 import java.util.ArrayList;
 import java.util.List;
