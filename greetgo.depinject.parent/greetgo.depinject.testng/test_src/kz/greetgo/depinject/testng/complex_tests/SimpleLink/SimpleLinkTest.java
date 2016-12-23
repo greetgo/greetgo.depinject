@@ -15,7 +15,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @ContainerConfig(BeanConfigSimpleLinkTest.class)
 public class SimpleLinkTest extends AbstractDepinjectTestNg {
 
-  public BeanGetter<SimpleLinkRoom> simpleLinkRoom;
+  public BeanGetter<SimpleLinkRoom> room;
 
   public static final List<String> log = new ArrayList<>();
 
@@ -25,18 +25,18 @@ public class SimpleLinkTest extends AbstractDepinjectTestNg {
     log.clear();
     log.add("--- Start");
 
-    simpleLinkRoom.get().takeJacketOff();
-    simpleLinkRoom.get().takeJacketOff();
+    room.get().takeJacketOff();
+    room.get().takeJacketOff();
 
     log.add("--- checkpoint 1");
 
-    simpleLinkRoom.get().lookOutTheWindow();
-    simpleLinkRoom.get().lookOutTheWindow();
+    room.get().lookOutTheWindow();
+    room.get().lookOutTheWindow();
 
     log.add("--- checkpoint 2");
 
-    simpleLinkRoom.get().turnComputerOn();
-    simpleLinkRoom.get().turnComputerOn();
+    room.get().turnComputerOn();
+    room.get().turnComputerOn();
 
     //log.forEach(System.out::println);
 
