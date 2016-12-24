@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BeanCreation {
+public abstract class BeanCreation implements Comparable<BeanCreation> {
   public final Class<?> beanClass;
   public final boolean singleton;
 
@@ -52,5 +52,13 @@ public abstract class BeanCreation {
     list.add(new BeanGetterDot(fieldName, beanReference));
   }
 
+  protected String compareStr() {
+    return beanClass.getName();
+  }
 
+  @Override
+  @SuppressWarnings("NullableProblems")
+  public int compareTo(BeanCreation o) {
+    return compareStr().compareTo(o.compareStr());
+  }
 }

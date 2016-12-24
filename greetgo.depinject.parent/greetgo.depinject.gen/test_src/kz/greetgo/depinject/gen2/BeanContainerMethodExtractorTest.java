@@ -55,8 +55,8 @@ public class BeanContainerMethodExtractorTest {
     assertThat(list.get(0).method.getName()).isEqualTo("method1");
     assertThat(list.get(1).method.getName()).isEqualTo("method2");
 
-    assertThat(list.get(0).beanReference.targetClass().getName()).isEqualTo(Bean1.class.getName());
-    assertThat(list.get(1).beanReference.targetClass().getName()).isEqualTo(Bean2.class.getName());
+    assertThat(list.get(0).beanReference.targetClass.getName()).isEqualTo(Bean1.class.getName());
+    assertThat(list.get(1).beanReference.targetClass.getName()).isEqualTo(Bean2.class.getName());
 
   }
 }

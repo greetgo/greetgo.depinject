@@ -4,6 +4,8 @@ import kz.greetgo.depinject.gen.errors.IllegalBeanGetterArgumentType;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BeanReference {
@@ -43,14 +45,19 @@ public class BeanReference {
     throw new IllegalBeanGetterArgumentType("Cannot extract bean class from type: " + target.toString() + "; " + place);
   }
 
-  private final Class<?> targetClass;
-  private final boolean isList;
+  public final Class<?> targetClass;
+  public final boolean isList;
 
-  public Class<?> targetClass() {
-    return targetClass;
-  }
+  public final List<BeanCreation> targetCreations = new ArrayList<>();
 
-  public boolean isList() {
-    return isList;
+  public void fillTargetCreationsFrom(List<BeanCreation> candidates) {
+
+    for (BeanCreation candidate : candidates) {
+      if (targetClass.isAssignableFrom(candidate.beanClass)) {
+        targetCreations.add(candidate);
+      }
+    }
+
+    Collections.sort(targetCreations);
   }
 }

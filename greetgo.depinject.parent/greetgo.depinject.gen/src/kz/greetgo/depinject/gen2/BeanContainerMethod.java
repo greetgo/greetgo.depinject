@@ -11,7 +11,6 @@ public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
     this.method = method;
     beanReference = new BeanReference(method.getGenericReturnType(),
       "from return type of " + method.toGenericString());
-    beanReference.targetClass();
   }
 
   @Override
