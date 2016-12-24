@@ -4,22 +4,39 @@ import kz.greetgo.class_scanner.ClassScannerDef;
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanContainer;
+import kz.greetgo.depinject.core.BeanFactoredBy;
+import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.core.BeanScanner;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.FactoryMethodCannotHaveAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
+import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
 import kz.greetgo.depinject.gen.errors.NoInclude;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-import static kz.greetgo.depinject.gen2.Utils.getAllAnnotations;
-import static kz.greetgo.depinject.gen2.Utils.getAnnotation;
+import static kz.greetgo.depinject.gen2.Utils.*;
 
 public class BeanCreationCollector {
   public static List<BeanCreation> collectFrom(Class<?> beanContainerInterface) {
+    BeanCreationCollector x = new BeanCreationCollector(beanContainerInterface);
+    x.collect();
+    return x.ret;
+  }
+
+  private final Class<?> beanContainerInterface;
+
+  private BeanCreationCollector(Class<?> beanContainerInterface) {
+    this.beanContainerInterface = beanContainerInterface;
+  }
+
+  private final List<BeanCreation> ret = new ArrayList<>();
+
+  private void collect() {
     if (!BeanContainer.class.isAssignableFrom(beanContainerInterface)) {
       throw new NoBeanContainer(beanContainerInterface);
     }
@@ -27,50 +44,59 @@ public class BeanCreationCollector {
     List<Include> includes = getAllAnnotations(beanContainerInterface, Include.class);
     if (includes.isEmpty()) throw new NoInclude(beanContainerInterface);
 
-    List<BeanCreation> ret = new ArrayList<>();
-    includes.forEach(include -> collectFromInclude(ret, include));
-    return ret;
+    includes.forEach(this::collectFromInclude);
   }
 
-  private static void collectFromInclude(List<BeanCreation> ret, Include include) {
+  private void collectFromInclude(Include include) {
     for (Class<?> beanConfig : include.value()) {
-      collectBeanConfig(ret, beanConfig);
+      collectFromBeanConfig(beanConfig);
     }
   }
 
-  private static void collectBeanConfig(List<BeanCreation> ret, Class<?> beanConfig) {
+  private final LinkedList<BeanReference> factoryClassStack = new LinkedList<>();
+
+  private void collectFromBeanConfig(Class<?> beanConfig) {
 
     BeanConfig beanConfigAnn = beanConfig.getAnnotation(BeanConfig.class);
     if (beanConfigAnn == null) throw new NoBeanConfig(beanConfig);
 
-    getAllAnnotations(beanConfig, Include.class).forEach(include -> collectFromInclude(ret, include));
+    Class<? extends BeanFactory> defaultFactoryClass = beanConfigAnn.defaultFactoryClass();
+
+    if (isRealClass(defaultFactoryClass)) {
+      factoryClassStack.add(new BeanReference(defaultFactoryClass));
+    }
+
+    getAllAnnotations(beanConfig, Include.class).forEach(this::collectFromInclude);
 
     {
       BeanScanner beanScanner = beanConfig.getAnnotation(BeanScanner.class);
-      if (beanScanner != null) collectFromPackage(ret, beanConfig.getPackage().getName());
+      if (beanScanner != null) collectFromPackage(beanConfig.getPackage().getName());
+    }
+
+    if (isRealClass(defaultFactoryClass)) {
+      factoryClassStack.removeLast();
     }
   }
 
-  private static void collectFromPackage(List<BeanCreation> ret, String packageName) {
+  private void collectFromPackage(String packageName) {
     new ClassScannerDef().scanPackage(packageName).forEach(someClass -> {
       Bean bean = someClass.getAnnotation(Bean.class);
-      if (bean != null) addClassAsBeanAndViewItForAnotherBeans(ret, someClass, bean.singleton());
+      if (bean != null) addClassAsBeanAndViewItForAnotherBeans(someClass, bean.singleton());
     });
   }
 
-  private static void addClassAsBeanAndViewItForAnotherBeans(List<BeanCreation> ret,
-                                                             Class<?> parentBeanClass,
-                                                             boolean singleton
+  private void addClassAsBeanAndViewItForAnotherBeans(Class<?> parentBeanClass,
+                                                      boolean singleton
   ) {
-
-    //boolean isInterface = parentBeanClass.isInterface();
-    //boolean isAbstract = Modifier.isAbstract(parentBeanClass.getModifiers());
 
     final BeanCreation parentBeanCreation;
 
-    //if (!isInterface && !isAbstract) {
-    ret.add(parentBeanCreation = new BeanCreationWithDefaultConstructor(parentBeanClass, singleton));
-    //}
+    if (isRealClass(parentBeanClass)) {
+      ret.add(parentBeanCreation = new BeanCreationWithDefaultConstructor(parentBeanClass, singleton));
+    } else {
+      ret.add(parentBeanCreation = new BeanCreationWithBeanFactory(
+        parentBeanClass, singleton, extractBeanFactoryReference(parentBeanClass)));
+    }
 
     for (Method method : parentBeanClass.getMethods()) {
       Bean bean = getAnnotation(method, Bean.class);
@@ -78,5 +104,16 @@ public class BeanCreationCollector {
       if (method.getParameterTypes().length > 0) throw new FactoryMethodCannotHaveAnyArguments(method);
       ret.add(new BeanCreationWithFactoryMethod(method.getReturnType(), bean.singleton(), parentBeanCreation, method));
     }
+  }
+
+  private BeanReference extractBeanFactoryReference(Class<?> beanClass) {
+    List<BeanFactoredBy> beanFactoredByList = getAllAnnotations(beanClass, BeanFactoredBy.class);
+    if (beanFactoredByList.size() > 0) {
+      return new BeanReference(beanFactoredByList.get(0).value());
+    }
+
+    if (factoryClassStack.size() == 0) throw new NoDefaultBeanFactory(beanClass);
+
+    return factoryClassStack.getLast();
   }
 }

@@ -2,6 +2,7 @@ package kz.greetgo.depinject.gen2;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -84,4 +85,11 @@ public class Utils {
 
     putAllAnnotations(source.getSuperclass(), annotation, accumulator, cache);
   }
+
+  public static boolean isRealClass(Class<?> aClass) {
+    boolean isInterface = aClass.isInterface();
+    boolean isAbstract = Modifier.isAbstract(aClass.getModifiers());
+    return !isInterface && !isAbstract;
+  }
+
 }

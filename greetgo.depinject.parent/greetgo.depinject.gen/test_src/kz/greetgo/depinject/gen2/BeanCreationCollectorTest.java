@@ -5,6 +5,7 @@ import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.FactoryMethodCannotHaveAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
+import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
 import kz.greetgo.depinject.gen.errors.NoInclude;
 import kz.greetgo.depinject.gen2.test_beans001.BeanConfig001;
 import kz.greetgo.depinject.gen2.test_beans002.BeanConfig002;
@@ -16,8 +17,10 @@ import kz.greetgo.depinject.gen2.test_beans004.BeanConfig004;
 import kz.greetgo.depinject.gen2.test_beans005.sub_beans_1.BeanFactory1;
 import kz.greetgo.depinject.gen2.test_beans005.sub_beans_2.BeanFactory2;
 import kz.greetgo.depinject.gen2.test_beans005.sub_beans_4.BeanFactory4;
+import kz.greetgo.depinject.gen2.test_beans005.sub_beans_5.BeanFactory5;
 import kz.greetgo.depinject.gen2.test_beans005.top.BeanConfig005;
 import kz.greetgo.depinject.gen2.test_beans005.top.TopBeanFactory;
+import kz.greetgo.depinject.gen2.test_beans006.BeanConfig006;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -169,7 +172,7 @@ public class BeanCreationCollectorTest {
 
     list.forEach(System.out::println);
 
-    assertThat(list).hasSize(8);
+    assertThat(list).hasSize(10);
 
     Map<String, BeanCreation> map = toMapSimple(list);
 
@@ -177,15 +180,31 @@ public class BeanCreationCollectorTest {
     BeanCreationWithBeanFactory bean2_creation = (BeanCreationWithBeanFactory) map.get("Bean2");
     BeanCreationWithBeanFactory bean3_creation = (BeanCreationWithBeanFactory) map.get("Bean3");
     BeanCreationWithBeanFactory bean4_creation = (BeanCreationWithBeanFactory) map.get("Bean4");
+    BeanCreationWithBeanFactory bean5_creation = (BeanCreationWithBeanFactory) map.get("Bean5");
 
     assertThat(bean1_creation).isNotNull();
     assertThat(bean2_creation).isNotNull();
     assertThat(bean3_creation).isNotNull();
     assertThat(bean4_creation).isNotNull();
+    assertThat(bean5_creation).isNotNull();
 
     assertThat(bean1_creation.beanFactorySource.targetClass().getName()).isEqualTo(BeanFactory1.class.getName());
     assertThat(bean2_creation.beanFactorySource.targetClass().getName()).isEqualTo(BeanFactory2.class.getName());
-    assertThat(bean3_creation.beanFactorySource.targetClass().getName()).isEqualTo(TopBeanFactory.class.getName());
+    assertThat(bean3_creation.beanFactorySource.targetClass().getName()).isEqualTo(BeanFactory2.class.getName());
     assertThat(bean4_creation.beanFactorySource.targetClass().getName()).isEqualTo(BeanFactory4.class.getName());
+    assertThat(bean5_creation.beanFactorySource.targetClass().getName()).isEqualTo(BeanFactory5.class.getName());
+  }
+
+  @Include(BeanConfig006.class)
+  interface BeanContainer_for_NoDefaultBeanFactory extends BeanContainer {
+  }
+
+  @Test(expectedExceptions = NoDefaultBeanFactory.class)
+  public void collectFrom_BeanFactory_NoDefaultBeanFactory() throws Exception {
+    //
+    //
+    BeanCreationCollector.collectFrom(BeanContainer_for_NoDefaultBeanFactory.class);
+    //
+    //
   }
 }
