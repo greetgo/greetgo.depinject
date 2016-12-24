@@ -8,7 +8,7 @@ import kz.greetgo.depinject.core.BeanFactoredBy;
 import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.core.BeanScanner;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.errors.FactoryMethodCannotHaveAnyArguments;
+import kz.greetgo.depinject.gen.errors.FactoryMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
@@ -63,7 +63,8 @@ public class BeanCreationCollector {
     Class<? extends BeanFactory> defaultFactoryClass = beanConfigAnn.defaultFactoryClass();
 
     if (isRealClass(defaultFactoryClass)) {
-      factoryClassStack.add(new BeanReference(defaultFactoryClass));
+      factoryClassStack.add(new BeanReference(defaultFactoryClass,
+        "from default bean factory at " + beanConfig.getName()));
     }
 
     getAllAnnotations(beanConfig, Include.class).forEach(this::collectFromInclude);
@@ -101,7 +102,7 @@ public class BeanCreationCollector {
     for (Method method : parentBeanClass.getMethods()) {
       Bean bean = getAnnotation(method, Bean.class);
       if (bean == null) continue;
-      if (method.getParameterTypes().length > 0) throw new FactoryMethodCannotHaveAnyArguments(method);
+      if (method.getParameterTypes().length > 0) throw new FactoryMethodCannotContainAnyArguments(method);
       ret.add(new BeanCreationWithFactoryMethod(method.getReturnType(), bean.singleton(), parentBeanCreation, method));
     }
   }
@@ -109,7 +110,8 @@ public class BeanCreationCollector {
   private BeanReference extractBeanFactoryReference(Class<?> beanClass) {
     List<BeanFactoredBy> beanFactoredByList = getAllAnnotations(beanClass, BeanFactoredBy.class);
     if (beanFactoredByList.size() > 0) {
-      return new BeanReference(beanFactoredByList.get(0).value());
+      return new BeanReference(beanFactoredByList.get(0).value(), "from BeanFactoredBy at "
+        + beanClass.getName() + " (Annotation BeanFactoredBy may be in parents)");
     }
 
     if (factoryClassStack.size() == 0) throw new NoDefaultBeanFactory(beanClass);

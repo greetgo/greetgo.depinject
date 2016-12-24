@@ -4,7 +4,7 @@ import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.HasAfterInject;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainsAnyArguments;
+import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoInclude;
 
@@ -114,7 +114,7 @@ public class BeanContainerGenerator {
                                                                Map<Class<?>, BeanDefinition> map) {
 
     if (method.getParameterTypes().length > 0) {
-      throw new BeanContainerMethodCannotContainsAnyArguments(beanContainerInterface, method);
+      throw new BeanContainerMethodCannotContainAnyArguments(beanContainerInterface, method);
     }
 
     final Type referenceType = method.getGenericReturnType();

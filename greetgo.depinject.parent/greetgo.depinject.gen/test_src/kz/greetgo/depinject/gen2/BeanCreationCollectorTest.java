@@ -2,7 +2,7 @@ package kz.greetgo.depinject.gen2;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.errors.FactoryMethodCannotHaveAnyArguments;
+import kz.greetgo.depinject.gen.errors.FactoryMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
@@ -19,7 +19,6 @@ import kz.greetgo.depinject.gen2.test_beans005.sub_beans_2.BeanFactory2;
 import kz.greetgo.depinject.gen2.test_beans005.sub_beans_4.BeanFactory4;
 import kz.greetgo.depinject.gen2.test_beans005.sub_beans_5.BeanFactory5;
 import kz.greetgo.depinject.gen2.test_beans005.top.BeanConfig005;
-import kz.greetgo.depinject.gen2.test_beans005.top.TopBeanFactory;
 import kz.greetgo.depinject.gen2.test_beans006.BeanConfig006;
 import org.testng.annotations.Test;
 
@@ -149,7 +148,7 @@ public class BeanCreationCollectorTest {
   interface BeanFactoryMethodCannotHasAnyArgumentsBeanContainer extends BeanContainer {
   }
 
-  @Test(expectedExceptions = FactoryMethodCannotHaveAnyArguments.class)
+  @Test(expectedExceptions = FactoryMethodCannotContainAnyArguments.class)
   public void collectFrom_BeanFactoryMethodCannotHasAnyArguments() throws Exception {
     //
     //

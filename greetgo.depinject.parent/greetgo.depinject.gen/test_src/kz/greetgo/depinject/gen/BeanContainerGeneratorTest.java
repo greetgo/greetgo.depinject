@@ -13,8 +13,8 @@ import kz.greetgo.depinject.gen.beans.groupA.FactoredBean1;
 import kz.greetgo.depinject.gen.beans.groupA.FactoredBean2;
 import kz.greetgo.depinject.gen.beans.groupA.FactoredBean3;
 import kz.greetgo.depinject.gen.beans.left_factory_method.BeanConfigWithLeftFactoryMethod;
-import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainsAnyArguments;
-import kz.greetgo.depinject.gen.errors.FactoryMethodCannotHaveAnyArguments;
+import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainAnyArguments;
+import kz.greetgo.depinject.gen.errors.FactoryMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoInclude;
@@ -80,7 +80,7 @@ public class BeanContainerGeneratorTest {
   private interface BeanContainerWithLeftFactoryMethod extends BeanContainer {
   }
 
-  @Test(expectedExceptions = FactoryMethodCannotHaveAnyArguments.class)
+  @Test(expectedExceptions = FactoryMethodCannotContainAnyArguments.class)
   public void collectBeanDefinitionsForBeanContainer_BeanFactoryMethodCannotHasAnyArguments() {
     //
     //
@@ -418,7 +418,7 @@ public class BeanContainerGeneratorTest {
     BeanX asd(int x);
   }
 
-  @Test(expectedExceptions = BeanContainerMethodCannotContainsAnyArguments.class)
+  @Test(expectedExceptions = BeanContainerMethodCannotContainAnyArguments.class)
   public void collectBeanContainerMethods_BeanContainerMethodCannotContainsAnyArguments() {
 
     //
