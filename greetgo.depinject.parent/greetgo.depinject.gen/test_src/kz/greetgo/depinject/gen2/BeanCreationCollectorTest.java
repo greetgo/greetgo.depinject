@@ -13,6 +13,11 @@ import kz.greetgo.depinject.gen2.test_beans003.Bean2;
 import kz.greetgo.depinject.gen2.test_beans003.BeanConfig003;
 import kz.greetgo.depinject.gen2.test_beans003.BeanFactory;
 import kz.greetgo.depinject.gen2.test_beans004.BeanConfig004;
+import kz.greetgo.depinject.gen2.test_beans005.sub_beans_1.BeanFactory1;
+import kz.greetgo.depinject.gen2.test_beans005.sub_beans_2.BeanFactory2;
+import kz.greetgo.depinject.gen2.test_beans005.sub_beans_4.BeanFactory4;
+import kz.greetgo.depinject.gen2.test_beans005.top.BeanConfig005;
+import kz.greetgo.depinject.gen2.test_beans005.top.TopBeanFactory;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -148,5 +153,39 @@ public class BeanCreationCollectorTest {
     BeanCreationCollector.collectFrom(BeanFactoryMethodCannotHasAnyArgumentsBeanContainer.class);
     //
     //
+  }
+
+  @Include(BeanConfig005.class)
+  interface BeanFactoryBeanContainer extends BeanContainer {
+  }
+
+  @Test
+  public void collectFrom_BeanFactory() throws Exception {
+    //
+    //
+    List<BeanCreation> list = BeanCreationCollector.collectFrom(BeanFactoryBeanContainer.class);
+    //
+    //
+
+    list.forEach(System.out::println);
+
+    assertThat(list).hasSize(8);
+
+    Map<String, BeanCreation> map = toMapSimple(list);
+
+    BeanCreationWithBeanFactory bean1_creation = (BeanCreationWithBeanFactory) map.get("Bean1");
+    BeanCreationWithBeanFactory bean2_creation = (BeanCreationWithBeanFactory) map.get("Bean2");
+    BeanCreationWithBeanFactory bean3_creation = (BeanCreationWithBeanFactory) map.get("Bean3");
+    BeanCreationWithBeanFactory bean4_creation = (BeanCreationWithBeanFactory) map.get("Bean4");
+
+    assertThat(bean1_creation).isNotNull();
+    assertThat(bean2_creation).isNotNull();
+    assertThat(bean3_creation).isNotNull();
+    assertThat(bean4_creation).isNotNull();
+
+    assertThat(bean1_creation.beanFactorySource.targetClass().getName()).isEqualTo(BeanFactory1.class.getName());
+    assertThat(bean2_creation.beanFactorySource.targetClass().getName()).isEqualTo(BeanFactory2.class.getName());
+    assertThat(bean3_creation.beanFactorySource.targetClass().getName()).isEqualTo(TopBeanFactory.class.getName());
+    assertThat(bean4_creation.beanFactorySource.targetClass().getName()).isEqualTo(BeanFactory4.class.getName());
   }
 }
