@@ -3,6 +3,8 @@ package kz.greetgo.depinject.gen2;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -92,4 +94,19 @@ public class Utils {
     return !isInterface && !isAbstract;
   }
 
+  public static String asStr(Class<?> aClass) {
+    boolean isInterface = aClass.isInterface();
+    if (isInterface) return "!" + aClass.getSimpleName();
+    boolean isAbstract = Modifier.isAbstract(aClass.getModifiers());
+    if (isAbstract) return "/" + aClass.getSimpleName();
+    return aClass.getSimpleName();
+  }
+
+  public static Class<?> extractRawClass(Type type) {
+    if (type instanceof Class) return (Class<?>) type;
+    if (type instanceof ParameterizedType) {
+      return extractRawClass(((ParameterizedType) type).getRawType());
+    }
+    throw new IllegalArgumentException("Left type " + type);
+  }
 }

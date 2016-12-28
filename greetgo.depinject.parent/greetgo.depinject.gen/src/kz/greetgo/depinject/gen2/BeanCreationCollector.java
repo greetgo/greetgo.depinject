@@ -16,6 +16,7 @@ import kz.greetgo.depinject.gen.errors.NoInclude;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class BeanCreationCollector {
   public static List<BeanCreation> collectFrom(Class<?> beanContainerInterface) {
     BeanCreationCollector x = new BeanCreationCollector(beanContainerInterface);
     x.collect();
+    Collections.sort(x.ret);
     return x.ret;
   }
 
@@ -64,7 +66,7 @@ public class BeanCreationCollector {
 
     if (isRealClass(defaultFactoryClass)) {
       factoryClassStack.add(new BeanReference(defaultFactoryClass,
-        "from default bean factory at " + beanConfig.getName()));
+        "default bean factory of " + Utils.asStr(beanConfig)));
     }
 
     getAllAnnotations(beanConfig, Include.class).forEach(this::collectFromInclude);
@@ -110,8 +112,8 @@ public class BeanCreationCollector {
   private BeanReference extractBeanFactoryReference(Class<?> beanClass) {
     List<BeanFactoredBy> beanFactoredByList = getAllAnnotations(beanClass, BeanFactoredBy.class);
     if (beanFactoredByList.size() > 0) {
-      return new BeanReference(beanFactoredByList.get(0).value(), "from BeanFactoredBy at "
-        + beanClass.getName() + " (Annotation BeanFactoredBy may be in parents)");
+      return new BeanReference(beanFactoredByList.get(0).value(), BeanFactoredBy.class.getSimpleName() +
+        " in (or in any parents of) " + Utils.asStr(beanClass));
     }
 
     if (factoryClassStack.size() == 0) throw new NoDefaultBeanFactory(beanClass);

@@ -10,7 +10,7 @@ public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
   public BeanContainerMethod(Method method) {
     this.method = method;
     beanReference = new BeanReference(method.getGenericReturnType(),
-      "from return type of " + method.toGenericString());
+      "return type of method " + method.getName() + "() of " + Utils.asStr(method.getDeclaringClass()));
   }
 
   @Override

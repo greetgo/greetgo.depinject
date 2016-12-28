@@ -16,4 +16,9 @@ public class BeanGetterDot implements Comparable<BeanGetterDot> {
   public int compareTo(BeanGetterDot o) {
     return fieldName.compareTo(o.fieldName);
   }
+
+  @Override
+  public String toString() {
+    return fieldName + " : " + beanReference.toFullString();
+  }
 }
