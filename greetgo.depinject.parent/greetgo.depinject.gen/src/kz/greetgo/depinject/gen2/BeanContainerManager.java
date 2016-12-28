@@ -16,7 +16,11 @@ public class BeanContainerManager {
 
   List<BeanContainerMethod> beanContainerMethodList;
   List<BeanCreation> beanCreationList;
+  List<BeanReference> allBeanReferences;
   List<BeanCreation> preparations;
+
+  List<BeanCreation> usingBeanCreationList;
+  List<BeanReference> usingBeanReferences;
 
   void prepareToWrite() {
     beanContainerMethodList = BeanContainerMethodExtractor.extract(beanContainerInterface);
@@ -24,7 +28,7 @@ public class BeanContainerManager {
 
     beanCreationList.forEach(BeanCreation::fillBeanGetterDotList);
 
-    List<BeanReference> allBeanReferences = new ArrayList<>();
+    allBeanReferences = new ArrayList<>();
     beanContainerMethodList.forEach(x -> allBeanReferences.add(x.beanReference));
 
     beanCreationList
@@ -46,10 +50,18 @@ public class BeanContainerManager {
 
     beanContainerMethodList.forEach(a -> a.beanReference.markToUse());
 
-    allBeanReferences.forEach(BeanReference::check);
+    usingBeanCreationList = beanCreationList.stream().filter(a -> a.use).collect(Collectors.toList());
+    usingBeanReferences = allBeanReferences.stream().filter(a -> a.use).collect(Collectors.toList());
 
-    for (BeanReference beanReference : allBeanReferences) {
-      //beanReference.getterCreations;
-    }
+    usingBeanReferences.forEach(BeanReference::check);
+
+    int beanGetterVar[] = {1};
+
+    usingBeanCreationList.forEach(a -> a.beanGetterVar = beanGetterVar[0]++);
+
+    usingBeanReferences.stream()
+      .flatMap(a -> a.getterCreations.stream())
+      .filter(a -> a.preparations.size() > 0)
+      .forEachOrdered(a -> a.beanGetterVar = beanGetterVar[0]++);
   }
 }

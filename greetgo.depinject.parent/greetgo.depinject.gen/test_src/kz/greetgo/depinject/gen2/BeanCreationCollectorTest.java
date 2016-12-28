@@ -169,7 +169,7 @@ public class BeanCreationCollectorTest {
     //
     //
 
-    list.forEach(System.out::println);
+    //list.forEach(System.out::println);
 
     assertThat(list).hasSize(10);
 

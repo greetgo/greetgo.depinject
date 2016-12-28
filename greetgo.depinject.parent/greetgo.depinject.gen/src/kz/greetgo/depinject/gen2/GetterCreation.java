@@ -21,6 +21,8 @@ public class GetterCreation extends AbstractGetterCreation {
   }
 
   public final List<BeanCreation> preparations = new ArrayList<>();
+  
+  public int beanGetterVar = 0;
 
   public void usePreparations(List<BeanCreation> allPreparations) {
     Class<?> currentClass = beanCreation.beanClass;

@@ -19,6 +19,8 @@ import static kz.greetgo.depinject.gen2.Utils.extractRawClass;
 public abstract class BeanCreation extends AbstractGetterCreation {
   public final Class<?> beanClass;
   public final boolean singleton;
+  
+  public int beanGetterVar;
 
   public BeanCreation(Class<?> beanClass, boolean singleton) {
     this.beanClass = beanClass;
