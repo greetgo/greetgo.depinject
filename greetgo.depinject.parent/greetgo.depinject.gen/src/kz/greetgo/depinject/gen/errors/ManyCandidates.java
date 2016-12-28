@@ -15,9 +15,9 @@ public class ManyCandidates extends RuntimeException {
     StringBuilder sb = new StringBuilder();
     sb.append(Utils.asStr(beanReference.targetClass))
       .append(" -> ")
-      .append(beanReference.targetCreations.size())
+      .append(beanReference.getterCreations.size())
       .append(" refs @ ").append(beanReference.place).append("\nCandidates:\n");
-    beanReference.targetCreations.forEach(bc -> sb.append("\n\t").append(bc));
+    beanReference.getterCreations.forEach(bc -> sb.append("\n\t").append(bc));
     return sb.toString();
   }
 }

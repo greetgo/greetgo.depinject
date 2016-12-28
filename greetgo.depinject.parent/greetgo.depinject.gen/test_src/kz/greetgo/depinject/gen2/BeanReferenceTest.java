@@ -89,8 +89,12 @@ public class BeanReferenceTest {
     //
     //
 
-    assertThat(beanReference.targetCreations).hasSize(2);
-    assertThat(beanReference.targetCreations.get(0).beanClass.getName()).isEqualTo(A1_RefInterface.class.getName());
-    assertThat(beanReference.targetCreations.get(1).beanClass.getName()).isEqualTo(A2_BeanClass.class.getName());
+    assertThat(beanReference.getterCreations).hasSize(2);
+
+    assertThat(beanReference.getterCreations.get(0).beanCreation.beanClass.getName())
+      .isEqualTo(A1_RefInterface.class.getName());
+
+    assertThat(beanReference.getterCreations.get(1).beanCreation.beanClass.getName())
+      .isEqualTo(A2_BeanClass.class.getName());
   }
 }

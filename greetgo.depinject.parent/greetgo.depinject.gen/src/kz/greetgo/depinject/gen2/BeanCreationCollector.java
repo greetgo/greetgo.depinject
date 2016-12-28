@@ -16,7 +16,7 @@ import kz.greetgo.depinject.gen.errors.NoInclude;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class BeanCreationCollector {
   public static List<BeanCreation> collectFrom(Class<?> beanContainerInterface) {
     BeanCreationCollector x = new BeanCreationCollector(beanContainerInterface);
     x.collect();
-    Collections.sort(x.ret);
+    x.ret.sort(Comparator.comparing(o -> o.beanClass.getName()));
     return x.ret;
   }
 

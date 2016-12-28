@@ -16,11 +16,9 @@ import java.util.Set;
 
 import static kz.greetgo.depinject.gen2.Utils.extractRawClass;
 
-public abstract class BeanCreation implements Comparable<BeanCreation> {
+public abstract class BeanCreation extends AbstractGetterCreation {
   public final Class<?> beanClass;
   public final boolean singleton;
-
-  public boolean use = false;
 
   public BeanCreation(Class<?> beanClass, boolean singleton) {
     this.beanClass = beanClass;
@@ -52,16 +50,6 @@ public abstract class BeanCreation implements Comparable<BeanCreation> {
     BeanReference beanReference = new BeanReference(pt.getActualTypeArguments()[0],
       "field " + fieldName + " of " + Utils.asStr(beanClass));
     list.add(new BeanGetterDot(fieldName, beanReference));
-  }
-
-  protected String compareStr() {
-    return beanClass.getName();
-  }
-
-  @Override
-  @SuppressWarnings("NullableProblems")
-  public int compareTo(BeanCreation o) {
-    return compareStr().compareTo(o.compareStr());
   }
 
   public void markToUse() {
