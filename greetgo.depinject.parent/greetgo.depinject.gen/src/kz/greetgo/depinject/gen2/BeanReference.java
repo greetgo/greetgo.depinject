@@ -112,4 +112,25 @@ public class BeanReference {
   public void usePreparations(List<BeanCreation> allPreparations) {
     getterCreations.forEach(tc -> tc.usePreparations(allPreparations));
   }
+
+  public boolean needGetter() {
+    if (getterCreations.size() > 1) return true;
+
+    if (getterCreations.get(0).preparations.size() > 0) return true;
+
+    return false;
+  }
+
+  public int varIndex = 0;
+
+  public String getBeanGetterVarName() {
+    return needGetter()
+      ? "getter_ref_" + (isList ? "list_" : "") + targetClass.getSimpleName() + '_' + varIndex()
+      : getterCreations.get(0).getBeanGetterVarName();
+  }
+
+  private int varIndex() {
+    if (varIndex <= 0) throw new RuntimeException("Left var index = " + varIndex);
+    return varIndex;
+  }
 }

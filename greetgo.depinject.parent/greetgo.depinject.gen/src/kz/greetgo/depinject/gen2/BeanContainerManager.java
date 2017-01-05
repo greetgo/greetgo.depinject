@@ -1,10 +1,14 @@
 package kz.greetgo.depinject.gen2;
 
 import kz.greetgo.depinject.core.BeanPreparation;
+import kz.greetgo.depinject.gen.errors.NoMethodsInBeanContainer;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BeanContainerManager {
@@ -21,6 +25,8 @@ public class BeanContainerManager {
 
   List<BeanCreation> usingBeanCreationList;
   List<BeanReference> usingBeanReferences;
+
+  List<GetterCreation> writingGetterCreations;
 
   void prepareToWrite() {
     beanContainerMethodList = BeanContainerMethodExtractor.extract(beanContainerInterface);
@@ -55,13 +61,43 @@ public class BeanContainerManager {
 
     usingBeanReferences.forEach(BeanReference::check);
 
-    int beanGetterVar[] = {1};
 
-    usingBeanCreationList.forEach(a -> a.beanGetterVar = beanGetterVar[0]++);
+    int varIndex[] = {1};
+
+    usingBeanCreationList.forEach(a -> a.varIndex = varIndex[0]++);
+
+    usingBeanReferences.stream().filter(BeanReference::needGetter).forEachOrdered(a -> a.varIndex = varIndex[0]++);
+
+    Map<GetterCreation, List<GetterCreation>> getterCreationMap = new HashMap<>();
+    usingBeanReferences.stream().flatMap(a -> a.getterCreations.stream())
+      .filter(GetterCreation::needGetter)
+      .forEachOrdered(a -> getterCreationMap.computeIfAbsent(a, k -> new ArrayList<>()).add(a));
+
+    getterCreationMap.entrySet().forEach(a -> {
+      a.getKey().varIndex = varIndex[0]++;
+      a.getValue().forEach(b -> b.varIndex = a.getKey().varIndex);
+    });
+    writingGetterCreations = new ArrayList<>();
+    writingGetterCreations.addAll(getterCreationMap.keySet());
+
+    writingGetterCreations.sort(Comparator.comparing(o -> o.beanCreation.beanClass.getName()));
+
+    usingBeanReferences.stream().flatMap(a -> a.getterCreations.stream())
+      .filter(GetterCreation::needGetter).forEachOrdered(a -> a.varIndex = varIndex[0]++);
 
     usingBeanReferences.stream()
       .flatMap(a -> a.getterCreations.stream())
       .filter(a -> a.preparations.size() > 0)
-      .forEachOrdered(a -> a.beanGetterVar = beanGetterVar[0]++);
+      .forEachOrdered(a -> a.varIndex = varIndex[0]++);
+  }
+
+  void writeBeanContainerMethods(int tab, PrintStream out) {
+    if (beanContainerMethodList.isEmpty()) throw new NoMethodsInBeanContainer(beanContainerInterface);
+
+    beanContainerMethodList.forEach(bcm -> bcm.writeBeanContainerMethod(tab, out));
+  }
+
+  void writeBeanCreation(int tab, PrintStream out) {
+    usingBeanCreationList.forEach(a -> a.writeGetter(tab, out));
   }
 }

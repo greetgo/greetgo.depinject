@@ -5,6 +5,7 @@ import kz.greetgo.depinject.core.BeanPreparation;
 import kz.greetgo.depinject.core.BeanPreparationPriority;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterDefinition;
 
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -16,15 +17,20 @@ import java.util.Set;
 
 import static kz.greetgo.depinject.gen2.Utils.extractRawClass;
 
-public abstract class BeanCreation extends AbstractGetterCreation {
+public abstract class BeanCreation {
   public final Class<?> beanClass;
   public final boolean singleton;
-  
-  public int beanGetterVar;
+
+  public int varIndex;
 
   public BeanCreation(Class<?> beanClass, boolean singleton) {
     this.beanClass = beanClass;
     this.singleton = singleton;
+  }
+
+  public String getBeanGetterVarName() {
+    if (varIndex <= 0) throw new RuntimeException("Left varIndex value = " + varIndex);
+    return "getter_native_" + beanClass.getSimpleName() + '_' + varIndex;
   }
 
   public final List<BeanGetterDot> beanGetterDotList = new ArrayList<>();
@@ -54,6 +60,8 @@ public abstract class BeanCreation extends AbstractGetterCreation {
     list.add(new BeanGetterDot(fieldName, beanReference));
   }
 
+  public boolean use = false;
+  
   public void markToUse() {
     if (use) return;
     use = true;
@@ -62,6 +70,10 @@ public abstract class BeanCreation extends AbstractGetterCreation {
   }
 
   protected abstract void markToUseAdditions();
+
+  public void writeGetter(int tab, PrintStream out) {
+    
+  }
 
   public static class BeanPreparationPriorityDot implements Comparable<BeanPreparationPriorityDot> {
     int parenting = 0;
