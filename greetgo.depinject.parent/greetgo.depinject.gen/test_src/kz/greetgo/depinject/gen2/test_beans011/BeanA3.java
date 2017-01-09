@@ -5,5 +5,5 @@ import kz.greetgo.depinject.core.BeanFactoredBy;
 
 @Bean
 @BeanFactoredBy(BeanA3_beanFactory.class)
-public interface BeanA3 extends BeanA2 {
+public interface BeanA3 {
 }

@@ -4,11 +4,6 @@ import kz.greetgo.depinject.core.Bean;
 
 @Bean
 public class AllBeanFactory {
-  @Bean
-  public BeanA2 createBeanA2() {
-    return new BeanA2() {
-    };
-  }
 
   @Bean
   public BeanA3_beanFactory createBeanA3_beanFactory() {
