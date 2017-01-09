@@ -14,6 +14,13 @@ import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_1;
 import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_1_a;
 import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_2;
 import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_3;
+import kz.greetgo.depinject.gen2.test_beans011.BeanA1;
+import kz.greetgo.depinject.gen2.test_beans011.BeanA1_impl;
+import kz.greetgo.depinject.gen2.test_beans011.BeanA2;
+import kz.greetgo.depinject.gen2.test_beans011.BeanA3;
+import kz.greetgo.depinject.gen2.test_beans011.BeanBSimple;
+import kz.greetgo.depinject.gen2.test_beans011.BeanConfig011;
+import kz.greetgo.depinject.gen2.test_beans011.ZGetters;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -224,6 +231,35 @@ public class BeanContainerManagerTest {
     assertThat(bean2.beanReference.getterCreations.get(1).preparations.get(1).beanClass.getName())
       .isEqualTo(BeanPreparation009_2.class.getName());
     assertThat(bean2.beanReference.getterCreations.get(1).preparations).hasSize(2);
+  }
+
+  @SuppressWarnings("unused")
+  @Include(BeanConfig011.class)
+  interface BeanContainer011 extends BeanContainer {
+    ZGetters getZ_Getters();
+
+    List<BeanA1> take_beanA1();
+
+    List<BeanA1_impl> take_beanA1_impl();
+
+    List<BeanA2> take_beanA2();
+
+    List<BeanA3> take_beanA3();
+
+    BeanBSimple getBeanBSimple();
+  }
+
+  @Test
+  public void leftException() throws Exception {
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer011.class);
+    bcm.prepareToWrite();
+
+    //
+    //
+    bcm.writeBeanCreation(1, System.out);
+    //
+    //
+
   }
 
 }
