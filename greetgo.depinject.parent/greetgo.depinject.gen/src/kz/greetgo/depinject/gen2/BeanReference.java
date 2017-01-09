@@ -117,7 +117,7 @@ public class BeanReference {
   public boolean needGetter() {
     if (getterCreations.size() > 1) return true;
 
-    if (getterCreations.size() == 0) throw new LeftException();
+    if (getterCreations.size() == 0) throw new LeftException("hgv4ghv6hj7knj9lkm0h3");
 
     if (getterCreations.get(0).preparations.size() > 0) return true;
 
