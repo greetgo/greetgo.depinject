@@ -1,6 +1,7 @@
 package kz.greetgo.depinject.gen2;
 
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterArgumentType;
+import kz.greetgo.depinject.gen.errors.LeftException;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
 
@@ -115,6 +116,8 @@ public class BeanReference {
 
   public boolean needGetter() {
     if (getterCreations.size() > 1) return true;
+
+    if (getterCreations.size() == 0) throw new LeftException();
 
     if (getterCreations.get(0).preparations.size() > 0) return true;
 

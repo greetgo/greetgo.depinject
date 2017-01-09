@@ -60,4 +60,17 @@ public class BeanContainerManagerTest2 {
     //
 
   }
+
+  @Test
+  public void writeBeanCreation() throws Exception {
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer010.class);
+    bcm.prepareToWrite();
+
+    //
+    //
+    bcm.writeBeanCreation(1, System.out);
+    //
+    //
+
+  }
 }

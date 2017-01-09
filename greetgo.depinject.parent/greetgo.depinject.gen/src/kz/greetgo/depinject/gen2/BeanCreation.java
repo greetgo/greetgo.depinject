@@ -14,7 +14,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static kz.greetgo.depinject.gen2.Tab.tab;
 import static kz.greetgo.depinject.gen2.Utils.extractRawClass;
 
 public abstract class BeanCreation {
@@ -61,7 +63,7 @@ public abstract class BeanCreation {
   }
 
   public boolean use = false;
-  
+
   public void markToUse() {
     if (use) return;
     use = true;
@@ -71,9 +73,64 @@ public abstract class BeanCreation {
 
   protected abstract void markToUseAdditions();
 
-  public void writeGetter(int tab, PrintStream out) {
-    
+  public int getterCreationRefCount = 0;
+
+  public String getterVarName() {
+    return "getter_simple_" + varIndex;
   }
+
+  public String cachedValueVarName() {
+    return "cachedValue_simple_" + varIndex;
+  }
+
+  public void writeGetter(int tab, PrintStream out) {
+    out.println();
+
+    if (singleton) {
+      out.println(tab(tab) + "private " + AtomicReference.class.getName() + "<" + beanClass.getName() +
+        "> " + cachedValueVarName() + " = new " + AtomicReference.class.getName() + "(null);");
+    }
+    out.println(tab(tab) + "@java.lang.Override");
+    out.println(tab(tab) + "private "
+      + BeanGetter.class.getName() + "<" + beanClass.getName() + "> " + getterVarName() + " = () -> {");
+
+    if (singleton) {
+
+      out.println(tab(tab + 1) + "{");
+      out.println(tab(tab + 2) + beanClass.getName() + " x = " + cachedValueVarName() + ".get();");
+      out.println(tab(tab + 2) + "if (x != null) return x;");
+      out.println(tab(tab + 1) + "}");
+
+      out.println(tab(tab + 1) + "synchronized (" + Const.syncField + ") {");
+
+      out.println(tab(tab + 2) + "{");
+      out.println(tab(tab + 3) + beanClass.getName() + " x = " + cachedValueVarName() + ".get();");
+      out.println(tab(tab + 3) + "if (x != null) return x;");
+      out.println(tab(tab + 2) + "}");
+
+      {
+        out.println(tab(tab + 2) + "{");
+
+        writeCreateBeanCode(tab + 3, out, "localValue");
+
+        out.println(tab(tab + 3) + cachedValueVarName() + ".set(localValue)");
+        out.println(tab(tab + 3) + "return localValue;");
+
+        out.println(tab(tab + 2) + "}");
+      }
+
+      out.println(tab(tab + 1) + "}");//synchronized
+
+    } else {
+      writeCreateBeanCode(tab + 1, out, "localValue");
+      out.println(tab(tab + 1) + "return localValue;");
+    }
+
+    out.println(tab(tab) + "}");
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  protected abstract void writeCreateBeanCode(int tab, PrintStream out, String variableName);
 
   public static class BeanPreparationPriorityDot implements Comparable<BeanPreparationPriorityDot> {
     int parenting = 0;
