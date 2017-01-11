@@ -1,13 +1,18 @@
 package kz.greetgo.depinject.gen2;
 
-import java.io.PrintStream;
+import java.util.Collections;
+import java.util.List;
 
-import static kz.greetgo.depinject.gen2.Tab.tab;
 import static kz.greetgo.depinject.gen2.Utils.asStr;
 
 public class BeanCreationWithDefaultConstructor extends BeanCreation {
   public BeanCreationWithDefaultConstructor(Class<?> beanClass, boolean singleton) {
     super(beanClass, singleton);
+  }
+
+  @Override
+  public List getAdditionalBeanReferences() {
+    return Collections.emptyList();
   }
 
   @Override
@@ -24,7 +29,7 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
   }
 
   @Override
-  protected void writeCreateBeanCode(int tab, PrintStream out, String variableName) {
-    out.println(tab(tab) + beanClass.getName() + ' ' + variableName + " = new " + beanClass.getName() + "();");
+  protected void writeCreateBeanCode(int tab, Outer out, String variableName) {
+    out.tab(tab).stn(beanClass.getName() + ' ' + variableName + " = new " + beanClass.getName() + "();");
   }
 }

@@ -40,6 +40,9 @@ public class BeanContainerManager {
     beanCreationList
       .forEach(a -> a.beanGetterDotList
         .forEach(b -> allBeanReferences.add(b.beanReference)));
+    beanCreationList.stream()
+      .flatMap(a -> a.getAdditionalBeanReferences().stream())
+      .forEachOrdered(a -> allBeanReferences.add(a));
 
     allBeanReferences.forEach(a -> a.fillTargetCreationsFrom(beanCreationList));
 
@@ -60,7 +63,6 @@ public class BeanContainerManager {
     usingBeanReferences = allBeanReferences.stream().filter(a -> a.use).collect(Collectors.toList());
 
     usingBeanReferences.forEach(BeanReference::check);
-
 
     int varIndex[] = {1};
 
@@ -91,13 +93,14 @@ public class BeanContainerManager {
       .forEachOrdered(a -> a.varIndex = varIndex[0]++);
   }
 
-  void writeBeanContainerMethods(int tab, PrintStream out) {
+  void writeBeanContainerMethods(int tab, Outer out) {
     if (beanContainerMethodList.isEmpty()) throw new NoMethodsInBeanContainer(beanContainerInterface);
 
     beanContainerMethodList.forEach(bcm -> bcm.writeBeanContainerMethod(tab, out));
   }
 
-  void writeBeanCreation(int tab, PrintStream out) {
+  @SuppressWarnings("SameParameterValue")
+  void writeBeanCreation(int tab, Outer out) {
     usingBeanCreationList.forEach(a -> a.writeGetter(tab, out));
   }
 }

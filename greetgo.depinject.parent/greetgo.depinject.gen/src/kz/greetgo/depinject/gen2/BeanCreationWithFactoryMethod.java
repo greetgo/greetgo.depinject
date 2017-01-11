@@ -1,9 +1,9 @@
 package kz.greetgo.depinject.gen2;
 
-import java.io.PrintStream;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 
-import static kz.greetgo.depinject.gen2.Tab.tab;
 import static kz.greetgo.depinject.gen2.Utils.asStr;
 
 public class BeanCreationWithFactoryMethod extends BeanCreation {
@@ -28,13 +28,18 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   }
 
   @Override
+  public List<BeanReference> getAdditionalBeanReferences() {
+    return Collections.emptyList();
+  }
+
+  @Override
   protected void markToUseAdditions() {
     factorySource.markToUse();
   }
 
   @Override
-  protected void writeCreateBeanCode(int tab, PrintStream out, String variableName) {
-    out.println(tab(tab) + beanClass.getName() + ' ' + variableName
+  protected void writeCreateBeanCode(int tab, Outer out, String variableName) {
+    out.tab(tab).stn(beanClass.getName() + ' ' + variableName
       + " = " + factorySource.getterVarName() + ".get()." + factoryMethod.getName() + "();");
   }
 }

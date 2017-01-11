@@ -14,12 +14,15 @@ import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_1;
 import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_1_a;
 import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_2;
 import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_3;
+import kz.greetgo.depinject.gen2.test_beans011.BeanA3;
 import kz.greetgo.depinject.gen2.test_beans011.BeanConfig011;
 import kz.greetgo.depinject.gen2.test_beans011.ZGetters;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -235,16 +238,19 @@ public class BeanContainerManagerTest {
   }
 
   @Test
-  public void leftException() throws Exception {
+  public void prepareToWrite_BeanFactories() throws Exception {
     BeanContainerManager bcm = new BeanContainerManager(BeanContainer011.class);
     bcm.prepareToWrite();
 
-    //
-    //
-    bcm.writeBeanCreation(1, System.out);
-    //
-    //
+    Map<String, BeanCreation> map = bcm.usingBeanCreationList
+      .stream().collect(Collectors.toMap(a -> a.beanClass.getSimpleName(), a -> a));
 
+    System.out.println(map);
+
+    assertThat(map.get(BeanA3.class.getSimpleName())).isInstanceOf(BeanCreationWithBeanFactory.class);
+
+    BeanCreationWithBeanFactory bean3creation = (BeanCreationWithBeanFactory) map.get(BeanA3.class.getSimpleName());
+    assertThat(bean3creation.beanFactorySource.getterCreations).hasSize(1);
   }
 
 }

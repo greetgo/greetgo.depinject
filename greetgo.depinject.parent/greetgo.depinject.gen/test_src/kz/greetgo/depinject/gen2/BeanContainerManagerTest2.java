@@ -53,9 +53,11 @@ public class BeanContainerManagerTest2 {
     BeanContainerManager bcm = new BeanContainerManager(BeanContainer010.class);
     bcm.prepareToWrite();
 
+    OuterToPrintStream outer = new OuterToPrintStream("  ", System.out);
+
     //
     //
-    bcm.writeBeanContainerMethods(1, System.out);
+    bcm.writeBeanContainerMethods(1, outer);
     //
     //
 
@@ -66,9 +68,11 @@ public class BeanContainerManagerTest2 {
     BeanContainerManager bcm = new BeanContainerManager(BeanContainer010.class);
     bcm.prepareToWrite();
 
+    OuterToPrintStream outer = new OuterToPrintStream("  ", System.out);
+
     //
     //
-    bcm.writeBeanCreation(1, System.out);
+    bcm.writeBeanCreation(1, outer);
     //
     //
 
