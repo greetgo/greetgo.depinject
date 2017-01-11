@@ -4,6 +4,7 @@ import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanScannerPackage;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -80,5 +81,25 @@ public class UtilsTest {
     List<BeanScannerPackage> list = Utils.getAllAnnotations(My4.class, BeanScannerPackage.class);
     list.forEach(ann -> assertThat(ann).isInstanceOf(BeanScannerPackage.class));
     assertThat(list).hasSize(5);
+  }
+
+  public static interface WithoutSuperclass {
+    @SuppressWarnings("unused")
+    void testMethod();
+  }
+
+  @Test
+  public void getAnnotation_noSuperclass() throws Exception {
+    Method testMethod = WithoutSuperclass.class.getMethod("testMethod");
+    System.out.println(testMethod);
+
+    //
+    //
+    Bean annotation = Utils.getAnnotation(testMethod, Bean.class);
+    //
+    //
+
+    assertThat(annotation).isNull();
+
   }
 }

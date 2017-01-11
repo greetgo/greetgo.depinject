@@ -126,10 +126,10 @@ public class BeanReference {
 
   public int varIndex = 0;
 
-  public String getBeanGetterVarName() {
+  public String getterVarName() {
     return needGetter()
       ? "getter_ref_" + (isList ? "list_" : "") + targetClass.getSimpleName() + '_' + varIndex()
-      : getterCreations.get(0).getBeanGetterVarName();
+      : getterCreations.get(0).getterVarName();
   }
 
   private int varIndex() {

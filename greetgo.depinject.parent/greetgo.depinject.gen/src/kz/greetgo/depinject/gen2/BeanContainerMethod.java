@@ -29,8 +29,8 @@ public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
 
     out.nl();
     out.tab(tab).stn("@java.lang.Override");
-    out.tab(tab).stn(toCode(method.getGenericReturnType()) + ' ' + method.getName() + "() {");
-    out.tab(tab + 1).stn("return " + beanReference.getBeanGetterVarName() + ".get();");
+    out.tab(tab).stn("public " + toCode(method.getGenericReturnType()) + ' ' + method.getName() + "() {");
+    out.tab(tab + 1).stn("return " + beanReference.getterVarName() + ".get();");
     out.tab(tab).stn("}");
 
   }

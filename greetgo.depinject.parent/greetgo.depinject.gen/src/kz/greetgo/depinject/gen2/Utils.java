@@ -20,6 +20,8 @@ public class Utils {
       if (aClass == Object.class) return null;
 
       Class<?> superclass = aClass.getSuperclass();
+      if (superclass == null) return null;
+
       try {
         method = superclass.getMethod(method.getName(), method.getParameterTypes());
       } catch (NoSuchMethodException e) {

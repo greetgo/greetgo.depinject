@@ -40,6 +40,6 @@ public class BeanCreationWithBeanFactory extends BeanCreation {
   @Override
   protected void writeCreateBeanCode(int tab, Outer out, String variableName) {
     out.tab(tab).stn(beanClass.getName() + ' ' + variableName
-      + " = " + beanFactorySource.getBeanGetterVarName() + ".get().createBean(" + beanClass.getName() + ".class);");
+      + " = " + beanFactorySource.getterVarName() + ".get().createBean(" + beanClass.getName() + ".class);");
   }
 }

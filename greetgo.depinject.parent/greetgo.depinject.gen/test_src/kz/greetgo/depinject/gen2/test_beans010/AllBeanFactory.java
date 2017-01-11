@@ -6,7 +6,7 @@ import kz.greetgo.depinject.core.Bean;
 public class AllBeanFactory {
   @Bean
   public BeanA2 createBeanA2() {
-    return new BeanA2() {
+    return () -> {
     };
   }
 

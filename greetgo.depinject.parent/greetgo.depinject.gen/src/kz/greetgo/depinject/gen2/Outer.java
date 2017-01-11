@@ -1,6 +1,8 @@
 package kz.greetgo.depinject.gen2;
 
-public interface Outer {
+import java.io.Closeable;
+
+public interface Outer extends Closeable {
 
   Outer str(String str);
 
@@ -13,4 +15,5 @@ public interface Outer {
 
   Outer tab(int tab);
 
+  void close();
 }

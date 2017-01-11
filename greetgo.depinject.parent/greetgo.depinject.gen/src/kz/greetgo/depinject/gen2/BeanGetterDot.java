@@ -21,4 +21,8 @@ public class BeanGetterDot implements Comparable<BeanGetterDot> {
   public String toString() {
     return fieldName + " : " + beanReference.toFullString();
   }
+
+  public void writeAssignment(int tab, Outer out, String variableName) {
+    out.tab(tab).stn(variableName + '.' + fieldName + " = " + beanReference.getterVarName() + ";");
+  }
 }

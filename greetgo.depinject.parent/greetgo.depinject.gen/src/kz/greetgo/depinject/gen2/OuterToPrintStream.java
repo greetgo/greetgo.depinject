@@ -30,4 +30,9 @@ public class OuterToPrintStream implements Outer {
     }
     return this;
   }
+
+  @Override
+  public void close() {
+    out.close();
+  }
 }

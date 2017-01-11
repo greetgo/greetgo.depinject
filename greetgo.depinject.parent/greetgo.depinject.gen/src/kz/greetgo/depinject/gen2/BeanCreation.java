@@ -3,6 +3,7 @@ package kz.greetgo.depinject.gen2;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.BeanPreparation;
 import kz.greetgo.depinject.core.BeanPreparationPriority;
+import kz.greetgo.depinject.core.HasAfterInject;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterDefinition;
 
 import java.lang.reflect.Field;
@@ -28,7 +29,7 @@ public abstract class BeanCreation {
     this.singleton = singleton;
   }
 
-  public String getBeanGetterVarName() {
+  public String getterVarName() {
     if (varIndex <= 0) throw new RuntimeException("Left varIndex value = " + varIndex);
     return "getter_native_" + beanClass.getSimpleName() + '_' + varIndex;
   }
@@ -73,12 +74,6 @@ public abstract class BeanCreation {
 
   protected abstract void markToUseAdditions();
 
-  public int getterCreationRefCount = 0;
-
-  public String getterVarName() {
-    return "getter_simple_" + varIndex;
-  }
-
   public String cachedValueVarName() {
     return "cachedValue_simple_" + varIndex;
   }
@@ -87,11 +82,11 @@ public abstract class BeanCreation {
     out.nl();
 
     if (singleton) {
-      out.tab(tab).stn("private " + AtomicReference.class.getName() + "<" + beanClass.getName() +
-        "> " + cachedValueVarName() + " = new " + AtomicReference.class.getName() + "(null);");
+      out.tab(tab).stn("private final " + AtomicReference.class.getName() + "<" + beanClass.getName() +
+        "> " + cachedValueVarName() + " = new " + AtomicReference.class.getName() + "<>(null);");
     }
-    out.tab(tab).stn("@java.lang.Override");
-    out.tab(tab).stn("private " + BeanGetter.class.getName()
+
+    out.tab(tab).stn("private final " + BeanGetter.class.getName()
       + "<" + beanClass.getName() + "> " + getterVarName() + " = () -> {");
 
     if (singleton) {
@@ -112,8 +107,9 @@ public abstract class BeanCreation {
         out.tab(tab + 2).stn("{");
 
         writeCreateBeanCode(tab + 3, out, "localValue");
+        writeBeanGettersAndInit(tab + 3, out, "localValue");
 
-        out.tab(tab + 3).stn(cachedValueVarName() + ".set(localValue)");
+        out.tab(tab + 3).stn(cachedValueVarName() + ".set(localValue);");
         out.tab(tab + 3).stn("return localValue;");
 
         out.tab(tab + 2).stn("}");
@@ -123,10 +119,18 @@ public abstract class BeanCreation {
 
     } else {
       writeCreateBeanCode(tab + 1, out, "localValue");
+      writeBeanGettersAndInit(tab + 3, out, "localValue");
       out.tab(tab + 1).stn("return localValue;");
     }
 
-    out.tab(tab).stn("}");
+    out.tab(tab).stn("};");
+  }
+
+  public void writeBeanGettersAndInit(int tab, Outer out, @SuppressWarnings("SameParameterValue") String variableName) {
+    beanGetterDotList.forEach(bg -> bg.writeAssignment(tab, out, variableName));
+    if (HasAfterInject.class.isAssignableFrom(beanClass)) {
+      out.tab(tab).str(variableName).stn(".afterInject();");
+    }
   }
 
   @SuppressWarnings("SameParameterValue")

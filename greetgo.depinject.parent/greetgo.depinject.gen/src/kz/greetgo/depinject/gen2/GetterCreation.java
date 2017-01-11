@@ -51,10 +51,10 @@ public class GetterCreation {
     return preparations.size() > 0;
   }
 
-  public String getBeanGetterVarName() {
+  public String getterVarName() {
     return needGetter()
       ? "getter_withPreparations_" + beanCreation.beanClass.getSimpleName() + '_' + varIndex()
-      : beanCreation.getBeanGetterVarName();
+      : beanCreation.getterVarName();
   }
 
   private int varIndex() {

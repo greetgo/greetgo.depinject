@@ -3,7 +3,6 @@ package kz.greetgo.depinject.gen2;
 import kz.greetgo.depinject.core.BeanPreparation;
 import kz.greetgo.depinject.gen.errors.NoMethodsInBeanContainer;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -100,7 +99,25 @@ public class BeanContainerManager {
   }
 
   @SuppressWarnings("SameParameterValue")
-  void writeBeanCreation(int tab, Outer out) {
+  void writeBeanCreations(int tab, Outer out) {
     usingBeanCreationList.forEach(a -> a.writeGetter(tab, out));
+  }
+
+  public void writeBeanContainerImpl(Outer outer, String packageName, String classSimpleName) {
+
+    if (packageName != null) {
+      outer.stn("package " + packageName + ";");
+    }
+
+    outer.stn("public final class " + classSimpleName
+      + " implements " + beanContainerInterface.getName().replaceAll("\\$", ".") + '{');
+
+    writeBeanContainerMethods(1, outer);
+
+    outer.tab(1).stn("private final java.lang.Object " + Const.syncField + " = new java.lang.Object();");
+
+    writeBeanCreations(1, outer);
+
+    outer.stn("}");
   }
 }
