@@ -29,7 +29,7 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
   }
 
   @Override
-  protected void writeCreateBeanCode(int tab, Outer out, String variableName) {
+  protected void writeCreateBean(int tab, Outer out, String variableName) {
     out.tab(tab).stn(beanClass.getName() + ' ' + variableName + " = new " + beanClass.getName() + "();");
   }
 }

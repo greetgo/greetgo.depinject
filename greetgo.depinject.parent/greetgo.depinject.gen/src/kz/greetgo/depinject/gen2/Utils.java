@@ -111,4 +111,8 @@ public class Utils {
     }
     throw new IllegalArgumentException("Left type " + type);
   }
+
+  public static String codeName(Class<?> aClass) {
+    return aClass.getName().replaceAll("\\$", ".");
+  }
 }

@@ -1,5 +1,5 @@
 package kz.greetgo.depinject.gen2;
 
 public interface Const {
-  String syncField = "forSynchronizedBlocks";
+  String SYNC_FIELD = "forSynchronizedBlocks";
 }

@@ -28,6 +28,10 @@ public class BeanContainerManager {
   List<GetterCreation> writingGetterCreations;
 
   void prepareToWrite() {
+    //
+    // PREPARE REFERENCES
+    //
+
     beanContainerMethodList = BeanContainerMethodExtractor.extract(beanContainerInterface);
     beanCreationList = BeanCreationCollector.collectFrom(beanContainerInterface);
 
@@ -56,40 +60,53 @@ public class BeanContainerManager {
 
     allBeanReferences.forEach(r -> r.usePreparations(preparations));
 
+    //
+    // MARK TO USE
+    //
+
     beanContainerMethodList.forEach(a -> a.beanReference.markToUse());
+
+    //
+    // INIT USING AND CHECK CONNECTIVITY
+    //
 
     usingBeanCreationList = beanCreationList.stream().filter(a -> a.use).collect(Collectors.toList());
     usingBeanReferences = allBeanReferences.stream().filter(a -> a.use).collect(Collectors.toList());
 
-    usingBeanReferences.forEach(BeanReference::check);
-
-    int varIndex[] = {1};
-
-    usingBeanCreationList.forEach(a -> a.varIndex = varIndex[0]++);
-
-    usingBeanReferences.stream().filter(BeanReference::needGetter).forEachOrdered(a -> a.varIndex = varIndex[0]++);
+    usingBeanReferences.forEach(BeanReference::checkConnectivity);
 
     Map<GetterCreation, List<GetterCreation>> getterCreationMap = new HashMap<>();
     usingBeanReferences.stream().flatMap(a -> a.getterCreations.stream())
       .filter(GetterCreation::needGetter)
       .forEachOrdered(a -> getterCreationMap.computeIfAbsent(a, k -> new ArrayList<>()).add(a));
 
-    getterCreationMap.entrySet().forEach(a -> {
-      a.getKey().varIndex = varIndex[0]++;
-      a.getValue().forEach(b -> b.varIndex = a.getKey().varIndex);
-    });
     writingGetterCreations = new ArrayList<>();
     writingGetterCreations.addAll(getterCreationMap.keySet());
 
     writingGetterCreations.sort(Comparator.comparing(o -> o.beanCreation.beanClass.getName()));
 
-    usingBeanReferences.stream().flatMap(a -> a.getterCreations.stream())
-      .filter(GetterCreation::needGetter).forEachOrdered(a -> a.varIndex = varIndex[0]++);
+    //
+    // INDEXING OF VARIABLES ...
+    //
+
+    int varIndex[] = {1};
+
+    usingBeanCreationList.forEach(a -> a.varIndex = varIndex[0]++);
 
     usingBeanReferences.stream()
-      .flatMap(a -> a.getterCreations.stream())
-      .filter(a -> a.preparations.size() > 0)
+      .filter(BeanReference::needGetter)
       .forEachOrdered(a -> a.varIndex = varIndex[0]++);
+
+    writingGetterCreations.forEach(gc -> {
+      gc.varIndex = varIndex[0]++;
+      getterCreationMap.get(gc).forEach(gc2 -> gc2.varIndex = gc.varIndex);
+    });
+
+    //
+    //
+    // THE END OF PREPARATION
+    //
+    //
   }
 
   void writeBeanContainerMethods(int tab, Outer out) {
@@ -112,12 +129,46 @@ public class BeanContainerManager {
     outer.stn("public final class " + classSimpleName
       + " implements " + beanContainerInterface.getName().replaceAll("\\$", ".") + '{');
 
+    outer.nl().tab(1).stn("private final java.lang.Object " + Const.SYNC_FIELD + " = new java.lang.Object();");
+
+    outer.tab(1).stn("//");
+    outer.tab(1).stn("// Bean container methods");
+    outer.tab(1).stn("//");
+
     writeBeanContainerMethods(1, outer);
 
-    outer.tab(1).stn("private final java.lang.Object " + Const.syncField + " = new java.lang.Object();");
+    outer.nl();
+    outer.tab(1).stn("//");
+    outer.tab(1).stn("// Bean creations");
+    outer.tab(1).stn("//");
 
     writeBeanCreations(1, outer);
 
+    outer.tab(1).stn("//");
+    outer.tab(1).stn("// Bean references");
+    outer.tab(1).stn("//");
+
+    writeBeanReferences(1, outer);
+
+    outer.tab(1).stn("//");
+    outer.tab(1).stn("// Getter creations");
+    outer.tab(1).stn("//");
+
+    writeGetterCreations(1, outer);
+
     outer.stn("}");
+  }
+
+
+  @SuppressWarnings("SameParameterValue")
+  private void writeBeanReferences(int tab, Outer outer) {
+    usingBeanReferences.stream()
+      .filter(BeanReference::needGetter)
+      .forEachOrdered(a -> a.writeGetter(tab, outer));
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  private void writeGetterCreations(int tab, Outer outer) {
+    writingGetterCreations.forEach(gc -> gc.writeGetter(tab, outer));
   }
 }

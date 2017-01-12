@@ -1,7 +1,13 @@
 package kz.greetgo.depinject.gen2;
 
+import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.gen.errors.LeftException;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static kz.greetgo.depinject.gen2.Utils.codeName;
 
 public class GetterCreation {
   public final Class<?> getterClass;
@@ -15,7 +21,7 @@ public class GetterCreation {
   }
 
   public boolean use = false;
-  
+
   public void markToUse() {
     if (use) return;
     use = true;
@@ -51,10 +57,8 @@ public class GetterCreation {
     return preparations.size() > 0;
   }
 
-  public String getterVarName() {
-    return needGetter()
-      ? "getter_withPreparations_" + beanCreation.beanClass.getSimpleName() + '_' + varIndex()
-      : beanCreation.getterVarName();
+  private String className() {
+    return beanCreation.beanClass.getSimpleName();
   }
 
   private int varIndex() {
@@ -80,5 +84,107 @@ public class GetterCreation {
       sb.append("\n\t\t\t\tprepared by ").append(preparation);
     }
     return sb.toString();
+  }
+
+  public void writeGetter(int tab, Outer outer) {
+    if (!needGetter()) return;
+    if (beanCreation.singleton) {
+      writeGetterSingleton(tab, outer);
+    } else {
+      writeGetterMulti(tab, outer);
+    }
+  }
+
+  private String applyPreparations(int tab, Outer outer, String inVarName) {
+    String current = inVarName;
+
+    int i = 1;
+
+    for (BeanCreation p : preparations) {
+
+      String newVar = inVarName + '_' + i++;
+
+      outer.tab(tab).stn(codeName(p.preparingClass) + " " + newVar
+        + " = " + p.getterVarName() + ".get().prepareBean(" + current + ");");
+
+      current = newVar;
+    }
+
+    return current;
+  }
+
+  public String getterVarName() {
+    return needGetter()
+      ? "getter_withPreparations_" + className() + '_' + varIndex()
+      : beanCreation.getterVarName();
+  }
+
+  private String cachedValueVarName() {
+    if (!needGetter()) throw new LeftException("gje4kkf556djd5h3");
+    return "cachedValue_withPreparations_" + className() + '_' + varIndex();
+  }
+
+  private String gettingMethodName() {
+    if (!needGetter()) throw new LeftException("hs74fh64h74ht56feh5");
+    return "get_withPreparations_" + className() + '_' + varIndex();
+  }
+
+  private void writeGetterSingleton(int tab, Outer o) {
+    String getterClassName = codeName(getterClass);
+    String beanClassName = codeName(beanCreation.beanClass);
+
+    o.nl();
+    o.tab(tab).stn("private final " + codeName(AtomicReference.class) + "<" + getterClassName
+      + "> " + cachedValueVarName() + " = new " + codeName(AtomicReference.class) + "<>();");
+    o.tab(tab).stn("private final " + codeName(BeanGetter.class) + "<" + getterClassName
+      + "> " + getterVarName() + " = () -> " + gettingMethodName() + "();");
+
+    o.tab(tab).stn("private " + getterClassName + ' ' + gettingMethodName() + " () {");
+
+    final int tab1 = tab + 1;
+    final int tab2 = tab + 2;
+    final int tab3 = tab + 3;
+
+    o.tab(tab1).stn("{");
+    o.tab(tab2).stn(getterClassName + " x = " + cachedValueVarName() + ".get();");
+    o.tab(tab2).stn("if (x != null) return x;");
+    o.tab(tab1).stn("}");
+
+    o.tab(tab1).stn("synchronized (" + Const.SYNC_FIELD + ") {");
+
+    o.tab(tab2).stn("{");
+    o.tab(tab3).stn(getterClassName + " x = " + cachedValueVarName() + ".get();");
+    o.tab(tab3).stn("if (x != null) return x;");
+    o.tab(tab2).stn("}");
+
+    o.tab(tab2).stn("{");
+    o.tab(tab3).stn(beanClassName + " singleValue = " + beanCreation.getterVarName() + ".get();");
+    String outVarName = applyPreparations(tab3, o, "singleValue");
+    o.tab(tab3).stn(cachedValueVarName() + ".set(" + outVarName + ");");
+    o.tab(tab3).stn("return " + outVarName + ';');
+    o.tab(tab2).stn("}");
+
+    o.tab(tab1).stn("}");//synchronized
+
+    o.tab(tab).stn("}");
+  }
+
+  private void writeGetterMulti(int tab, Outer o) {
+    String getterClassName = codeName(getterClass);
+    String beanClassName = codeName(beanCreation.beanClass);
+
+    o.nl();
+    o.tab(tab).stn("private final " + codeName(BeanGetter.class) + "<" + getterClassName
+      + "> " + getterVarName() + " = () -> " + gettingMethodName() + "();");
+
+    o.tab(tab).stn("private " + getterClassName + ' ' + gettingMethodName() + " () {");
+
+    final int tab1 = tab + 1;
+
+    o.tab(tab1).stn(beanClassName + " value = " + beanCreation.getterVarName() + ".get();");
+    String outVarName = applyPreparations(tab1, o, "value");
+    o.tab(tab1).stn("return " + outVarName + ';');
+
+    o.tab(tab).stn("}");
   }
 }

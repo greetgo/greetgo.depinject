@@ -42,7 +42,9 @@ public class BeanContainerManagerTest2 {
 
     List<BeanA1> take_beanA1();
 
-    List<BeanA1_impl> take_beanA1_impl();
+    List<BeanA1_impl> take_beanA1_impl_list();
+
+    BeanA1_impl take_beanA1_impl();
 
     List<BeanA2> take_beanA2();
 
@@ -89,13 +91,12 @@ public class BeanContainerManagerTest2 {
     bcm.prepareToWrite();
 
     String packageName = bci.getPackage().getName();
-    String classSimpleName = bci.getSimpleName() + "_IMPLEMENTS";
+    String classSimpleName = bci.getSimpleName() + "_IMPLEMENT";
 
     File javaFile = new File(buildDir() + "/gen_src/" + packageName.replaceAll("\\.", "/")
       + '/' + classSimpleName + ".java");
 
     javaFile.getParentFile().mkdirs();
-
 
     try (Outer outer = OuterTo.file(javaFile)) {
 

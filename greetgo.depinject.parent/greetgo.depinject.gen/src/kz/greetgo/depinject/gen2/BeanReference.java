@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.gen2;
 
+import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterArgumentType;
 import kz.greetgo.depinject.gen.errors.LeftException;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static kz.greetgo.depinject.gen2.Utils.codeName;
 
 public class BeanReference {
 
@@ -89,7 +92,7 @@ public class BeanReference {
       + ']';
   }
 
-  public void check() {
+  public void checkConnectivity() {
     if (isList) return;
 
     if (getterCreations.size() == 0) throw new NoCandidates(this);
@@ -115,13 +118,7 @@ public class BeanReference {
   }
 
   public boolean needGetter() {
-    if (getterCreations.size() > 1) return true;
-
-    if (getterCreations.size() == 0) throw new LeftException("hgv4ghv6hj7knj9lkm0h3");
-
-    if (getterCreations.get(0).preparations.size() > 0) return true;
-
-    return false;
+    return isList;
   }
 
   public int varIndex = 0;
@@ -132,8 +129,49 @@ public class BeanReference {
       : getterCreations.get(0).getterVarName();
   }
 
+  private String gettingMethodName() {
+    if (!needGetter()) throw new LeftException("jhb4jhb5hjb6jn7");
+    return "get_ref_" + (isList ? "list_" : "") + targetClass.getSimpleName() + '_' + varIndex();
+  }
+
   private int varIndex() {
     if (varIndex <= 0) throw new RuntimeException("Left var index = " + varIndex);
     return varIndex;
+  }
+
+  public void writeGetter(int tab, Outer outer) {
+    if (!needGetter()) return;
+    outer.nl();
+    if (isList) {
+      writeGetterAsList(tab, outer);
+    } else {
+      writeGetterMono(tab, outer);
+    }
+  }
+
+  @SuppressWarnings("unused")
+  private void writeGetterMono(int tab, Outer outer) {
+    throw new UnsupportedOperationException();
+  }
+
+  private void writeGetterAsList(int tab, Outer outer) {
+    outer.tab(tab).stn("private final " + codeName(BeanGetter.class) + "<" + codeName(List.class)
+      + "<" + codeName(targetClass) + ">> " + getterVarName() + " = () -> " + gettingMethodName() + "();");
+    outer.tab(tab).stn("private final " + codeName(List.class)
+      + "<" + codeName(targetClass) + "> " + gettingMethodName() + "() {");
+
+    final int tab1 = tab + 1;
+
+    outer.tab(tab1).stn(codeName(List.class) + "<" + codeName(targetClass)
+      + "> list = new " + codeName(ArrayList.class) + "<>();");
+
+    for (GetterCreation gc : getterCreations) {
+      gc.getterVarName();
+      outer.tab(tab1).stn("list.add(" + gc.getterVarName() + ".get());");
+    }
+
+    outer.tab(tab1).stn("return list;");
+
+    outer.tab(tab).stn("};");
   }
 }
