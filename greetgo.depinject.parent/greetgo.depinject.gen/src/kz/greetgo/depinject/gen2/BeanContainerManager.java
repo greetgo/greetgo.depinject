@@ -131,6 +131,7 @@ public class BeanContainerManager {
 
     outer.nl().tab(1).stn("private final java.lang.Object " + Const.SYNC_FIELD + " = new java.lang.Object();");
 
+    outer.nl();
     outer.tab(1).stn("//");
     outer.tab(1).stn("// Bean container methods");
     outer.tab(1).stn("//");
@@ -144,12 +145,14 @@ public class BeanContainerManager {
 
     writeBeanCreations(1, outer);
 
+    outer.nl();
     outer.tab(1).stn("//");
     outer.tab(1).stn("// Bean references");
     outer.tab(1).stn("//");
 
     writeBeanReferences(1, outer);
 
+    outer.tab(1).nl();
     outer.tab(1).stn("//");
     outer.tab(1).stn("// Getter creations");
     outer.tab(1).stn("//");

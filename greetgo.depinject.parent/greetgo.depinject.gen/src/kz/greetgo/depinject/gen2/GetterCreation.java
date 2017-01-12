@@ -137,7 +137,7 @@ public class GetterCreation {
     o.tab(tab).stn("private final " + codeName(AtomicReference.class) + "<" + getterClassName
       + "> " + cachedValueVarName() + " = new " + codeName(AtomicReference.class) + "<>();");
     o.tab(tab).stn("private final " + codeName(BeanGetter.class) + "<" + getterClassName
-      + "> " + getterVarName() + " = () -> " + gettingMethodName() + "();");
+      + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
 
     o.tab(tab).stn("private " + getterClassName + ' ' + gettingMethodName() + " () {");
 
@@ -175,7 +175,7 @@ public class GetterCreation {
 
     o.nl();
     o.tab(tab).stn("private final " + codeName(BeanGetter.class) + "<" + getterClassName
-      + "> " + getterVarName() + " = () -> " + gettingMethodName() + "();");
+      + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
 
     o.tab(tab).stn("private " + getterClassName + ' ' + gettingMethodName() + " () {");
 

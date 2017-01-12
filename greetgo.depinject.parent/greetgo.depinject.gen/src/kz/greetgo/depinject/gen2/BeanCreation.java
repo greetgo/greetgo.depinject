@@ -96,7 +96,7 @@ public abstract class BeanCreation {
     }
 
     out.tab(tab).stn("private final " + codeName(BeanGetter.class)
-      + "<" + codeName(beanClass) + "> " + getterVarName() + " = () -> " + gettingMethodName() + "();");
+      + "<" + codeName(beanClass) + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
     out.tab(tab).stn("private " + codeName(beanClass) + " " + gettingMethodName() + " () {");
 
     if (singleton) {
@@ -133,7 +133,7 @@ public abstract class BeanCreation {
       out.tab(tab + 1).stn("return localValue;");
     }
 
-    out.tab(tab).stn("};");
+    out.tab(tab).stn("}");
   }
 
   public void writeBeanGettersAndInit(int tab, Outer out, @SuppressWarnings("SameParameterValue") String variableName) {

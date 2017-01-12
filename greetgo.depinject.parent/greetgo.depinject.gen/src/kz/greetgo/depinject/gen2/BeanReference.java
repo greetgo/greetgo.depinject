@@ -156,8 +156,8 @@ public class BeanReference {
 
   private void writeGetterAsList(int tab, Outer outer) {
     outer.tab(tab).stn("private final " + codeName(BeanGetter.class) + "<" + codeName(List.class)
-      + "<" + codeName(targetClass) + ">> " + getterVarName() + " = () -> " + gettingMethodName() + "();");
-    outer.tab(tab).stn("private final " + codeName(List.class)
+      + "<" + codeName(targetClass) + ">> " + getterVarName() + " = this::" + gettingMethodName() + ";");
+    outer.tab(tab).stn("private " + codeName(List.class)
       + "<" + codeName(targetClass) + "> " + gettingMethodName() + "() {");
 
     final int tab1 = tab + 1;
@@ -172,6 +172,6 @@ public class BeanReference {
 
     outer.tab(tab1).stn("return list;");
 
-    outer.tab(tab).stn("};");
+    outer.tab(tab).stn("}");
   }
 }
