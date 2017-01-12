@@ -22,6 +22,10 @@ import kz.greetgo.depinject.gen2.test_beans005.top.BeanConfig005;
 import kz.greetgo.depinject.gen2.test_beans006.BeanConfig006;
 import kz.greetgo.depinject.gen2.test_beans012.BeanConfig012;
 import kz.greetgo.depinject.gen2.test_beans013.BeanConfig013;
+import kz.greetgo.depinject.gen2.test_beans014.BeanConfig014_2;
+import kz.greetgo.depinject.gen2.test_beans014.BeanConfig014_3;
+import kz.greetgo.depinject.gen2.test_beans014.local_package.sub.BeanConfig014_1;
+import kz.greetgo.depinject.gen2.test_beans014.remote_package.sub.RemoteBean;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -233,5 +237,56 @@ public class BeanCreationCollectorTest {
     BeanCreationCollector.collectFrom(BeanContainer_WithAbstractBeanFactoryReference.class);
     //
     //
+  }
+
+  @Include(BeanConfig014_1.class)
+  interface BeanContainer_BeanScannerPackage_withParentReference extends BeanContainer {
+  }
+
+  @Test
+  public void collectFrom_BeanScannerPackage_withParentReference() throws Exception {
+    //
+    //
+    List<BeanCreation> bcList = BeanCreationCollector
+      .collectFrom(BeanContainer_BeanScannerPackage_withParentReference.class);
+    //
+    //
+
+    assertThat(bcList).hasSize(1);
+    assertThat(bcList.get(0).beanClass.getName()).isEqualTo(RemoteBean.class.getName());
+  }
+
+  @Include(BeanConfig014_2.class)
+  interface BeanContainer_BeanScannerPackage_withRelativeReference extends BeanContainer {
+  }
+
+  @Test
+  public void collectFrom_BeanScannerPackage_withRelativeReference() throws Exception {
+    //
+    //
+    List<BeanCreation> bcList = BeanCreationCollector
+      .collectFrom(BeanContainer_BeanScannerPackage_withRelativeReference.class);
+    //
+    //
+
+    assertThat(bcList).hasSize(1);
+    assertThat(bcList.get(0).beanClass.getName()).isEqualTo(RemoteBean.class.getName());
+  }
+
+  @Include(BeanConfig014_3.class)
+  interface BeanContainer_BeanScannerPackage_withFullReference extends BeanContainer {
+  }
+
+  @Test
+  public void collectFrom_BeanScannerPackage_withFullReference() throws Exception {
+    //
+    //
+    List<BeanCreation> bcList = BeanCreationCollector
+      .collectFrom(BeanContainer_BeanScannerPackage_withFullReference.class);
+    //
+    //
+
+    assertThat(bcList).hasSize(1);
+    assertThat(bcList.get(0).beanClass.getName()).isEqualTo(RemoteBean.class.getName());
   }
 }

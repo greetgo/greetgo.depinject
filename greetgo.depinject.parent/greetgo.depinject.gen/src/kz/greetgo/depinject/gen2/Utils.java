@@ -98,9 +98,9 @@ public class Utils {
 
   public static String asStr(Class<?> aClass) {
     boolean isInterface = aClass.isInterface();
-    if (isInterface) return "!" + aClass.getSimpleName();
+    if (isInterface) return "iface " + aClass.getSimpleName();
     boolean isAbstract = Modifier.isAbstract(aClass.getModifiers());
-    if (isAbstract) return "/" + aClass.getSimpleName();
+    if (isAbstract) return "abstract " + aClass.getSimpleName();
     return aClass.getSimpleName();
   }
 

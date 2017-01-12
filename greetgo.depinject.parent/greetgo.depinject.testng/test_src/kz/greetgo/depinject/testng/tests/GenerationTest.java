@@ -5,7 +5,6 @@ import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.BeanContainerGenerator;
 import kz.greetgo.depinject.testng.test_beans_package.AbstractDepinjectTestNgTestBeans;
 import kz.greetgo.depinject.testng.test_beans_package.for_include_by_str.OnSideBean;
-import kz.greetgo.depinject.testng.test_beans_package.left_package.LeftBean;
 import kz.greetgo.util.ServerUtil;
 import org.testng.annotations.Test;
 
@@ -16,6 +15,7 @@ public class GenerationTest {
 
   @Include(AbstractDepinjectTestNgTestBeans.class)
   public interface TestBeanContainer extends BeanContainer {
+    @SuppressWarnings("unused")
     OnSideBean getLeftBean();
   }
 
