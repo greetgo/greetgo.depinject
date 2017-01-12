@@ -90,9 +90,13 @@ public abstract class BeanCreation {
   public void writeGetter(int tab, Outer out) {
     out.nl();
 
+    final int tab1 = tab + 1;
+    final int tab2 = tab + 2;
+    final int tab3 = tab + 3;
+
     if (singleton) {
-      out.tab(tab).stn("private final " + AtomicReference.class.getName() + "<" + beanClass.getName() +
-        "> " + cachedValueVarName() + " = new " + AtomicReference.class.getName() + "<>(null);");
+      out.tab(tab).stn("private final " + codeName(AtomicReference.class) + "<" + codeName(beanClass) +
+        "> " + cachedValueVarName() + " = new " + codeName(AtomicReference.class) + "<>(null);");
     }
 
     out.tab(tab).stn("private final " + codeName(BeanGetter.class)
@@ -101,36 +105,46 @@ public abstract class BeanCreation {
 
     if (singleton) {
 
-      out.tab(tab + 1).stn("{");
-      out.tab(tab + 2).stn(codeName(beanClass) + " x = " + cachedValueVarName() + ".get();");
-      out.tab(tab + 2).stn("if (x != null) return x;");
-      out.tab(tab + 1).stn("}");
+      out.tab(tab1).stn("{");
+      out.tab(tab2).stn(codeName(beanClass) + " x = " + cachedValueVarName() + ".get();");
+      out.tab(tab2).stn("if (x != null) return x;");
+      out.tab(tab1).stn("}");
 
-      out.tab(tab + 1).stn("synchronized (" + Const.SYNC_FIELD + ") {");
+      out.tab(tab1).stn("synchronized (" + Const.SYNC_FIELD + ") {");
 
-      out.tab(tab + 2).stn("{");
-      out.tab(tab + 3).stn(codeName(beanClass) + " x = " + cachedValueVarName() + ".get();");
-      out.tab(tab + 3).stn("if (x != null) return x;");
-      out.tab(tab + 2).stn("}");
+      out.tab(tab2).stn("{");
+      out.tab(tab3).stn(codeName(beanClass) + " x = " + cachedValueVarName() + ".get();");
+      out.tab(tab3).stn("if (x != null) return x;");
+      out.tab(tab2).stn("}");
 
       {
-        out.tab(tab + 2).stn("{");
+        out.tab(tab2).stn("try {");
 
         writeCreateBean(tab + 3, out, "localValue");
         writeBeanGettersAndInit(tab + 3, out, "localValue");
 
-        out.tab(tab + 3).stn(cachedValueVarName() + ".set(localValue);");
-        out.tab(tab + 3).stn("return localValue;");
+        out.tab(tab3).stn(cachedValueVarName() + ".set(localValue);");
+        out.tab(tab3).stn("return localValue;");
 
-        out.tab(tab + 2).stn("}");
+        out.tab(tab2).stn("} catch (java.lang.Exception e) {");
+        out.tab(tab3).stn("if (e instanceof java.lang.RuntimeException) throw (java.lang.RuntimeException) e;");
+        out.tab(tab3).stn("throw new java.lang.RuntimeException(e);");
+        out.tab(tab2).stn("}");
       }
 
-      out.tab(tab + 1).stn("}");//synchronized
+      out.tab(tab1).stn("}");//synchronized
 
     } else {
-      writeCreateBean(tab + 1, out, "localValue");
-      writeBeanGettersAndInit(tab + 3, out, "localValue");
-      out.tab(tab + 1).stn("return localValue;");
+
+      out.tab(tab1).stn("try {");
+      writeCreateBean(tab2, out, "localValue");
+      writeBeanGettersAndInit(tab2, out, "localValue");
+      out.tab(tab2).stn("return localValue;");
+      out.tab(tab1).stn("} catch (java.lang.Exception e) {");
+      out.tab(tab2).stn("if (e instanceof java.lang.RuntimeException) throw (java.lang.RuntimeException) e;");
+      out.tab(tab2).stn("throw new java.lang.RuntimeException(e);");
+      out.tab(tab1).stn("}");
+      RuntimeException e;
     }
 
     out.tab(tab).stn("}");
@@ -139,8 +153,7 @@ public abstract class BeanCreation {
   public void writeBeanGettersAndInit(int tab, Outer out, @SuppressWarnings("SameParameterValue") String variableName) {
     beanGetterDotList.forEach(bg -> bg.writeAssignment(tab, out, variableName));
     if (HasAfterInject.class.isAssignableFrom(beanClass)) {
-      out.tab(tab).stn("try{ " + variableName + ".afterInject();" +
-        " }catch(java.lang.Exception e) {if(e instanceof java.lang.RuntimeException) throw (java.lang.RuntimeException)e; throw new java.lang.RuntimeException(e);}");
+      out.tab(tab).stn(variableName + ".afterInject();");
     }
   }
 

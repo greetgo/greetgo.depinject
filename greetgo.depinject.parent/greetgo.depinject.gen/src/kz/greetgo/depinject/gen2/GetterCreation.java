@@ -187,4 +187,9 @@ public class GetterCreation {
 
     o.tab(tab).stn("}");
   }
+
+  public Class<?> lastClass() {
+    if (preparations.size() == 0) return beanCreation.beanClass;
+    return preparations.get(preparations.size() - 1).beanClass;
+  }
 }

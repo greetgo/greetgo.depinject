@@ -15,4 +15,6 @@ public class ZGetters {
   public BeanGetter<List<BeanA2>> beanA2;
 
   public BeanGetter<List<BeanA3>> beanA3;
+
+  public BeanGetter<BeanA4> beanA4;
 }

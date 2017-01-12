@@ -4,7 +4,7 @@ import kz.greetgo.class_scanner.ClassScannerDef;
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanContainer;
-import kz.greetgo.depinject.core.BeanFactoredBy;
+import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.core.BeanScanner;
 import kz.greetgo.depinject.core.Include;
@@ -112,9 +112,9 @@ public class BeanCreationCollector {
   }
 
   private BeanReference extractBeanFactoryReference(Class<?> beanClass) {
-    List<BeanFactoredBy> beanFactoredByList = getAllAnnotations(beanClass, BeanFactoredBy.class);
-    if (beanFactoredByList.size() > 0) {
-      return new BeanReference(beanFactoredByList.get(0).value(), BeanFactoredBy.class.getSimpleName() +
+    List<FactoredBy> factoredByList = getAllAnnotations(beanClass, FactoredBy.class);
+    if (factoredByList.size() > 0) {
+      return new BeanReference(factoredByList.get(0).value(), FactoredBy.class.getSimpleName() +
         " in (or in any parents of) " + Utils.asStr(beanClass));
     }
 

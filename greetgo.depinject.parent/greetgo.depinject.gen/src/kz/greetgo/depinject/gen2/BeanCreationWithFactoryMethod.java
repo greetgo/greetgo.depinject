@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static kz.greetgo.depinject.gen2.Utils.asStr;
+import static kz.greetgo.depinject.gen2.Utils.codeName;
 
 public class BeanCreationWithFactoryMethod extends BeanCreation {
   public final BeanCreation factorySource;
@@ -39,7 +40,7 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
 
   @Override
   protected void writeCreateBean(int tab, Outer out, String variableName) {
-    out.tab(tab).stn(beanClass.getName() + ' ' + variableName
+    out.tab(tab).stn(codeName(beanClass) + ' ' + variableName
       + " = " + factorySource.getterVarName() + ".get()." + factoryMethod.getName() + "();");
   }
 }

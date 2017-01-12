@@ -1,5 +1,9 @@
 package kz.greetgo.depinject.gen2;
 
+import kz.greetgo.depinject.core.BeanGetter;
+
+import static kz.greetgo.depinject.gen2.Utils.codeName;
+
 public class BeanGetterDot implements Comparable<BeanGetterDot> {
   public final String fieldName;
   public final BeanReference beanReference;
@@ -23,6 +27,8 @@ public class BeanGetterDot implements Comparable<BeanGetterDot> {
   }
 
   public void writeAssignment(int tab, Outer out, String variableName) {
-    out.tab(tab).stn(variableName + '.' + fieldName + " = " + beanReference.getterVarName() + ";");
+    out.tab(tab).stn(variableName + '.' + fieldName + " = (" + codeName(BeanGetter.class) + '<'
+      + beanReference.targetClassCode() + ">)(java.lang.Object)" + beanReference.getterVarName() + ";");
+
   }
 }

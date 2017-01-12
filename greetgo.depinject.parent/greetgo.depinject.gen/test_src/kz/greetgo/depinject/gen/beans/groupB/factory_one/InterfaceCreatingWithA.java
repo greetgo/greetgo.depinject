@@ -1,8 +1,10 @@
 package kz.greetgo.depinject.gen.beans.groupB.factory_one;
 
-import kz.greetgo.depinject.core.BeanFactoredBy;
+import kz.greetgo.depinject.core.Bean;
+import kz.greetgo.depinject.core.FactoredBy;
 
-@BeanFactoredBy(FactoryA.class)
+@Bean
+@FactoredBy(FactoryA.class)
 public interface InterfaceCreatingWithA {
   String helloFromInterfaceCreatingWithA();
 }

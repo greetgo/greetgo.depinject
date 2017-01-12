@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static kz.greetgo.depinject.gen2.Utils.asStr;
+import static kz.greetgo.depinject.gen2.Utils.codeName;
 
 public class BeanCreationWithDefaultConstructor extends BeanCreation {
   public BeanCreationWithDefaultConstructor(Class<?> beanClass, boolean singleton) {
@@ -30,6 +31,6 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
 
   @Override
   protected void writeCreateBean(int tab, Outer out, String variableName) {
-    out.tab(tab).stn(beanClass.getName() + ' ' + variableName + " = new " + beanClass.getName() + "();");
+    out.tab(tab).stn(codeName(beanClass) + ' ' + variableName + " = new " + codeName(beanClass) + "();");
   }
 }

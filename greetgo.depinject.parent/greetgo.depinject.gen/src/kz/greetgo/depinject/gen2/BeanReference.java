@@ -55,6 +55,11 @@ public class BeanReference {
   public final Class<?> targetClass;
   public final boolean isList;
 
+  @SuppressWarnings("unused")
+  public String targetClassCode() {
+    return isList ? codeName(List.class) + '<' + codeName(targetClass) + '>' : codeName(targetClass);
+  }
+
   public final List<GetterCreation> getterCreations = new ArrayList<>();
 
   private String compareStr = null;
@@ -201,4 +206,5 @@ public class BeanReference {
 
     outer.tab(tab).stn("}");
   }
+
 }

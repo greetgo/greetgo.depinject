@@ -1,9 +1,9 @@
 package kz.greetgo.depinject.gen2.test_beans005.sub_beans_5;
 
 import kz.greetgo.depinject.core.Bean;
-import kz.greetgo.depinject.core.BeanFactoredBy;
+import kz.greetgo.depinject.core.FactoredBy;
 
 @Bean
-@BeanFactoredBy(BeanFactory5.class)
+@FactoredBy(BeanFactory5.class)
 public interface Bean5 {
 }
