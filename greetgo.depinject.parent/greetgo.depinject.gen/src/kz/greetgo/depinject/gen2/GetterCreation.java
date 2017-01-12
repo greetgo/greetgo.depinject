@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static kz.greetgo.depinject.gen2.Utils.asStr;
 import static kz.greetgo.depinject.gen2.Utils.codeName;
 
 public class GetterCreation {
@@ -18,6 +19,11 @@ public class GetterCreation {
     if (beanCreation == null) throw new NullPointerException("beanCreation == null");
     this.getterClass = getterClass;
     this.beanCreation = beanCreation;
+  }
+
+  @Override
+  public String toString() {
+    return "GetterCreation{ " + asStr(getterClass) + " := " + beanCreation;
   }
 
   public boolean use = false;
@@ -79,7 +85,7 @@ public class GetterCreation {
 
   public String preparationStr() {
     StringBuilder sb = new StringBuilder();
-    sb.append("\n\t").append(Utils.asStr(getterClass)).append(" -> ").append(beanCreation);
+    sb.append("\n\t").append(asStr(getterClass)).append(" -> ").append(beanCreation);
     for (BeanCreation preparation : preparations) {
       sb.append("\n\t\t\t\tprepared by ").append(preparation);
     }

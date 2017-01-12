@@ -4,9 +4,10 @@ import kz.greetgo.class_scanner.ClassScannerDef;
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanContainer;
-import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.core.BeanScanner;
+import kz.greetgo.depinject.core.BeanScannerPackage;
+import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.FactoryMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
@@ -16,9 +17,11 @@ import kz.greetgo.depinject.gen.errors.NoInclude;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static kz.greetgo.depinject.gen2.Utils.*;
 
@@ -78,8 +81,39 @@ public class BeanCreationCollector {
       if (beanScanner != null) collectFromPackage(beanConfig.getPackage().getName());
     }
 
+    {
+      BeanScannerPackage beanScannerPackage = beanConfig.getAnnotation(BeanScannerPackage.class);
+      if (beanScannerPackage != null) for (String subPackageName : beanScannerPackage.value()) {
+        collectFromPackage(calcFullName(beanConfig.getPackage().getName(), subPackageName));
+      }
+    }
+
     if (addToFactoryClassStack) {
       factoryClassStack.removeLast();
+    }
+  }
+
+  static String calcFullName(String current, String relative) {
+    if (relative.startsWith(".")) return current + relative;
+    if (!relative.startsWith("^")) return relative;
+
+    {
+      List<String> currentList = new ArrayList<>();
+      Collections.addAll(currentList, current.split("\\."));
+
+      int count = 0;
+      while (count < relative.length() && relative.charAt(count) == '^') {
+        count++;
+        if (currentList.size() > 0) {
+          currentList.remove(currentList.size() - 1);
+        }
+      }
+
+      while (count < relative.length() && relative.charAt(count) == '.') count++;
+
+      Collections.addAll(currentList, relative.substring(count).split("\\."));
+
+      return currentList.stream().collect(Collectors.joining("."));
     }
   }
 

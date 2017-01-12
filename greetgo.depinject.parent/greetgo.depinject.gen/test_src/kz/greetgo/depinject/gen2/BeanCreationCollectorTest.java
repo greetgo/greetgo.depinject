@@ -26,6 +26,7 @@ import kz.greetgo.depinject.gen2.test_beans014.BeanConfig014_2;
 import kz.greetgo.depinject.gen2.test_beans014.BeanConfig014_3;
 import kz.greetgo.depinject.gen2.test_beans014.local_package.sub.BeanConfig014_1;
 import kz.greetgo.depinject.gen2.test_beans014.remote_package.sub.RemoteBean;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -288,5 +289,32 @@ public class BeanCreationCollectorTest {
 
     assertThat(bcList).hasSize(1);
     assertThat(bcList.get(0).beanClass.getName()).isEqualTo(RemoteBean.class.getName());
+  }
+
+  @DataProvider
+  public Object[][] calcFullName_DP() {
+    return new Object[][]{
+      {"kz.greetgo.depinject.gen", "com.google.sap", "com.google.sap"},
+      {"kz.greetgo.depinject.gen", ".hello.world", "kz.greetgo.depinject.gen.hello.world"},
+      {"kz.greetgo.depinject.gen", "^.by.world", "kz.greetgo.depinject.by.world"},
+      {"kz.greetgo.depinject.gen", "^^.gcory.pink.world", "kz.greetgo.gcory.pink.world"},
+      {"kz.greetgo.depinject.gen", "^^^.greetCom.gcory.pink.world", "kz.greetCom.gcory.pink.world"},
+      {"kz.greetgo.depinject.gen", "^by.world", "kz.greetgo.depinject.by.world"},
+      {"kz.greetgo.depinject.gen", "^^gcory.pink.world", "kz.greetgo.gcory.pink.world"},
+      {"kz.greetgo.depinject.gen", "^^^greetCom.gcory.pink.world", "kz.greetCom.gcory.pink.world"},
+    };
+  }
+
+  @Test(dataProvider = "calcFullName_DP")
+  public void calcFullName(String current, String relative, String expected) throws Exception {
+
+    //
+    //
+    String actual = BeanCreationCollector.calcFullName(current, relative);
+    //
+    //
+
+    assertThat(actual).isEqualTo(expected);
+
   }
 }
