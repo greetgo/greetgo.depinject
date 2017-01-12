@@ -57,6 +57,33 @@ public class BeanReference {
 
   public final List<GetterCreation> getterCreations = new ArrayList<>();
 
+  private String compareStr = null;
+
+  public String compareStr() {
+    if (compareStr == null) compareStr = (isList ? "A_" : "B_") + targetClass.getName();
+    return compareStr;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    BeanReference that = (BeanReference) o;
+
+    if (isList != that.isList) return false;
+    if (!getterCreations.equals(that.getterCreations)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = (isList ? 1 : 0);
+    result = 31 * result + getterCreations.hashCode();
+    return result;
+  }
+
   public void fillTargetCreationsFrom(List<BeanCreation> candidates) {
 
     for (BeanCreation candidate : candidates) {

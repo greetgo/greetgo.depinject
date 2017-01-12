@@ -27,6 +27,8 @@ public class BeanContainerManager {
 
   List<GetterCreation> writingGetterCreations;
 
+  List<BeanReference> writingBeanReferences;
+
   void prepareToWrite() {
     //
     // PREPARE REFERENCES
@@ -85,6 +87,14 @@ public class BeanContainerManager {
 
     writingGetterCreations.sort(Comparator.comparing(o -> o.beanCreation.beanClass.getName()));
 
+    Map<BeanReference, List<BeanReference>> beanReferenceMap = new HashMap<>();
+    usingBeanReferences.stream()
+      .filter(BeanReference::needGetter)
+      .forEachOrdered(br -> beanReferenceMap.computeIfAbsent(br, k -> new ArrayList<>()).add(br));
+
+    writingBeanReferences = beanReferenceMap.keySet().stream().collect(Collectors.toList());
+    writingBeanReferences.sort(Comparator.comparing(BeanReference::compareStr));
+
     //
     // INDEXING OF VARIABLES ...
     //
@@ -93,9 +103,10 @@ public class BeanContainerManager {
 
     usingBeanCreationList.forEach(a -> a.varIndex = varIndex[0]++);
 
-    usingBeanReferences.stream()
-      .filter(BeanReference::needGetter)
-      .forEachOrdered(a -> a.varIndex = varIndex[0]++);
+    writingBeanReferences.forEach(br -> {
+      br.varIndex = varIndex[0]++;
+      beanReferenceMap.get(br).forEach(br2 -> br2.varIndex = br.varIndex);
+    });
 
     writingGetterCreations.forEach(gc -> {
       gc.varIndex = varIndex[0]++;
@@ -103,15 +114,13 @@ public class BeanContainerManager {
     });
 
     //
-    //
     // THE END OF PREPARATION
     //
-    //
+
   }
 
   void writeBeanContainerMethods(int tab, Outer out) {
     if (beanContainerMethodList.isEmpty()) throw new NoMethodsInBeanContainer(beanContainerInterface);
-
     beanContainerMethodList.forEach(bcm -> bcm.writeBeanContainerMethod(tab, out));
   }
 
@@ -165,9 +174,7 @@ public class BeanContainerManager {
 
   @SuppressWarnings("SameParameterValue")
   private void writeBeanReferences(int tab, Outer outer) {
-    usingBeanReferences.stream()
-      .filter(BeanReference::needGetter)
-      .forEachOrdered(a -> a.writeGetter(tab, outer));
+    writingBeanReferences.forEach(a -> a.writeGetter(tab, outer));
   }
 
   @SuppressWarnings("SameParameterValue")
