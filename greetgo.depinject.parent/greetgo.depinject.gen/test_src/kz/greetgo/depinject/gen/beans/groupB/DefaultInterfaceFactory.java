@@ -7,6 +7,7 @@ public abstract class DefaultInterfaceFactory implements BeanFactory {
   @Override
   public Object createBean(Class<?> beanClass) {
     if (beanClass == CreatingByDefaultFactory.class) {
+      //noinspection Convert2Lambda
       return new CreatingByDefaultFactory() {
         @Override
         public String hello() {

@@ -20,6 +20,8 @@ import kz.greetgo.depinject.gen2.test_beans005.sub_beans_4.BeanFactory4;
 import kz.greetgo.depinject.gen2.test_beans005.sub_beans_5.BeanFactory5;
 import kz.greetgo.depinject.gen2.test_beans005.top.BeanConfig005;
 import kz.greetgo.depinject.gen2.test_beans006.BeanConfig006;
+import kz.greetgo.depinject.gen2.test_beans012.BeanConfig012;
+import kz.greetgo.depinject.gen2.test_beans013.BeanConfig013;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -203,6 +205,32 @@ public class BeanCreationCollectorTest {
     //
     //
     BeanCreationCollector.collectFrom(BeanContainer_for_NoDefaultBeanFactory.class);
+    //
+    //
+  }
+
+  @Include(BeanConfig012.class)
+  interface BeanContainer_WithInterfaceBeanFactoryReference extends BeanContainer {
+  }
+
+  @Test
+  public void collectFrom_InterfaceBeanFactoryReference() throws Exception {
+    //
+    //
+    BeanCreationCollector.collectFrom(BeanContainer_WithInterfaceBeanFactoryReference.class);
+    //
+    //
+  }
+
+  @Include(BeanConfig013.class)
+  interface BeanContainer_WithAbstractBeanFactoryReference extends BeanContainer {
+  }
+
+  @Test
+  public void collectFrom_AbstractBeanFactoryReference() throws Exception {
+    //
+    //
+    BeanCreationCollector.collectFrom(BeanContainer_WithAbstractBeanFactoryReference.class);
     //
     //
   }

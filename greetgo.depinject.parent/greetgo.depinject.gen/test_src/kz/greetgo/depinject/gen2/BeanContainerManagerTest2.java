@@ -3,6 +3,7 @@ package kz.greetgo.depinject.gen2;
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.NoMethodsInBeanContainer;
+import kz.greetgo.depinject.gen.impl_and_use_bean_containers.BeanContainerForTestingUtil;
 import kz.greetgo.depinject.gen2.test_beans010.BeanA1;
 import kz.greetgo.depinject.gen2.test_beans010.BeanA1_impl;
 import kz.greetgo.depinject.gen2.test_beans010.BeanA2;
@@ -10,6 +11,7 @@ import kz.greetgo.depinject.gen2.test_beans010.BeanA3;
 import kz.greetgo.depinject.gen2.test_beans010.BeanBSimple;
 import kz.greetgo.depinject.gen2.test_beans010.BeanConfig010;
 import kz.greetgo.depinject.gen2.test_beans010.ZGetters;
+import kz.greetgo.depinject.gen2.test_beans012.BeanConfig012;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -109,4 +111,14 @@ public class BeanContainerManagerTest2 {
     }
 
   }
+
+  @Test
+  public void prepareToWrite_BeanContainerForTestingUtil() throws Exception {
+    Class<?> bci = BeanContainerForTestingUtil.class;
+
+    BeanContainerManager bcm = new BeanContainerManager(bci);
+    bcm.prepareToWrite();
+
+  }
+
 }

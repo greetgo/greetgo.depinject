@@ -64,7 +64,9 @@ public class BeanCreationCollector {
 
     Class<? extends BeanFactory> defaultFactoryClass = beanConfigAnn.defaultFactoryClass();
 
-    if (isRealClass(defaultFactoryClass)) {
+    boolean addToFactoryClassStack = BeanFactory.class != defaultFactoryClass;
+
+    if (addToFactoryClassStack) {
       factoryClassStack.add(new BeanReference(defaultFactoryClass,
         "default bean factory of " + Utils.asStr(beanConfig)));
     }
@@ -76,7 +78,7 @@ public class BeanCreationCollector {
       if (beanScanner != null) collectFromPackage(beanConfig.getPackage().getName());
     }
 
-    if (isRealClass(defaultFactoryClass)) {
+    if (addToFactoryClassStack) {
       factoryClassStack.removeLast();
     }
   }
