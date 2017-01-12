@@ -129,7 +129,7 @@ public class BeanContainerManager {
     usingBeanCreationList.forEach(a -> a.writeGetter(tab, out));
   }
 
-  public void writeBeanContainerImpl(Outer outer, String packageName, String classSimpleName) {
+  void writeBeanContainerImpl0(Outer outer, String packageName, String classSimpleName) {
 
     if (packageName != null) {
       outer.stn("package " + packageName + ";");
@@ -180,5 +180,10 @@ public class BeanContainerManager {
   @SuppressWarnings("SameParameterValue")
   private void writeGetterCreations(int tab, Outer outer) {
     writingGetterCreations.forEach(gc -> gc.writeGetter(tab, outer));
+  }
+
+  public void writeBeanContainerImpl(Outer outer, String packageName, String classSimpleName) {
+    prepareToWrite();
+    writeBeanContainerImpl0(outer, packageName, classSimpleName);
   }
 }

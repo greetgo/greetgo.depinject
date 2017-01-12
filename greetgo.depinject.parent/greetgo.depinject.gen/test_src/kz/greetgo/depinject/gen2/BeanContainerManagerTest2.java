@@ -102,7 +102,7 @@ public class BeanContainerManagerTest2 {
 
       //
       //
-      bcm.writeBeanContainerImpl(outer, packageName, classSimpleName);
+      bcm.writeBeanContainerImpl0(outer, packageName, classSimpleName);
       //
       //
 
