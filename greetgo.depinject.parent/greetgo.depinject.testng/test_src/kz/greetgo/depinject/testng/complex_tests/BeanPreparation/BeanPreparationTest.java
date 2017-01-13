@@ -18,7 +18,7 @@ public class BeanPreparationTest extends AbstractDepinjectTestNg {
 
   public BeanGetter<BeanPreparationRoom> room;
 
-  @Test(enabled = false)
+  @Test
   public void test() throws Exception {
 
     log.clear();
