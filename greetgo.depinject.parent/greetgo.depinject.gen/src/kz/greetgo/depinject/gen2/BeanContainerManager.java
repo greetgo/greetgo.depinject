@@ -37,7 +37,8 @@ public class BeanContainerManager {
 
     beanContainerMethodList = BeanContainerMethodExtractor.extract(beanContainerInterface);
     beanCreationList = BeanCreationCollector.collectFrom(beanContainerInterface)
-      .stream().distinct().collect(Collectors.toList());
+      .stream().unordered().distinct().collect(Collectors.toList());
+    beanCreationList.sort(Comparator.comparing(o -> o.beanClass.getName()));
 
     beanCreationList.forEach(BeanCreation::fillBeanGetterDotList);
 
