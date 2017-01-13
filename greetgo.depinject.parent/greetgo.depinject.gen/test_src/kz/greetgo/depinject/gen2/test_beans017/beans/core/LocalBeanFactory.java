@@ -1,7 +1,7 @@
-package kz.greetgo.depinject.gen2.UsingBeanFactory.beans.core;
+package kz.greetgo.depinject.gen2.test_beans017.beans.core;
 
 import kz.greetgo.depinject.core.BeanFactory;
-import kz.greetgo.depinject.gen2.UsingBeanFactory.util.UsingBeanFactory;
+import kz.greetgo.depinject.gen2.test_beans017.util.UsingBeanFactory;
 
 public abstract class LocalBeanFactory implements BeanFactory {
 

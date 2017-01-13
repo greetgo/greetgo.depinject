@@ -1,8 +1,8 @@
-package kz.greetgo.depinject.gen2.UsingBeanFactory.beans.core;
+package kz.greetgo.depinject.gen2.test_beans017.beans.core;
 
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
-import kz.greetgo.depinject.gen2.UsingBeanFactory.util.UsingBeanFactory;
+import kz.greetgo.depinject.gen2.test_beans017.util.UsingBeanFactory;
 
 @Bean
 public class UsingBeanFactoryRoom {

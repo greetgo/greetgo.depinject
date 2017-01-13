@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.gen2.UsingBeanFactory.util;
+package kz.greetgo.depinject.gen2.test_beans017.util;
 
 import java.util.ArrayList;
 import java.util.List;

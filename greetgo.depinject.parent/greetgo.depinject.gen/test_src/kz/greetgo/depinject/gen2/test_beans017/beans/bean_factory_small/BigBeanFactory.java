@@ -1,7 +1,7 @@
-package kz.greetgo.depinject.gen2.UsingBeanFactory.beans.bean_factory_small;
+package kz.greetgo.depinject.gen2.test_beans017.beans.bean_factory_small;
 
 import kz.greetgo.depinject.core.Bean;
-import kz.greetgo.depinject.gen2.UsingBeanFactory.beans.core.LocalBeanFactory;
+import kz.greetgo.depinject.gen2.test_beans017.beans.core.LocalBeanFactory;
 
 @Bean
 public class BigBeanFactory extends LocalBeanFactory {
