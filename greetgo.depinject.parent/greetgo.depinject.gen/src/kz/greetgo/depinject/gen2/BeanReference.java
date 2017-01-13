@@ -89,7 +89,11 @@ public class BeanReference {
     return result;
   }
 
+  private boolean wasFillTargetCreations = false;
+
   public void fillTargetCreationsFrom(List<BeanCreation> candidates) {
+    if (wasFillTargetCreations) return;
+    wasFillTargetCreations = true;
 
     for (BeanCreation candidate : candidates) {
       if (targetClass.isAssignableFrom(candidate.beanClass)) {
@@ -145,7 +149,11 @@ public class BeanReference {
     return sb.toString();
   }
 
+  private boolean wasUsePreparations = false;
+
   public void usePreparations(List<BeanCreation> allPreparations) {
+    if (wasUsePreparations) return;
+    wasUsePreparations = true;
     getterCreations.forEach(tc -> tc.usePreparations(allPreparations));
   }
 

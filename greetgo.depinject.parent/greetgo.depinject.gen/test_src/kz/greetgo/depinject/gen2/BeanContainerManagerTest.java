@@ -4,6 +4,9 @@ import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
+import kz.greetgo.depinject.gen2.UsingBeanFactory.beans.core.UsingBeanFactoryRoom;
+import kz.greetgo.depinject.gen2.UsingBeanFactory.util.BeanConfigUsingBigBeanFactory;
+import kz.greetgo.depinject.gen2.UsingBeanFactory.util.BeanConfigUsingSmallBeanFactory;
 import kz.greetgo.depinject.gen2.test_beans007.BeanConfig007;
 import kz.greetgo.depinject.gen2.test_beans007.SomeBeanClass;
 import kz.greetgo.depinject.gen2.test_beans008.BeanConfig008;
@@ -308,5 +311,27 @@ public class BeanContainerManagerTest {
     assertThat(factoryCount).isEqualTo(1);
     assertThat(someBean016_count).describedAs("If SomeBean016 is 6 " +
       "then error in method BeanCreationWithFactoryMethod.equals()").isEqualTo(3);
+  }
+
+  @Include(BeanConfigUsingSmallBeanFactory.class)
+  interface BeanContainer_BeanConfigUsingSmallBeanFactory extends BeanContainer {
+    UsingBeanFactoryRoom get();
+  }
+
+  @Include(BeanConfigUsingBigBeanFactory.class)
+  interface BeanContainer_BeanConfigUsingBigBeanFactory extends BeanContainer {
+    UsingBeanFactoryRoom get();
+  }
+
+  @Test
+  public void prepareToWrite_BeanConfigUsingSmallBeanFactory() throws Exception {
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_BeanConfigUsingSmallBeanFactory.class);
+    bcm.prepareToWrite();
+  }
+
+  @Test
+  public void prepareToWrite_BeanConfigUsingBigBeanFactory() throws Exception {
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_BeanConfigUsingBigBeanFactory.class);
+    bcm.prepareToWrite();
   }
 }
