@@ -11,6 +11,11 @@ import kz.greetgo.depinject.gen2.test_beans010.BeanA3;
 import kz.greetgo.depinject.gen2.test_beans010.BeanBSimple;
 import kz.greetgo.depinject.gen2.test_beans010.BeanConfig010;
 import kz.greetgo.depinject.gen2.test_beans010.ZGetters;
+import kz.greetgo.depinject.gen2.test_beans018.Bean018_ann;
+import kz.greetgo.depinject.gen2.test_beans018.Bean018_both;
+import kz.greetgo.depinject.gen2.test_beans018.Bean018_empty;
+import kz.greetgo.depinject.gen2.test_beans018.Bean018_iface;
+import kz.greetgo.depinject.gen2.test_beans018.BeanConfig018;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -118,6 +123,29 @@ public class BeanContainerManagerTest2 {
     BeanContainerManager bcm = new BeanContainerManager(bci);
     bcm.prepareToWrite();
 
+  }
+
+  @SuppressWarnings("unused")
+  @Include(BeanConfig018.class)
+  interface BeanContainer018 extends BeanContainer {
+    Bean018_ann bean018_ann();
+
+    Bean018_both bean018_both();
+
+    Bean018_empty bean018_empty();
+
+    Bean018_iface bean018_iface();
+  }
+
+  @Test
+  public void prepareToWrite_018_replacer() throws Exception {
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer018.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
   }
 
 }

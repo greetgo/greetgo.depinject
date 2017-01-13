@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.core;
+package kz.greetgo.depinject.core.replace;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Priority of applying of BeanPreparation.
+ * Priority of applying of BeanReplacer.
  * </p>
  * <p>
  * If this annotation is absent, then priority is zero.
@@ -18,13 +18,13 @@ import java.lang.annotation.Target;
  * </p>
  */
 @Documented
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BeanPreparationPriority {
+public @interface ReplacePriority {
   /**
    * Double value of priority
    *
-   * @return the priority of applying of BeanPreparation
+   * @return the priority of applying of BeanReplacer
    */
   double value();
 }
