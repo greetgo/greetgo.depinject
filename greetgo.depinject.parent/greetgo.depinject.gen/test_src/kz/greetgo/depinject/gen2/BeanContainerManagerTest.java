@@ -17,6 +17,8 @@ import kz.greetgo.depinject.gen2.test_beans009.BeanPreparation009_3;
 import kz.greetgo.depinject.gen2.test_beans011.BeanA3;
 import kz.greetgo.depinject.gen2.test_beans011.BeanConfig011;
 import kz.greetgo.depinject.gen2.test_beans011.ZGetters;
+import kz.greetgo.depinject.gen2.test_beans015.BeanConfig015;
+import kz.greetgo.depinject.gen2.test_beans015.SomeBean015;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -240,7 +242,11 @@ public class BeanContainerManagerTest {
   @Test
   public void prepareToWrite_BeanFactories() throws Exception {
     BeanContainerManager bcm = new BeanContainerManager(BeanContainer011.class);
+    //
+    //
     bcm.prepareToWrite();
+    //
+    //
 
     Map<String, BeanCreation> map = bcm.usingBeanCreationList
       .stream().collect(Collectors.toMap(a -> a.beanClass.getSimpleName(), a -> a));
@@ -253,4 +259,23 @@ public class BeanContainerManagerTest {
     assertThat(bean3creation.beanFactorySource.getterCreations).hasSize(1);
   }
 
+  @Include(BeanConfig015.class)
+  interface BeanContainer_TwoBeanConfigPaths_defaultConstructor extends BeanContainer {
+    SomeBean015 get();
+  }
+
+  @Test
+  public void prepareToWrite_TwoBeanConfigPaths_defaultConstructor() throws Exception {
+
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_TwoBeanConfigPaths_defaultConstructor.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    assertThat(bcm.usingBeanCreationList).hasSize(1);
+
+  }
 }

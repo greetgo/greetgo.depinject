@@ -11,7 +11,6 @@ import kz.greetgo.depinject.gen2.test_beans010.BeanA3;
 import kz.greetgo.depinject.gen2.test_beans010.BeanBSimple;
 import kz.greetgo.depinject.gen2.test_beans010.BeanConfig010;
 import kz.greetgo.depinject.gen2.test_beans010.ZGetters;
-import kz.greetgo.depinject.gen2.test_beans012.BeanConfig012;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -75,7 +74,7 @@ public class BeanContainerManagerTest2 {
     BeanContainerManager bcm = new BeanContainerManager(BeanContainer010.class);
     bcm.prepareToWrite();
 
-    OuterToPrintStream outer = new OuterToPrintStream("  ", System.out);
+    Outer outer = new OuterToPrintStream("  ", System.out);
 
     //
     //

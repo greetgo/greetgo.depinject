@@ -27,8 +27,26 @@ public abstract class BeanCreation {
   public int varIndex;
 
   public BeanCreation(Class<?> beanClass, boolean singleton) {
+    if (beanClass == null) throw new NullPointerException("beanClass == null");
     this.beanClass = beanClass;
     this.singleton = singleton;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    BeanCreation that = (BeanCreation) o;
+
+    if (!beanClass.equals(that.beanClass)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return beanClass.hashCode();
   }
 
   public String getterVarName() {

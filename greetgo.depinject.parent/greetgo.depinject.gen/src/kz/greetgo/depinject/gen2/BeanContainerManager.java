@@ -30,12 +30,14 @@ public class BeanContainerManager {
   List<BeanReference> writingBeanReferences;
 
   void prepareToWrite() {
+
     //
     // PREPARE REFERENCES
     //
 
     beanContainerMethodList = BeanContainerMethodExtractor.extract(beanContainerInterface);
-    beanCreationList = BeanCreationCollector.collectFrom(beanContainerInterface);
+    beanCreationList = BeanCreationCollector.collectFrom(beanContainerInterface)
+      .stream().distinct().collect(Collectors.toList());
 
     beanCreationList.forEach(BeanCreation::fillBeanGetterDotList);
 
@@ -84,7 +86,6 @@ public class BeanContainerManager {
 
     writingGetterCreations = new ArrayList<>();
     writingGetterCreations.addAll(getterCreationMap.keySet());
-
     writingGetterCreations.sort(Comparator.comparing(o -> o.beanCreation.beanClass.getName()));
 
     Map<BeanReference, List<BeanReference>> beanReferenceMap = new HashMap<>();
@@ -101,7 +102,7 @@ public class BeanContainerManager {
 
     int varIndex[] = {1};
 
-    usingBeanCreationList.forEach(a -> a.varIndex = varIndex[0]++);
+    usingBeanCreationList.forEach(bc -> bc.varIndex = varIndex[0]++);
 
     writingBeanReferences.forEach(br -> {
       br.varIndex = varIndex[0]++;

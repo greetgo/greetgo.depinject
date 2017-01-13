@@ -12,7 +12,7 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
   }
 
   @Override
-  public List getAdditionalBeanReferences() {
+  public List<BeanReference> getAdditionalBeanReferences() {
     return Collections.emptyList();
   }
 

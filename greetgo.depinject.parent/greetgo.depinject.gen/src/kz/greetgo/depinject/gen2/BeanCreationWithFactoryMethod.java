@@ -43,4 +43,14 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
     out.tab(tab).stn(codeName(beanClass) + ' ' + variableName
       + " = " + factorySource.getterVarName() + ".get()." + factoryMethod.getName() + "();");
   }
+
+  @Override
+  public boolean equals(Object o) {
+    return this == o;
+  }
+
+  @Override
+  public int hashCode() {
+    return System.identityHashCode(this);
+  }
 }
