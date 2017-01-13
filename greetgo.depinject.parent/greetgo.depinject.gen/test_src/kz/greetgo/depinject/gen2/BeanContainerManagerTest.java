@@ -19,6 +19,9 @@ import kz.greetgo.depinject.gen2.test_beans011.BeanConfig011;
 import kz.greetgo.depinject.gen2.test_beans011.ZGetters;
 import kz.greetgo.depinject.gen2.test_beans015.BeanConfig015;
 import kz.greetgo.depinject.gen2.test_beans015.SomeBean015;
+import kz.greetgo.depinject.gen2.test_beans016.BeanConfig016;
+import kz.greetgo.depinject.gen2.test_beans016.SomeBean016;
+import kz.greetgo.depinject.gen2.test_beans016.SomeBeanFactory016;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -277,5 +280,33 @@ public class BeanContainerManagerTest {
 
     assertThat(bcm.usingBeanCreationList).hasSize(1);
 
+  }
+
+  @Include(BeanConfig016.class)
+  interface BeanContainer_TwoBeanConfigPaths_factoryMethod extends BeanContainer {
+    List<SomeBean016> get();
+  }
+
+  @Test
+  public void prepareToWrite_TwoBeanConfigPaths_factoryMethod() throws Exception {
+
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_TwoBeanConfigPaths_factoryMethod.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    int factoryCount = 0, someBean016_count = 0;
+
+    for (BeanCreation bc : bcm.usingBeanCreationList) {
+      if (SomeBean016.class.isAssignableFrom(bc.beanClass)) someBean016_count++;
+      if (SomeBeanFactory016.class.isAssignableFrom(bc.beanClass)) factoryCount++;
+    }
+
+    assertThat(factoryCount).isEqualTo(1);
+    assertThat(someBean016_count).describedAs("If SomeBean016 is 6 " +
+      "then error in method BeanCreationWithFactoryMethod.equals()").isEqualTo(3);
   }
 }

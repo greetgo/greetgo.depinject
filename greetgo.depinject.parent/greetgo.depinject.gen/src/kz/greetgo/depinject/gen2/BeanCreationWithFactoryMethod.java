@@ -14,6 +14,8 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   public BeanCreationWithFactoryMethod(Class<?> beanClass, boolean singleton,
                                        BeanCreation factorySource, Method factoryMethod) {
     super(beanClass, singleton);
+    if (factorySource == null) throw new NullPointerException("factorySource == null");
+    if (factoryMethod == null) throw new NullPointerException("factoryMethod == null");
     this.factorySource = factorySource;
     this.factoryMethod = factoryMethod;
   }
@@ -46,11 +48,23 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
 
   @Override
   public boolean equals(Object o) {
-    return this == o;
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+
+    BeanCreationWithFactoryMethod that = (BeanCreationWithFactoryMethod) o;
+
+    if (!factorySource.equals(that.factorySource)) return false;
+    if (!factoryMethod.equals(that.factoryMethod)) return false;
+
+    return true;
   }
 
   @Override
   public int hashCode() {
-    return System.identityHashCode(this);
+    int result = super.hashCode();
+    result = 31 * result + factorySource.hashCode();
+    result = 31 * result + factoryMethod.hashCode();
+    return result;
   }
 }
