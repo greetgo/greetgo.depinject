@@ -2,8 +2,8 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.beans.MainConfig;
-import kz.greetgo.depinject.gen.interfaces.IBeanB2;
+import kz.greetgo.depinject.gen.test_beans027.beans.BeanConfig027;
+import kz.greetgo.depinject.gen.test_beans027.interfaces.IBeanB2;
 import kz.greetgo.java_compiler.JavaCompiler;
 import kz.greetgo.java_compiler.JavaCompilerFactory;
 import kz.greetgo.util.ServerUtil;
@@ -11,7 +11,7 @@ import kz.greetgo.util.ServerUtil;
 import java.io.File;
 
 public class BeanContainerGeneratorRunProbe {
-  @Include({MainConfig.class})
+  @Include({BeanConfig027.class})
   public interface TestBeanContainer extends BeanContainer {
     IBeanB2 getIBeanB2();
   }

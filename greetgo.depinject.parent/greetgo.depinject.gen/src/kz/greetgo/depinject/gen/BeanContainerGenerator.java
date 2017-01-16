@@ -1,8 +1,5 @@
 package kz.greetgo.depinject.gen;
 
-import kz.greetgo.depinject.gen2.BeanContainerManager;
-import kz.greetgo.depinject.gen2.OuterToPrintWriter;
-
 import java.io.File;
 import java.io.PrintWriter;
 

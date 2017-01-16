@@ -1,7 +1,7 @@
 package kz.greetgo.depinject.gen.errors;
 
-import kz.greetgo.depinject.gen2.BeanReference;
-import kz.greetgo.depinject.gen2.Utils;
+import kz.greetgo.depinject.gen.BeanReference;
+import kz.greetgo.depinject.gen.Utils;
 
 public class NoCandidates extends RuntimeException {
   public final BeanReference beanReference;

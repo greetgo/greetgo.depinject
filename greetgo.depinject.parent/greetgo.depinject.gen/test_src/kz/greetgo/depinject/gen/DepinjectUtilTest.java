@@ -1,8 +1,8 @@
 package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.Depinject;
-import kz.greetgo.depinject.gen.beans.afterInject_sync.DependsOnAlone;
-import kz.greetgo.depinject.gen.impl_and_use_bean_containers.BeanContainerForTestingUtil;
+import kz.greetgo.depinject.gen.test_beans027.beans.afterInject_sync.DependsOnAlone;
+import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
 import kz.greetgo.util.ServerUtil;
 import org.testng.annotations.Test;
 
@@ -83,7 +83,7 @@ public class DepinjectUtilTest {
     //
     //
     DepinjectUtil.implementAndUseBeanContainers(
-        "kz.greetgo.depinject.gen.impl_and_use_bean_containers",
+        "kz.greetgo.depinject.gen.test_beans027.container",
         srcDir
     );
     //

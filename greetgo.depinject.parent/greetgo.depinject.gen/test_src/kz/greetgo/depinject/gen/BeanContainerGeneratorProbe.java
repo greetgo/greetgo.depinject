@@ -2,14 +2,14 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.beans.MainConfig;
-import kz.greetgo.depinject.gen.interfaces.IBeanB2;
+import kz.greetgo.depinject.gen.test_beans027.beans.BeanConfig027;
+import kz.greetgo.depinject.gen.test_beans027.interfaces.IBeanB2;
 
 import java.io.File;
 
 public class BeanContainerGeneratorProbe {
   @SuppressWarnings("unused")
-  @Include({MainConfig.class})
+  @Include({BeanConfig027.class})
   private interface TestBeanContainer extends BeanContainer {
     IBeanB2 getIBeanB2();
   }
