@@ -4,9 +4,6 @@ import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
-import kz.greetgo.depinject.gen2.test_beans017.beans.core.UsingBeanFactoryRoom;
-import kz.greetgo.depinject.gen2.test_beans017.util.BeanConfigUsingBigBeanFactory;
-import kz.greetgo.depinject.gen2.test_beans017.util.BeanConfigUsingSmallBeanFactory;
 import kz.greetgo.depinject.gen2.test_beans007.BeanConfig007;
 import kz.greetgo.depinject.gen2.test_beans007.SomeBeanClass;
 import kz.greetgo.depinject.gen2.test_beans008.BeanConfig008;
@@ -25,6 +22,18 @@ import kz.greetgo.depinject.gen2.test_beans015.SomeBean015;
 import kz.greetgo.depinject.gen2.test_beans016.BeanConfig016;
 import kz.greetgo.depinject.gen2.test_beans016.SomeBean016;
 import kz.greetgo.depinject.gen2.test_beans016.SomeBeanFactory016;
+import kz.greetgo.depinject.gen2.test_beans017.beans.core.UsingBeanFactoryRoom;
+import kz.greetgo.depinject.gen2.test_beans017.util.BeanConfigUsingBigBeanFactory;
+import kz.greetgo.depinject.gen2.test_beans017.util.BeanConfigUsingSmallBeanFactory;
+import kz.greetgo.depinject.gen2.test_beans019.Bean019;
+import kz.greetgo.depinject.gen2.test_beans019.BeanConfig019;
+import kz.greetgo.depinject.gen2.test_beans021.Bean021;
+import kz.greetgo.depinject.gen2.test_beans021.Bean021_free;
+import kz.greetgo.depinject.gen2.test_beans021.BeanConfig021;
+import kz.greetgo.depinject.gen2.test_beans20.Bean020;
+import kz.greetgo.depinject.gen2.test_beans20.Bean020_free;
+import kz.greetgo.depinject.gen2.test_beans20.BeanConfig020;
+import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -333,5 +342,84 @@ public class BeanContainerManagerTest {
   public void prepareToWrite_BeanConfigUsingBigBeanFactory() throws Exception {
     BeanContainerManager bcm = new BeanContainerManager(BeanContainer_BeanConfigUsingBigBeanFactory.class);
     bcm.prepareToWrite();
+  }
+
+  @Include(BeanConfig019.class)
+  interface BeanContainer_019 extends BeanContainer {
+    Bean019 get();
+  }
+
+  @Test
+  public void prepareToWrite_019() throws Exception {
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_019.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    assertThat(bcm.beanContainerMethodList).describedAs("beanContainerMethodList.size must be 1").hasSize(1);
+    assertThat(bcm.allBeanReferences).describedAs("allBeanReferences.size must be 1").hasSize(1);
+    assertThat(bcm.writingBeanReferences).describedAs("writingBeanReferences.size must be absent").isEmpty();
+  }
+
+  @SuppressWarnings("unused")
+  @Include(BeanConfig020.class)
+  interface BeanContainer020 extends BeanContainer {
+    Bean020 bean020();
+
+    Bean020_free bean020_free();
+  }
+
+  @Test
+  public void prepareToWrite_replacer_iface() throws Exception {
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer020.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    assertThat(bcm.replacers).hasSize(1);
+
+    assertThat(bcm.writingGetterCreations).hasSize(1);
+    assertThat(bcm.writingGetterCreations.get(0).replacers).hasSize(1);
+    assertThat(bcm.writingGetterCreations.get(0).beanCreation.beanClass.getName()).isEqualTo(Bean020.class.getName());
+    assertThat(bcm.beanCreationList).hasSize(3);
+    assertThat(bcm.usingBeanCreationList).hasSize(3);
+  }
+
+  @Test
+  public void prepareToWrite_replacerForItself() throws Exception {
+    Assertions.fail("Check that replacer cannot be replacer for itself");
+  }
+
+  @SuppressWarnings("unused")
+  @Include(BeanConfig021.class)
+  interface BeanContainer021 extends BeanContainer {
+    Bean021 bean021();
+
+    Bean021_free bean021_free();
+  }
+
+  @Test
+  public void prepareToWrite_replacer_ann() throws Exception {
+    BeanContainerManager bcm = new BeanContainerManager(BeanContainer021.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    assertThat(bcm.replacers).hasSize(1);
+
+    assertThat(bcm.writingGetterCreations).hasSize(1);
+    assertThat(bcm.writingGetterCreations.get(0).replacers).hasSize(1);
+    assertThat(bcm.writingGetterCreations.get(0).beanCreation.beanClass.getName()).isEqualTo(Bean021.class.getName());
+    assertThat(bcm.beanCreationList).hasSize(3);
+    assertThat(bcm.usingBeanCreationList).hasSize(3);
   }
 }

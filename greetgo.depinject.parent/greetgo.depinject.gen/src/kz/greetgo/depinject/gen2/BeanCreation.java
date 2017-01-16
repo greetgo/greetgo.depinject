@@ -4,6 +4,8 @@ import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.BeanPreparation;
 import kz.greetgo.depinject.core.BeanPreparationPriority;
 import kz.greetgo.depinject.core.HasAfterInject;
+import kz.greetgo.depinject.core.replace.BeanReplacer;
+import kz.greetgo.depinject.core.replace.ReplacePriority;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterDefinition;
 import kz.greetgo.depinject.gen.errors.LeftException;
 
@@ -104,7 +106,6 @@ public abstract class BeanCreation {
 
   protected abstract void markToUseAdditions();
 
-
   public void writeGetter(int tab, Outer out) {
     out.nl();
 
@@ -177,6 +178,7 @@ public abstract class BeanCreation {
 
   @SuppressWarnings("SameParameterValue")
   protected abstract void writeCreateBean(int tab, Outer out, String variableName);
+
 
   public static class BeanPreparationPriorityDot implements Comparable<BeanPreparationPriorityDot> {
     int parenting = 0;
@@ -263,5 +265,52 @@ public abstract class BeanCreation {
   protected String preparationInfo() {
     if (preparingClass == null) return "";
     return ", preparation for " + Utils.asStr(preparingClass) + ' ' + beanPreparationPriority.toString();
+  }
+
+  //
+  // REPLACER
+  //
+
+  public ReplaceChecker replaceChecker = null;
+
+  public boolean hasReplaceChecker() {
+    return replaceChecker != null;
+  }
+
+  public void calculateReplaceChecker() {
+    replaceChecker = null;
+    if (!BeanReplacer.class.isAssignableFrom(beanClass)) return;
+    replaceChecker = ReplaceCheckerExtractor.fromBeanClass(beanClass);
+  }
+
+  public static class ReplacerPriorityDot implements Comparable<ReplacerPriorityDot> {
+    private String className;
+    private double priority = 0;
+
+    @Override
+    @SuppressWarnings("NullableProblems")
+    public int compareTo(ReplacerPriorityDot o) {
+      {
+        int cmp = Double.compare(priority, o.priority);
+        if (cmp != 0) return cmp;
+      }
+      {
+        return className.compareTo(o.className);
+      }
+    }
+  }
+
+  private final ReplacerPriorityDot replacerPriority = new ReplacerPriorityDot();
+
+  public ReplacerPriorityDot replacerPriority() {
+    return replacerPriority;
+  }
+
+  public void calculateReplacerPriority() {
+    replacerPriority.className = beanClass.getName();
+    ReplacePriority replacePriority = Utils.getAnnotation(beanClass, ReplacePriority.class);
+    if (replacePriority != null) {
+      replacerPriority.priority = replacePriority.value();
+    }
   }
 }

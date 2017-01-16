@@ -34,4 +34,8 @@ public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
     out.tab(tab).stn("}");
 
   }
+
+  public void markToUse() {
+    beanReference.markToUse();
+  }
 }

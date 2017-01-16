@@ -33,6 +33,7 @@ public class GetterCreation {
     use = true;
     beanCreation.markToUse();
     preparations.forEach(BeanCreation::markToUse);
+    replacers.forEach(BeanCreation::markToUse);
   }
 
   public final List<BeanCreation> preparations = new ArrayList<>();
@@ -46,6 +47,7 @@ public class GetterCreation {
 
     if (!beanCreation.equals(that.beanCreation)) return false;
     if (!preparations.equals(that.preparations)) return false;
+    if (!replacers.equals(that.replacers)) return false;
 
     return true;
   }
@@ -54,13 +56,14 @@ public class GetterCreation {
   public int hashCode() {
     int result = beanCreation.hashCode();
     result = 31 * result + preparations.hashCode();
+    result = 31 * result + replacers.hashCode();
     return result;
   }
 
   public int varIndex = 0;
 
   public boolean needGetter() {
-    return preparations.size() > 0;
+    return preparations.size() > 0 || replacers.size() > 0;
   }
 
   private String className() {
@@ -119,6 +122,27 @@ public class GetterCreation {
     return current;
   }
 
+  private String applyReplacers(int tab, Outer o, String varName) {
+    String var = null;
+
+    for (BeanCreation replacer : replacers) {
+      if (var == null) {
+        var = "replacer_" + varName;
+        o.tab(tab).stn(codeName(getterClass) + ' ' + var + " = " + replaceCode(replacer, varName) + ';');
+      } else {
+        o.tab(tab).stn(var + " = " + replaceCode(replacer, var) + ';');
+      }
+    }
+
+    return var == null ? varName : var;
+  }
+
+  private String replaceCode(BeanCreation replacer, String varName) {
+    return "(" + codeName(getterClass) + ") " + replacer.getterVarName()
+      + ".get().replaceBean(" + varName + ", " + codeName(getterClass) + ".class)";
+  }
+
+
   public String getterVarName() {
     return needGetter()
       ? "getter_withPreparations_" + className() + '_' + varIndex()
@@ -165,9 +189,10 @@ public class GetterCreation {
 
     o.tab(tab2).stn("{");
     o.tab(tab3).stn(beanClassName + " singleValue = " + beanCreation.getterVarName() + ".get();");
-    String outVarName = applyPreparations(tab3, o, "singleValue");
-    o.tab(tab3).stn(cachedValueVarName() + ".set(" + outVarName + ");");
-    o.tab(tab3).stn("return " + outVarName + ';');
+    String outPreparationsVarName = applyPreparations(tab3, o, "singleValue");
+    String outReplacersVarName = applyReplacers(tab3, o, outPreparationsVarName);
+    o.tab(tab3).stn(cachedValueVarName() + ".set(" + outReplacersVarName + ");");
+    o.tab(tab3).stn("return " + outReplacersVarName + ';');
     o.tab(tab2).stn("}");
 
     o.tab(tab1).stn("}");//synchronized
@@ -188,14 +213,21 @@ public class GetterCreation {
     final int tab1 = tab + 1;
 
     o.tab(tab1).stn(beanClassName + " value = " + beanCreation.getterVarName() + ".get();");
-    String outVarName = applyPreparations(tab1, o, "value");
-    o.tab(tab1).stn("return " + outVarName + ';');
+    String outPreparationsVarName = applyPreparations(tab1, o, "value");
+    String outReplacersVarName = applyReplacers(tab1, o, outPreparationsVarName);
+    o.tab(tab1).stn("return " + outReplacersVarName + ';');
 
     o.tab(tab).stn("}");
   }
 
-  public Class<?> lastClass() {
-    if (preparations.size() == 0) return beanCreation.beanClass;
-    return preparations.get(preparations.size() - 1).beanClass;
+//  public Class<?> lastClass() {
+//    if (preparations.size() == 0) return beanCreation.beanClass;
+//    return preparations.get(preparations.size() - 1).beanClass;
+//  }
+
+  public final List<BeanCreation> replacers = new ArrayList<>();
+
+  public void addReplacer(BeanCreation replacer) {
+    replacers.add(replacer);
   }
 }

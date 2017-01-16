@@ -20,7 +20,7 @@ public class BeanContainerManager {
   List<BeanContainerMethod> beanContainerMethodList;
   List<BeanCreation> beanCreationList;
   List<BeanReference> allBeanReferences;
-  List<BeanCreation> preparations;
+  List<BeanCreation> preparations, replacers;
 
   List<BeanCreation> usingBeanCreationList;
   List<BeanReference> usingBeanReferences;
@@ -65,11 +65,20 @@ public class BeanContainerManager {
 
     allBeanReferences.forEach(r -> r.usePreparations(preparations));
 
+    replacers = beanCreationList.stream()
+      .peek(BeanCreation::calculateReplaceChecker)
+      .filter(BeanCreation::hasReplaceChecker)
+      .peek(BeanCreation::calculateReplacerPriority)
+      .sorted(Comparator.comparing(BeanCreation::replacerPriority))
+      .collect(Collectors.toList());
+
+    allBeanReferences.forEach(r -> r.useReplacers(replacers));
+
     //
     // MARK TO USE
     //
 
-    beanContainerMethodList.forEach(a -> a.beanReference.markToUse());
+    beanContainerMethodList.forEach(BeanContainerMethod::markToUse);
 
     //
     // INIT USING AND CHECK CONNECTIVITY

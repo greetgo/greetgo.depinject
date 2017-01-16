@@ -157,6 +157,19 @@ public class BeanReference {
     getterCreations.forEach(tc -> tc.usePreparations(allPreparations));
   }
 
+  private boolean wasUseReplacers = false;
+
+  public void useReplacers(List<BeanCreation> allReplacers) {
+    if (wasUseReplacers) return;
+    wasUseReplacers = true;
+    for (BeanCreation replacer : allReplacers) {
+      if (replacer.replaceChecker != null && replacer.replaceChecker.check(targetClass)) {
+        getterCreations.forEach(gc -> gc.addReplacer(replacer));
+      }
+    }
+  }
+
+
   public boolean needGetter() {
     return isList;
   }

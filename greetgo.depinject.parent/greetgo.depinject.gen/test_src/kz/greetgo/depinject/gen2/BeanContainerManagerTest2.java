@@ -90,14 +90,17 @@ public class BeanContainerManagerTest2 {
   }
 
   @Test
-  public void writeBeanContainerImpl() throws Exception {
-    Class<?> bci = BeanContainer010.class;
+  public void writeBeanContainerImpl_010() throws Exception {
+    generate(BeanContainer010.class);
+  }
 
+  private void generate(Class<?> bci) {
     BeanContainerManager bcm = new BeanContainerManager(bci);
     bcm.prepareToWrite();
 
     String packageName = bci.getPackage().getName();
-    String classSimpleName = bci.getSimpleName() + "_IMPLEMENT";
+
+    String classSimpleName = bci.getSimpleName() + "_IMPL";
 
     File javaFile = new File(buildDir() + "/gen_src/" + packageName.replaceAll("\\.", "/")
       + '/' + classSimpleName + ".java");
@@ -113,7 +116,6 @@ public class BeanContainerManagerTest2 {
       //
 
     }
-
   }
 
   @Test
@@ -139,13 +141,7 @@ public class BeanContainerManagerTest2 {
 
   @Test
   public void prepareToWrite_018_replacer() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer018.class);
-
-    //
-    //
-    bcm.prepareToWrite();
-    //
-    //
+    generate(BeanContainer018.class);
   }
 
 }
