@@ -5,9 +5,9 @@ import kz.greetgo.depinject.core.BeanPreparation;
 import kz.greetgo.depinject.testng.complex_tests.BeanPreparation.BeanPreparationTest;
 
 @Bean
-public class BeanPreparationWindowPreparation implements BeanPreparation<BeanPreparationWindow> {
+public class BeanPreparation_WindowPreparation implements BeanPreparation<BeanPreparation_Window> {
   @Override
-  public BeanPreparationWindow prepareBean(BeanPreparationWindow bean) {
+  public BeanPreparation_Window prepareBean(BeanPreparation_Window bean) {
     return () -> {
       BeanPreparationTest.log.add("Before look out");
       bean.lookOut();

@@ -4,7 +4,7 @@ import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.testng.complex_tests.BeanPreparation.BeanPreparationTest;
 
 @Bean
-public class BeanPreparationWindowImpl implements BeanPreparationWindow {
+public class BeanPreparation_WindowImpl implements BeanPreparation_Window {
   @Override
   public void lookOut() {
     BeanPreparationTest.log.add("Look out window");

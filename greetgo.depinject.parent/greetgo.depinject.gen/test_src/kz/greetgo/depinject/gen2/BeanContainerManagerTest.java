@@ -30,9 +30,9 @@ import kz.greetgo.depinject.gen2.test_beans019.BeanConfig019;
 import kz.greetgo.depinject.gen2.test_beans021.Bean021;
 import kz.greetgo.depinject.gen2.test_beans021.Bean021_free;
 import kz.greetgo.depinject.gen2.test_beans021.BeanConfig021;
-import kz.greetgo.depinject.gen2.test_beans20.Bean020;
-import kz.greetgo.depinject.gen2.test_beans20.Bean020_free;
-import kz.greetgo.depinject.gen2.test_beans20.BeanConfig020;
+import kz.greetgo.depinject.gen2.test_beans020.Bean020;
+import kz.greetgo.depinject.gen2.test_beans020.Bean020_free;
+import kz.greetgo.depinject.gen2.test_beans020.BeanConfig020;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
