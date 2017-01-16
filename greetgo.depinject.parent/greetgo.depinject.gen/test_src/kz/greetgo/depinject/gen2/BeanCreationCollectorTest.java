@@ -194,11 +194,11 @@ public class BeanCreationCollectorTest {
     assertThat(bean4_creation).isNotNull();
     assertThat(bean5_creation).isNotNull();
 
-    assertThat(bean1_creation.beanFactorySource.targetClass.getName()).isEqualTo(BeanFactory1.class.getName());
-    assertThat(bean2_creation.beanFactorySource.targetClass.getName()).isEqualTo(BeanFactory2.class.getName());
-    assertThat(bean3_creation.beanFactorySource.targetClass.getName()).isEqualTo(BeanFactory2.class.getName());
-    assertThat(bean4_creation.beanFactorySource.targetClass.getName()).isEqualTo(BeanFactory4.class.getName());
-    assertThat(bean5_creation.beanFactorySource.targetClass.getName()).isEqualTo(BeanFactory5.class.getName());
+    assertThat(bean1_creation.beanFactorySource.sourceClass.getName()).isEqualTo(BeanFactory1.class.getName());
+    assertThat(bean2_creation.beanFactorySource.sourceClass.getName()).isEqualTo(BeanFactory2.class.getName());
+    assertThat(bean3_creation.beanFactorySource.sourceClass.getName()).isEqualTo(BeanFactory2.class.getName());
+    assertThat(bean4_creation.beanFactorySource.sourceClass.getName()).isEqualTo(BeanFactory4.class.getName());
+    assertThat(bean5_creation.beanFactorySource.sourceClass.getName()).isEqualTo(BeanFactory5.class.getName());
   }
 
   @Include(BeanConfig006.class)

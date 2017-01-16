@@ -27,7 +27,7 @@ public class BeanReferenceTest {
 
     BeanReference beanReference = new BeanReference(type, "place 1");
 
-    assertThat(beanReference.targetClass.getName()).isEqualTo(SomeClass.class.getName());
+    assertThat(beanReference.sourceClass.getName()).isEqualTo(SomeClass.class.getName());
     assertThat(beanReference.isList).isFalse();
     assertThat(beanReference.place).isEqualTo("place 1");
 
@@ -46,7 +46,7 @@ public class BeanReferenceTest {
 
     BeanReference beanReference = new BeanReference(type, "place 2");
 
-    assertThat(beanReference.targetClass.getName()).isEqualTo(SomeClass.class.getName());
+    assertThat(beanReference.sourceClass.getName()).isEqualTo(SomeClass.class.getName());
     assertThat(beanReference.isList).isTrue();
     assertThat(beanReference.place).isEqualTo("place 2");
   }

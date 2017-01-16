@@ -24,7 +24,7 @@ public class BeanReference {
     this.place = place;
 
     if (target instanceof Class) {
-      targetClass = (Class<?>) target;
+      sourceClass = (Class<?>) target;
       isList = false;
       return;
     }
@@ -36,7 +36,7 @@ public class BeanReference {
         Type listArg = parameterizedType.getActualTypeArguments()[0];
 
         if (listArg instanceof Class) {
-          targetClass = (Class<?>) listArg;
+          sourceClass = (Class<?>) listArg;
           isList = true;
           return;
         }
@@ -52,12 +52,12 @@ public class BeanReference {
     throw new IllegalBeanGetterArgumentType("Cannot extract bean class from type: " + target.toString() + "; " + place);
   }
 
-  public final Class<?> targetClass;
+  public final Class<?> sourceClass;
   public final boolean isList;
 
   @SuppressWarnings("unused")
   public String targetClassCode() {
-    return isList ? codeName(List.class) + '<' + codeName(targetClass) + '>' : codeName(targetClass);
+    return isList ? codeName(List.class) + '<' + codeName(sourceClass) + '>' : codeName(sourceClass);
   }
 
   public final List<GetterCreation> getterCreations = new ArrayList<>();
@@ -65,7 +65,7 @@ public class BeanReference {
   private String compareStr = null;
 
   public String compareStr() {
-    if (compareStr == null) compareStr = (isList ? "A_" : "B_") + targetClass.getName();
+    if (compareStr == null) compareStr = (isList ? "A_" : "B_") + sourceClass.getName();
     return compareStr;
   }
 
@@ -96,8 +96,8 @@ public class BeanReference {
     wasFillTargetCreations = true;
 
     for (BeanCreation candidate : candidates) {
-      if (targetClass.isAssignableFrom(candidate.beanClass)) {
-        getterCreations.add(new GetterCreation(targetClass, candidate));
+      if (sourceClass.isAssignableFrom(candidate.beanClass)) {
+        getterCreations.add(new GetterCreation(sourceClass, candidate));
       }
     }
 
@@ -119,11 +119,10 @@ public class BeanReference {
 
   @Override
   public String toString() {
-    return (isList ? "[" : "") + Utils.asStr(targetClass) + (isList ? "]" : "")
+    return (isList ? "[" : "") + Utils.asStr(sourceClass) + (isList ? "]" : "")
       + " -> " + getterCreations.size() + '['
       + getterCreations.stream()
-      .map(tc -> tc.beanCreation)
-      .map(BeanCreation::toString)
+      .map(GetterCreation::toString)
       .collect(Collectors.joining(", "))
       + ']';
   }
@@ -162,11 +161,7 @@ public class BeanReference {
   public void useReplacers(List<BeanCreation> allReplacers) {
     if (wasUseReplacers) return;
     wasUseReplacers = true;
-    for (BeanCreation replacer : allReplacers) {
-      if (replacer.replaceChecker != null && replacer.replaceChecker.check(targetClass)) {
-        getterCreations.forEach(gc -> gc.addReplacer(replacer));
-      }
-    }
+    getterCreations.forEach(tc -> tc.useReplacers(allReplacers));
   }
 
 
@@ -178,13 +173,13 @@ public class BeanReference {
 
   public String getterVarName() {
     return needGetter()
-      ? "getter_ref_" + (isList ? "list_" : "") + targetClass.getSimpleName() + '_' + varIndex()
+      ? "getter_ref_" + (isList ? "list_" : "") + sourceClass.getSimpleName() + '_' + varIndex()
       : getterCreations.get(0).getterVarName();
   }
 
   private String gettingMethodName() {
     if (!needGetter()) throw new LeftException("jhb4jhb5hjb6jn7");
-    return "get_ref_" + (isList ? "list_" : "") + targetClass.getSimpleName() + '_' + varIndex();
+    return "get_ref_" + (isList ? "list_" : "") + sourceClass.getSimpleName() + '_' + varIndex();
   }
 
   private int varIndex() {
@@ -209,13 +204,13 @@ public class BeanReference {
 
   private void writeGetterAsList(int tab, Outer outer) {
     outer.tab(tab).stn("private final " + codeName(BeanGetter.class) + "<" + codeName(List.class)
-      + "<" + codeName(targetClass) + ">> " + getterVarName() + " = this::" + gettingMethodName() + ";");
+      + "<" + codeName(sourceClass) + ">> " + getterVarName() + " = this::" + gettingMethodName() + ";");
     outer.tab(tab).stn("private " + codeName(List.class)
-      + "<" + codeName(targetClass) + "> " + gettingMethodName() + "() {");
+      + "<" + codeName(sourceClass) + "> " + gettingMethodName() + "() {");
 
     final int tab1 = tab + 1;
 
-    outer.tab(tab1).stn(codeName(List.class) + "<" + codeName(targetClass)
+    outer.tab(tab1).stn(codeName(List.class) + "<" + codeName(sourceClass)
       + "> list = new " + codeName(ArrayList.class) + "<>();");
 
     for (GetterCreation gc : getterCreations) {

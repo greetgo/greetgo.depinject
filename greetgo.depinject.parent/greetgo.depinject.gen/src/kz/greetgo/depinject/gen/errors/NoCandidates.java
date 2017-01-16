@@ -7,7 +7,7 @@ public class NoCandidates extends RuntimeException {
   public final BeanReference beanReference;
 
   public NoCandidates(BeanReference beanReference) {
-    super(Utils.asStr(beanReference.targetClass) + " in " + beanReference.place);
+    super(Utils.asStr(beanReference.sourceClass) + " in " + beanReference.place);
     this.beanReference = beanReference;
   }
 }

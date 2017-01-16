@@ -44,14 +44,15 @@ import kz.greetgo.depinject.gen2.test_beans024.BeanConfig024;
 import kz.greetgo.depinject.gen2.test_beans024.Iface024;
 import kz.greetgo.depinject.gen2.test_beans025.Bean025;
 import kz.greetgo.depinject.gen2.test_beans025.BeanConfig025;
+import kz.greetgo.depinject.gen2.test_beans025.BeanWithRefToReplacer;
 import kz.greetgo.depinject.gen2.test_beans026.Bean026;
 import kz.greetgo.depinject.gen2.test_beans026.BeanConfig026;
 import kz.greetgo.depinject.gen2.test_beans026.Replacer026_A;
 import kz.greetgo.depinject.gen2.test_beans026.Replacer026_B;
-import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -456,11 +457,15 @@ public class BeanContainerManagerTest {
     //
     //
 
+    bcm.beanContainerMethodList.forEach(System.out::println);
+
     assertThat(bcm.beanContainerMethodList).hasSize(4);
     assertThat(bcm.replacers).hasSize(1);
     assertThat(bcm.usingBeanCreationList).hasSize(2);
-    assertThat(bcm.writingGetterCreations).hasSize(1);
-    assertThat(bcm.writingBeanReferences).describedAs("It need to be more bean references for replaces").hasSize(2);
+    assertThat(bcm.writingGetterCreations).hasSize(2);
+
+    assertThat(bcm.writingGetterCreations.get(0).replacers).hasSize(1);
+    assertThat(bcm.writingGetterCreations.get(1).replacers).hasSize(1);
 
   }
 
@@ -526,6 +531,8 @@ public class BeanContainerManagerTest {
   @Include(BeanConfig025.class)
   interface BeanContainer025 extends BeanContainer {
     Bean025 bean025();
+
+    BeanWithRefToReplacer bean_with_ref_to_replacer();
   }
 
   @Test
@@ -539,11 +546,25 @@ public class BeanContainerManagerTest {
     //
     //
 
-    assertThat(bcm.replacers).hasSize(1);
-    bcm.allBeanReferences.forEach(System.out::println);
+    assertThat(bcm.replacers).hasSize(2);
 
+//    bcm.allBeanReferences.forEach(a -> System.out.println(a.toFullString()));
 
-    Assertions.fail("Check that replacer cannot be replacer for itself");
+    Map<String, BeanReference> map = new HashMap<>();
+    bcm.allBeanReferences.forEach(r -> map.put(r.sourceClass.getSimpleName(), r));
+//    map.keySet().forEach(System.out::println);
+
+    BeanReference beanRef = map.get("Bean025");
+    assertThat(beanRef.getterCreations).hasSize(1);
+    assertThat(beanRef.getterCreations.get(0).replacers).hasSize(2);
+
+    BeanReference replaceBR = map.get("Replacer025");
+    assertThat(replaceBR.getterCreations).hasSize(1);
+    assertThat(replaceBR.getterCreations.get(0).replacers).describedAs("replacer cannot be replaced").isEmpty();
+
+    BeanReference replaceBR_more = map.get("Replacer025_more");
+    assertThat(replaceBR_more.getterCreations).hasSize(1);
+    assertThat(replaceBR_more.getterCreations.get(0).replacers).describedAs("replacer cannot be replaced").isEmpty();
   }
 
 

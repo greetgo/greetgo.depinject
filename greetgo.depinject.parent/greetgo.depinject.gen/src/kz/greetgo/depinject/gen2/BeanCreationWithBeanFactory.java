@@ -13,8 +13,8 @@ public class BeanCreationWithBeanFactory extends BeanCreation {
 
   public BeanCreationWithBeanFactory(Class<?> beanClass, boolean singleton, BeanReference beanFactorySource) {
     super(beanClass, singleton);
-    if (!BeanFactory.class.isAssignableFrom(beanFactorySource.targetClass)) {
-      throw new RuntimeException(beanFactorySource.targetClass + " is not bean factory; " + beanFactorySource.place);
+    if (!BeanFactory.class.isAssignableFrom(beanFactorySource.sourceClass)) {
+      throw new RuntimeException(beanFactorySource.sourceClass + " is not bean factory; " + beanFactorySource.place);
     }
     this.beanFactorySource = beanFactorySource;
   }

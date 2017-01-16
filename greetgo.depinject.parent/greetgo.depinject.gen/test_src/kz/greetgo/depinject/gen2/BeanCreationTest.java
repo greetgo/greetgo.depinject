@@ -48,8 +48,8 @@ public class BeanCreationTest {
     assertThat(list.get(1).fieldName).isEqualTo("field2");
     assertThat(list.get(2).fieldName).isEqualTo("parentField");
 
-    assertThat(list.get(0).beanReference.targetClass.getName()).isEqualTo(Bean1.class.getName());
-    assertThat(list.get(1).beanReference.targetClass.getName()).isEqualTo(Bean2.class.getName());
+    assertThat(list.get(0).beanReference.sourceClass.getName()).isEqualTo(Bean1.class.getName());
+    assertThat(list.get(1).beanReference.sourceClass.getName()).isEqualTo(Bean2.class.getName());
 
     assertThat(list.get(0).beanReference.isList).isFalse();
     assertThat(list.get(1).beanReference.isList).isTrue();

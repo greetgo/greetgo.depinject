@@ -1,6 +1,7 @@
 package kz.greetgo.depinject.gen2;
 
 import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.core.replace.BeanReplacer;
 import kz.greetgo.depinject.gen.errors.LeftException;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class GetterCreation {
 
   @Override
   public String toString() {
-    return "GetterCreation{ " + asStr(getterClass) + " := " + beanCreation;
+    return "GetterCreation{(" + varIndex + ") " + asStr(getterClass) + " := " + beanCreation;
   }
 
   public boolean use = false;
@@ -49,6 +50,8 @@ public class GetterCreation {
     if (!preparations.equals(that.preparations)) return false;
     if (!replacers.equals(that.replacers)) return false;
 
+    if (replacers.size() > 0 && !getterClass.equals(that.getterClass)) return false;
+
     return true;
   }
 
@@ -57,6 +60,7 @@ public class GetterCreation {
     int result = beanCreation.hashCode();
     result = 31 * result + preparations.hashCode();
     result = 31 * result + replacers.hashCode();
+    if (replacers.size() > 0) result = 31 * result + getterClass.hashCode();
     return result;
   }
 
@@ -75,7 +79,12 @@ public class GetterCreation {
     return varIndex;
   }
 
+  private boolean wasUsePreparations = false;
+
   public void usePreparations(List<BeanCreation> allPreparations) {
+    if (wasUsePreparations) return;
+    wasUsePreparations = true;
+
     Class<?> currentClass = beanCreation.beanClass;
     for (BeanCreation preparation : allPreparations) {
       Class<?> pc = preparation.preparingClass;
@@ -91,6 +100,9 @@ public class GetterCreation {
     sb.append("\n\t").append(asStr(getterClass)).append(" -> ").append(beanCreation);
     for (BeanCreation preparation : preparations) {
       sb.append("\n\t\t\t\tprepared by ").append(preparation);
+    }
+    for (BeanCreation replacer : replacers) {
+      sb.append("\n\t\t\t\treplaced by ").append(replacer);
     }
     return sb.toString();
   }
@@ -227,7 +239,19 @@ public class GetterCreation {
 
   public final List<BeanCreation> replacers = new ArrayList<>();
 
-  public void addReplacer(BeanCreation replacer) {
-    replacers.add(replacer);
+  private boolean wasUseReplacers = false;
+
+  public void useReplacers(List<BeanCreation> allReplacers) {
+    if (wasUseReplacers) return;
+    wasUseReplacers = true;
+
+    Class<?> checkingClass = beanCreation.beanClass;
+    if (BeanReplacer.class.isAssignableFrom(checkingClass)) return;
+
+    for (BeanCreation replacer : allReplacers) {
+      if (replacer.replaceChecker != null && replacer.replaceChecker.check(checkingClass)) {
+        replacers.add(replacer);
+      }
+    }
   }
 }

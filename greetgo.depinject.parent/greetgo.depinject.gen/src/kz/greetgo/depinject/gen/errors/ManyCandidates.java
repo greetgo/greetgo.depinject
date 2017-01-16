@@ -13,7 +13,7 @@ public class ManyCandidates extends RuntimeException {
 
   private static String createMessage(BeanReference beanReference) {
     StringBuilder sb = new StringBuilder();
-    sb.append(Utils.asStr(beanReference.targetClass))
+    sb.append(Utils.asStr(beanReference.sourceClass))
       .append(" -> ")
       .append(beanReference.getterCreations.size())
       .append(" refs @ ").append(beanReference.place).append("\nCandidates:\n");

@@ -38,4 +38,9 @@ public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
   public void markToUse() {
     beanReference.markToUse();
   }
+
+  @Override
+  public String toString() {
+    return "Method " + method.getName() + "() ::: " + beanReference.toFullString();
+  }
 }
