@@ -3,6 +3,7 @@ package kz.greetgo.depinject.gen;
 import kz.greetgo.class_scanner.ClassScanner;
 import kz.greetgo.class_scanner.ClassScannerDef;
 import kz.greetgo.depinject.core.BeanContainer;
+import kz.greetgo.depinject.core.Include;
 import kz.greetgo.java_compiler.JavaCompiler;
 import kz.greetgo.java_compiler.JavaCompilerFactory;
 import kz.greetgo.util.ServerUtil;
@@ -47,6 +48,7 @@ public class DepinjectUtil {
       ClassScanner classScanner = new ClassScannerDef();
       for (Class<?> aClass : classScanner.scanPackage(packageName)) {
         if (!BeanContainer.class.isAssignableFrom(aClass)) continue;
+        if (aClass.getAnnotation(Include.class) == null) continue;
 
         BeanContainerGenerator bcg = new BeanContainerGenerator();
         bcg.beanContainerInterface = aClass;

@@ -3,6 +3,7 @@ package kz.greetgo.depinject.gen;
 import kz.greetgo.depinject.Depinject;
 import kz.greetgo.depinject.gen.test_beans027.beans.afterInject_sync.DependsOnAlone;
 import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
+import kz.greetgo.depinject.gen.test_beans028.NoIncludeBeanContainer;
 import kz.greetgo.util.ServerUtil;
 import org.testng.annotations.Test;
 
@@ -83,8 +84,8 @@ public class DepinjectUtilTest {
     //
     //
     DepinjectUtil.implementAndUseBeanContainers(
-        "kz.greetgo.depinject.gen.test_beans027.container",
-        srcDir
+      "kz.greetgo.depinject.gen.test_beans027.container",
+      srcDir
     );
     //
     //
@@ -106,7 +107,7 @@ public class DepinjectUtilTest {
 
     DependsOnAlone dependsOnAlone = impl.getDependsOnAlone();
     assertThat(dependsOnAlone.valueInitiatedWhileAfterInject)
-        .isEqualTo("DependsOnAlone value : Value while after inject");
+      .isEqualTo("DependsOnAlone value : Value while after inject");
 
     ServerUtil.deleteRecursively(srcDir);
   }
@@ -117,5 +118,22 @@ public class DepinjectUtilTest {
 
     DependsOnAlone dependsOnAlone = impl.getDependsOnAlone();
     System.out.println(dependsOnAlone.valueInitiatedWhileAfterInject);
+  }
+
+  @Test
+  public void implementAndUseBeanContainers_NoIncludeBeanContainer() throws Exception {
+    final String srcDir = "build/implementAndUseBeanContainers_NoIncludeBeanContainer";
+
+    //
+    //
+    //
+    DepinjectUtil.implementAndUseBeanContainers(
+      NoIncludeBeanContainer.class.getPackage().getName(),
+      srcDir
+    );
+    //
+    //
+    //
+
   }
 }
