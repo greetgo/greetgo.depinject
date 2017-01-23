@@ -11,11 +11,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BeanContainerManager {
+  private final Context context;
   private final Class<?> beanContainerInterface;
 
-  public BeanContainerManager(Class<?> beanContainerInterface) {
+  BeanContainerManager(Context context, Class<?> beanContainerInterface) {
+    this.context = context;
     this.beanContainerInterface = beanContainerInterface;
   }
+
+  BeanCreationCollector collector;
 
   List<BeanContainerMethod> beanContainerMethodList;
   List<BeanCreation> beanCreationList;
@@ -35,8 +39,12 @@ public class BeanContainerManager {
     // PREPARE REFERENCES
     //
 
-    beanContainerMethodList = BeanContainerMethodExtractor.extract(beanContainerInterface);
-    beanCreationList = BeanCreationCollector.collectFrom(beanContainerInterface)
+    beanContainerMethodList = context.extractBeanContainerMethodList(beanContainerInterface);
+
+    collector = context.newBeanCreationCollector(beanContainerInterface);
+    collector.collect();
+
+    beanCreationList = collector.beanCreationList
       .stream().unordered().distinct().collect(Collectors.toList());
     beanCreationList.sort(Comparator.comparing(o -> o.beanClass.getName()));
 

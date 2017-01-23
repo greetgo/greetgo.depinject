@@ -4,6 +4,7 @@ import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
+import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
 import kz.greetgo.depinject.gen.test_beans007.BeanConfig007;
 import kz.greetgo.depinject.gen.test_beans007.SomeBeanClass;
 import kz.greetgo.depinject.gen.test_beans008.BeanConfig008;
@@ -49,6 +50,12 @@ import kz.greetgo.depinject.gen.test_beans026.Bean026;
 import kz.greetgo.depinject.gen.test_beans026.BeanConfig026;
 import kz.greetgo.depinject.gen.test_beans026.Replacer026_A;
 import kz.greetgo.depinject.gen.test_beans026.Replacer026_B;
+import kz.greetgo.depinject.gen.test_beans029.BeanConfig029;
+import kz.greetgo.depinject.gen.test_beans029.beans4.Bean029_4;
+import kz.greetgo.depinject.gen.test_beans030.BeanConfig030;
+import kz.greetgo.depinject.gen.test_beans030.beans4.Bean030_4;
+import kz.greetgo.depinject.gen.test_beans31.BeanConfig031;
+import kz.greetgo.depinject.gen.test_beans31.beans4.Bean031_4;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -70,7 +77,8 @@ public class BeanContainerManagerTest {
   @Test(expectedExceptions = ManyCandidates.class)
   public void prepareToWrite_ManyCandidates() throws Exception {
 
-    BeanContainerManager bcm = new BeanContainerManager(For_prepareToWrite_ManyCandidates.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(For_prepareToWrite_ManyCandidates.class);
 
     //
     //
@@ -92,7 +100,8 @@ public class BeanContainerManagerTest {
   @Test(expectedExceptions = NoCandidates.class)
   public void prepareToWrite_NoCandidates() throws Exception {
 
-    BeanContainerManager bcm = new BeanContainerManager(For_prepareToWrite_NoCandidates.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(For_prepareToWrite_NoCandidates.class);
 
     //
     //
@@ -109,7 +118,8 @@ public class BeanContainerManagerTest {
   @Test
   public void prepareToWrite_NoDuplicateBeansBecauseTheseClassesNotUsed() throws Exception {
 
-    BeanContainerManager bcm = new BeanContainerManager(For_prepareToWrite_NoDuplicateBeansBecauseTheseClassesNotUsed.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(For_prepareToWrite_NoDuplicateBeansBecauseTheseClassesNotUsed.class);
 
     //
     //
@@ -125,7 +135,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_preparations_1() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(For_prepareToWrite_preparations_1.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(For_prepareToWrite_preparations_1.class);
 
     //
     //
@@ -189,7 +200,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_preparations_2() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(For_prepareToWrite_preparations_2.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(For_prepareToWrite_preparations_2.class);
 
     //
     //
@@ -272,7 +284,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_BeanFactories() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer011.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer011.class);
     //
     //
     bcm.prepareToWrite();
@@ -298,7 +311,8 @@ public class BeanContainerManagerTest {
   @Test
   public void prepareToWrite_TwoBeanConfigPaths_defaultConstructor() throws Exception {
 
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_TwoBeanConfigPaths_defaultConstructor.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer_TwoBeanConfigPaths_defaultConstructor.class);
 
     //
     //
@@ -318,7 +332,8 @@ public class BeanContainerManagerTest {
   @Test
   public void prepareToWrite_TwoBeanConfigPaths_factoryMethod() throws Exception {
 
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_TwoBeanConfigPaths_factoryMethod.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer_TwoBeanConfigPaths_factoryMethod.class);
 
     //
     //
@@ -350,13 +365,15 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_BeanConfigUsingSmallBeanFactory() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_BeanConfigUsingSmallBeanFactory.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer_BeanConfigUsingSmallBeanFactory.class);
     bcm.prepareToWrite();
   }
 
   @Test
   public void prepareToWrite_BeanConfigUsingBigBeanFactory() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_BeanConfigUsingBigBeanFactory.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer_BeanConfigUsingBigBeanFactory.class);
     bcm.prepareToWrite();
   }
 
@@ -367,7 +384,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_019() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer_019.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer_019.class);
 
     //
     //
@@ -390,7 +408,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_replacer_iface() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer020.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer020.class);
 
     //
     //
@@ -418,7 +437,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_replacer_ann() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer021.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer021.class);
 
     //
     //
@@ -449,7 +469,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_replacer_returnClass() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer022.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer022.class);
 
     //
     //
@@ -483,7 +504,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_distinctGetterCreation() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer023.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer023.class);
 
     //
     //
@@ -512,7 +534,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_noGetterCreation() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer024.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer024.class);
 
     //
     //
@@ -538,7 +561,8 @@ public class BeanContainerManagerTest {
   @Test
   public void prepareToWrite_replacerForItself() throws Exception {
 
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer025.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer025.class);
 
     //
     //
@@ -576,7 +600,8 @@ public class BeanContainerManagerTest {
 
   @Test
   public void prepareToWrite_replacePriority() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer026.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer026.class);
 
     //
     //
@@ -588,4 +613,120 @@ public class BeanContainerManagerTest {
     assertThat(bcm.replacers.get(0).beanClass.getName()).isEqualTo(Replacer026_B.class.getName());
     assertThat(bcm.replacers.get(1).beanClass.getName()).isEqualTo(Replacer026_A.class.getName());
   }
+
+  @Include(BeanConfig029.class)
+  interface BeanContainer029 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean029_4 bean();
+  }
+
+  @Test
+  public void prepareToWrite_NoCandidates2() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer029.class);
+
+    NoCandidates error = null;
+
+    try {
+      //
+      //
+      bcm.prepareToWrite();
+      //
+      //
+    } catch (NoCandidates e) {
+      error = e;
+    }
+
+    assertThat(error).isNotNull();
+    assert error != null;
+    System.out.println(error.getMessage());
+
+    List<BeanConfigTree.TreeElement> list = error.configTree.tree.stream()
+      .filter(a -> a.type != BeanConfigTree.TreeElementType.Bean)
+      .collect(Collectors.toList());
+
+    assertThat(list.get(0).type).isEqualTo(BeanConfigTree.TreeElementType.ROOT);
+    assertThat(list.get(0).message).isEqualTo(BeanContainer029.class.getName());
+
+    assertThat(list.get(4).type).isEqualTo(BeanConfigTree.TreeElementType.ScanPackage);
+    assertThat(list.get(4).message).isEqualTo(Bean029_4.class.getPackage().getName());
+
+  }
+
+  @Include(BeanConfig030.class)
+  interface BeanContainer030 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean030_4 bean();
+  }
+
+  @Test
+  public void prepareToWrite_ManyCandidates2() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer030.class);
+
+    ManyCandidates error = null;
+
+    try {
+      //
+      //
+      bcm.prepareToWrite();
+      //
+      //
+    } catch (ManyCandidates e) {
+      error = e;
+    }
+
+    assertThat(error).isNotNull();
+    assert error != null;
+    System.out.println(error.getMessage());
+
+    List<BeanConfigTree.TreeElement> list = error.configTree.tree.stream()
+      .filter(a -> a.type != BeanConfigTree.TreeElementType.Bean)
+      .collect(Collectors.toList());
+
+    assertThat(list.get(0).type).isEqualTo(BeanConfigTree.TreeElementType.ROOT);
+    assertThat(list.get(0).message).isEqualTo(BeanContainer030.class.getName());
+
+    assertThat(list.get(4).type).isEqualTo(BeanConfigTree.TreeElementType.ScanPackage);
+    assertThat(list.get(4).message).isEqualTo(Bean030_4.class.getPackage().getName());
+  }
+
+  @Include(BeanConfig031.class)
+  interface BeanContainer031 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean031_4 bean();
+  }
+
+  @Test
+  public void prepareToWrite_NoDefaultBeanFactory() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer031.class);
+
+    NoDefaultBeanFactory error = null;
+
+    try {
+      //
+      //
+      bcm.prepareToWrite();
+      //
+      //
+    } catch (NoDefaultBeanFactory e) {
+      error = e;
+    }
+
+    assertThat(error).isNotNull();
+    assert error != null;
+    System.out.println(error.getMessage());
+
+    List<BeanConfigTree.TreeElement> list = error.configTree.tree.stream()
+      .filter(a -> a.type != BeanConfigTree.TreeElementType.Bean)
+      .collect(Collectors.toList());
+
+    assertThat(list.get(0).type).isEqualTo(BeanConfigTree.TreeElementType.ROOT);
+    assertThat(list.get(0).message).isEqualTo(BeanContainer031.class.getName());
+
+    assertThat(list.get(4).type).isEqualTo(BeanConfigTree.TreeElementType.ScanPackage);
+    assertThat(list.get(4).message).isEqualTo(Bean031_4.class.getPackage().getName());
+  }
+
 }

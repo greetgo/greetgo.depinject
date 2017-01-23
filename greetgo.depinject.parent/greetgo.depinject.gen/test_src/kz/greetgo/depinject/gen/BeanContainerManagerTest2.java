@@ -3,7 +3,6 @@ package kz.greetgo.depinject.gen;
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.NoMethodsInBeanContainer;
-import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
 import kz.greetgo.depinject.gen.test_beans010.BeanA1;
 import kz.greetgo.depinject.gen.test_beans010.BeanA1_impl;
 import kz.greetgo.depinject.gen.test_beans010.BeanA2;
@@ -16,6 +15,7 @@ import kz.greetgo.depinject.gen.test_beans018.Bean018_both;
 import kz.greetgo.depinject.gen.test_beans018.Bean018_empty;
 import kz.greetgo.depinject.gen.test_beans018.Bean018_iface;
 import kz.greetgo.depinject.gen.test_beans018.BeanConfig018;
+import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -29,7 +29,8 @@ public class BeanContainerManagerTest2 {
 
   @Test(expectedExceptions = NoMethodsInBeanContainer.class)
   public void writeBeanContainerMethods_NoMethodsInBeanContainer() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(NoMethodsInBeanContainerWOW.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(NoMethodsInBeanContainerWOW.class);
     bcm.prepareToWrite();
 
     //
@@ -59,7 +60,8 @@ public class BeanContainerManagerTest2 {
 
   @Test
   public void writeBeanContainerMethods() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer010.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer010.class);
     bcm.prepareToWrite();
 
     OuterToPrintStream outer = new OuterToPrintStream("  ", System.out);
@@ -74,7 +76,8 @@ public class BeanContainerManagerTest2 {
 
   @Test
   public void writeBeanCreation() throws Exception {
-    BeanContainerManager bcm = new BeanContainerManager(BeanContainer010.class);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer010.class);
     bcm.prepareToWrite();
 
     Outer outer = new OuterToPrintStream("  ", System.out);
@@ -93,7 +96,8 @@ public class BeanContainerManagerTest2 {
   }
 
   private void generate(Class<?> bci) {
-    BeanContainerManager bcm = new BeanContainerManager(bci);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(bci);
     bcm.prepareToWrite();
 
     String packageName = bci.getPackage().getName();
@@ -120,7 +124,8 @@ public class BeanContainerManagerTest2 {
   public void prepareToWrite_BeanContainerForTestingUtil() throws Exception {
     Class<?> bci = BeanContainerForTestingUtil.class;
 
-    BeanContainerManager bcm = new BeanContainerManager(bci);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(bci);
     bcm.prepareToWrite();
 
   }

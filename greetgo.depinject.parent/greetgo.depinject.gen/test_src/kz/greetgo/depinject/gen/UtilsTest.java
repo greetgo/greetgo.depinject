@@ -1,8 +1,7 @@
 package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.Bean;
-import kz.greetgo.depinject.core.BeanScannerPackage;
-import kz.greetgo.depinject.gen.Utils;
+import kz.greetgo.depinject.core.ScanPackage;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -13,15 +12,15 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class UtilsTest {
 
   @Bean
-  @BeanScannerPackage("Super")
+  @ScanPackage("Super")
   interface Super {
   }
 
-  @BeanScannerPackage("Super2")
+  @ScanPackage("Super2")
   interface Super2 {
   }
 
-  @BeanScannerPackage("My")
+  @ScanPackage("My")
   interface My extends Super, Super2 {
   }
 
@@ -31,7 +30,7 @@ public class UtilsTest {
     assertThat(bean).isNotNull();
   }
 
-  @BeanScannerPackage("My2")
+  @ScanPackage("My2")
   interface My2 extends Super2 {
   }
 
@@ -41,15 +40,15 @@ public class UtilsTest {
     assertThat(bean).isNull();
   }
 
-  @BeanScannerPackage("My3")
+  @ScanPackage("My3")
   class My3 implements Super2, Super {
   }
 
-  @BeanScannerPackage("Super3")
+  @ScanPackage("Super3")
   interface Super3 {
   }
 
-  @BeanScannerPackage("My4")
+  @ScanPackage("My4")
   class My4 extends My3 implements Super3 {
   }
 
@@ -79,8 +78,8 @@ public class UtilsTest {
 
   @Test
   public void getAllAnnotations_class4() throws Exception {
-    List<BeanScannerPackage> list = Utils.getAllAnnotations(My4.class, BeanScannerPackage.class);
-    list.forEach(ann -> assertThat(ann).isInstanceOf(BeanScannerPackage.class));
+    List<ScanPackage> list = Utils.getAllAnnotations(My4.class, ScanPackage.class);
+    list.forEach(ann -> assertThat(ann).isInstanceOf(ScanPackage.class));
     assertThat(list).hasSize(5);
   }
 

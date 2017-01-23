@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class BeanCreationWithDefaultConstructor extends BeanCreation {
-  public BeanCreationWithDefaultConstructor(Class<?> beanClass, boolean singleton) {
-    super(beanClass, singleton);
+  public BeanCreationWithDefaultConstructor(Context context, Class<?> beanClass, boolean singleton) {
+    super(context, beanClass, singleton);
   }
 
   @Override

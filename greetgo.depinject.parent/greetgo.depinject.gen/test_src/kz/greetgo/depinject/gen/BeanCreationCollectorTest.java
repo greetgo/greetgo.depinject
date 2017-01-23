@@ -26,6 +26,7 @@ import kz.greetgo.depinject.gen.test_beans014.BeanConfig014_2;
 import kz.greetgo.depinject.gen.test_beans014.BeanConfig014_3;
 import kz.greetgo.depinject.gen.test_beans014.local_package.sub.BeanConfig014_1;
 import kz.greetgo.depinject.gen.test_beans014.remote_package.sub.RemoteBean;
+import kz.greetgo.depinject.gen.test_beans029.BeanConfig029;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -42,9 +43,11 @@ public class BeanCreationCollectorTest {
 
   @Test(expectedExceptions = NoBeanContainer.class)
   public void collectFrom_NoBeanContainer() throws Exception {
+    Context context = new Context();
+
     //
     //
-    BeanCreationCollector.collectFrom(BeanContainerWithoutNoBeanContainer.class);
+    context.newBeanCreationCollector(BeanContainerWithoutNoBeanContainer.class).collect();
     //
     //
   }
@@ -54,9 +57,11 @@ public class BeanCreationCollectorTest {
 
   @Test(expectedExceptions = NoInclude.class)
   public void collectFrom_NoInclude() throws Exception {
+    Context context = new Context();
+
     //
     //
-    BeanCreationCollector.collectFrom(BeanContainerWithoutInclude.class);
+    context.newBeanCreationCollector(BeanContainerWithoutInclude.class).collect();
     //
     //
   }
@@ -70,9 +75,10 @@ public class BeanCreationCollectorTest {
 
   @Test(expectedExceptions = NoBeanConfig.class)
   public void collectFrom_NoBeanConfig() throws Exception {
+    Context context = new Context();
     //
     //
-    BeanCreationCollector.collectFrom(ForNoBeanConfigError.class);
+    context.newBeanCreationCollector(ForNoBeanConfigError.class).collect();
     //
     //
   }
@@ -89,9 +95,10 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_BeanWithDefaultConstructor() throws Exception {
+    Context context = new Context();
     //
     //
-    List<BeanCreation> list = BeanCreationCollector.collectFrom(HasBeanWithDefaultConstructor.class);
+    List<BeanCreation> list = context.newBeanCreationCollector(HasBeanWithDefaultConstructor.class).collect();
     //
     //
 
@@ -112,9 +119,10 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_withoutBeanScanner() throws Exception {
+    Context context = new Context();
     //
     //
-    List<BeanCreation> list = BeanCreationCollector.collectFrom(WithoutBeanScanner.class);
+    List<BeanCreation> list = context.newBeanCreationCollector(WithoutBeanScanner.class).collect();
     //
     //
 
@@ -127,9 +135,10 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_factoryMethod() {
+    Context context = new Context();
     //
     //
-    List<BeanCreation> list = BeanCreationCollector.collectFrom(FactoryMethodBeanContainer.class);
+    List<BeanCreation> list = context.newBeanCreationCollector(FactoryMethodBeanContainer.class).collect();
     //
     //
 
@@ -157,9 +166,10 @@ public class BeanCreationCollectorTest {
 
   @Test(expectedExceptions = FactoryMethodCannotContainAnyArguments.class)
   public void collectFrom_BeanFactoryMethodCannotHasAnyArguments() throws Exception {
+    Context context = new Context();
     //
     //
-    BeanCreationCollector.collectFrom(BeanFactoryMethodCannotHasAnyArgumentsBeanContainer.class);
+    context.newBeanCreationCollector(BeanFactoryMethodCannotHasAnyArgumentsBeanContainer.class).collect();
     //
     //
   }
@@ -170,9 +180,10 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_BeanFactory() throws Exception {
+    Context context = new Context();
     //
     //
-    List<BeanCreation> list = BeanCreationCollector.collectFrom(BeanFactoryBeanContainer.class);
+    List<BeanCreation> list = context.newBeanCreationCollector(BeanFactoryBeanContainer.class).collect();
     //
     //
 
@@ -207,9 +218,10 @@ public class BeanCreationCollectorTest {
 
   @Test(expectedExceptions = NoDefaultBeanFactory.class)
   public void collectFrom_BeanFactory_NoDefaultBeanFactory() throws Exception {
+    Context context = new Context();
     //
     //
-    BeanCreationCollector.collectFrom(BeanContainer_for_NoDefaultBeanFactory.class);
+    context.newBeanCreationCollector(BeanContainer_for_NoDefaultBeanFactory.class).collect();
     //
     //
   }
@@ -220,9 +232,10 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_InterfaceBeanFactoryReference() throws Exception {
+    Context context = new Context();
     //
     //
-    BeanCreationCollector.collectFrom(BeanContainer_WithInterfaceBeanFactoryReference.class);
+    context.newBeanCreationCollector(BeanContainer_WithInterfaceBeanFactoryReference.class).collect();
     //
     //
   }
@@ -233,9 +246,10 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_AbstractBeanFactoryReference() throws Exception {
+    Context context = new Context();
     //
     //
-    BeanCreationCollector.collectFrom(BeanContainer_WithAbstractBeanFactoryReference.class);
+    context.newBeanCreationCollector(BeanContainer_WithAbstractBeanFactoryReference.class).collect();
     //
     //
   }
@@ -246,10 +260,11 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_BeanScannerPackage_withParentReference() throws Exception {
+    Context context = new Context();
     //
     //
-    List<BeanCreation> bcList = BeanCreationCollector
-      .collectFrom(BeanContainer_BeanScannerPackage_withParentReference.class);
+    List<BeanCreation> bcList = context.newBeanCreationCollector(
+      BeanContainer_BeanScannerPackage_withParentReference.class).collect();
     //
     //
 
@@ -263,10 +278,11 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_BeanScannerPackage_withRelativeReference() throws Exception {
+    Context context = new Context();
     //
     //
-    List<BeanCreation> bcList = BeanCreationCollector
-      .collectFrom(BeanContainer_BeanScannerPackage_withRelativeReference.class);
+    List<BeanCreation> bcList = context.newBeanCreationCollector(
+      BeanContainer_BeanScannerPackage_withRelativeReference.class).collect();
     //
     //
 
@@ -280,10 +296,11 @@ public class BeanCreationCollectorTest {
 
   @Test
   public void collectFrom_BeanScannerPackage_withFullReference() throws Exception {
+    Context context = new Context();
     //
     //
-    List<BeanCreation> bcList = BeanCreationCollector
-      .collectFrom(BeanContainer_BeanScannerPackage_withFullReference.class);
+    List<BeanCreation> bcList = context.newBeanCreationCollector(
+      BeanContainer_BeanScannerPackage_withFullReference.class).collect();
     //
     //
 
@@ -316,5 +333,18 @@ public class BeanCreationCollectorTest {
 
     assertThat(actual).isEqualTo(expected);
 
+  }
+
+  @Include(BeanConfig029.class)
+  interface BeanContainer029 extends BeanContainer {
+  }
+
+  @Test
+  public void collectAndViewBeanConfigTree() throws Exception {
+    Context context = new Context();
+    BeanCreationCollector collector = context.newBeanCreationCollector(BeanContainer029.class);
+    collector.collect();
+
+    System.out.println(context.configTree.asStr(false, true));
   }
 }

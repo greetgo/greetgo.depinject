@@ -26,7 +26,8 @@ public class BeanContainerGenerator {
 
   public void writeTo(PrintWriter writer) throws Exception {
     OuterToPrintWriter outer = new OuterToPrintWriter("  ", writer);
-    BeanContainerManager bcm = new BeanContainerManager(beanContainerInterface);
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(beanContainerInterface);
     bcm.writeBeanContainerImpl(outer, packageName, implClassName);
   }
 }

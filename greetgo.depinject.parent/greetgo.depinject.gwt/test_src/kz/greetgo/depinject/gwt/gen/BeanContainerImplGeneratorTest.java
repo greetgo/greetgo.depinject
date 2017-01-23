@@ -3,7 +3,6 @@ package kz.greetgo.depinject.gwt.gen;
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoInclude;
-import kz.greetgo.depinject.gen.errors.NoInterface;
 import kz.greetgo.depinject.gwt.gen.example.TestBeanContainer;
 import kz.greetgo.depinject.gwt.gen.example.TestBeanContainerNoInclude;
 import kz.greetgo.depinject.gwt.gen.example.beans1.AsdBeanImpl;

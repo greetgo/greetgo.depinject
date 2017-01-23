@@ -1,7 +1,5 @@
 package kz.greetgo.depinject.gen;
 
-import kz.greetgo.depinject.gen.BeanContainerMethod;
-import kz.greetgo.depinject.gen.BeanContainerMethodExtractor;
 import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainAnyArguments;
 import org.testng.annotations.Test;
 
@@ -9,7 +7,7 @@ import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class BeanContainerMethodExtractorTest {
+public class ContextTest {
 
   class Bean1 {
   }
@@ -27,10 +25,11 @@ public class BeanContainerMethodExtractorTest {
   }
 
   @Test(expectedExceptions = BeanContainerMethodCannotContainAnyArguments.class)
-  public void extract_BeanContainerMethodCannotContainAnyArguments() throws Exception {
+  public void extractBeanContainerMethodList_BeanContainerMethodCannotContainAnyArguments() throws Exception {
+    Context context = new Context();
     //
     //
-    BeanContainerMethodExtractor.extract(HasMethodWithArguments.class);
+    context.extractBeanContainerMethodList(HasMethodWithArguments.class);
     //
     //
   }
@@ -45,10 +44,11 @@ public class BeanContainerMethodExtractorTest {
   }
 
   @Test
-  public void extract() throws Exception {
+  public void extractBeanContainerMethodList() throws Exception {
+    Context context = new Context();
     //
     //
-    List<BeanContainerMethod> list = BeanContainerMethodExtractor.extract(GoodBeanContainer.class);
+    List<BeanContainerMethod> list = context.extractBeanContainerMethodList(GoodBeanContainer.class);
     //
     //
 

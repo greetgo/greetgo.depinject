@@ -6,14 +6,11 @@ import kz.greetgo.depinject.core.BeanPreparationPriority;
 import kz.greetgo.depinject.core.HasAfterInject;
 import kz.greetgo.depinject.core.replace.BeanReplacer;
 import kz.greetgo.depinject.core.replace.ReplacePriority;
-import kz.greetgo.depinject.gen.errors.IllegalBeanGetterDefinition;
 import kz.greetgo.depinject.gen.errors.LeftException;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +22,10 @@ public abstract class BeanCreation {
 
   public int varIndex;
 
-  public BeanCreation(Class<?> beanClass, boolean singleton) {
+  protected final Context context;
+
+  public BeanCreation(Context context, Class<?> beanClass, boolean singleton) {
+    this.context = context;
     if (beanClass == null) throw new NullPointerException("beanClass == null");
     this.beanClass = beanClass;
     this.singleton = singleton;
@@ -68,28 +68,7 @@ public abstract class BeanCreation {
   public final List<BeanGetterDot> beanGetterDotList = new ArrayList<>();
 
   public void fillBeanGetterDotList() {
-    fillBeanGetterDotListInner(beanGetterDotList, beanClass);
-  }
-
-  static void fillBeanGetterDotListInner(List<BeanGetterDot> beanGetterDotList, Class<?> beanClass) {
-
-    for (Field field : beanClass.getFields()) {
-      if (field.getType() == BeanGetter.class) {
-        addDot(beanGetterDotList, field.getName(), field.getGenericType(), beanClass);
-      }
-    }
-
-    Collections.sort(beanGetterDotList);
-  }
-
-  private static void addDot(List<BeanGetterDot> list, String fieldName, Type beanGetterType, Class<?> beanClass) {
-    if (!(beanGetterType instanceof ParameterizedType)) {
-      throw new IllegalBeanGetterDefinition(beanClass, fieldName);
-    }
-    ParameterizedType pt = (ParameterizedType) beanGetterType;
-    BeanReference beanReference = new BeanReference(pt.getActualTypeArguments()[0],
-      "field " + fieldName + " of " + Utils.asStr(beanClass));
-    list.add(new BeanGetterDot(fieldName, beanReference));
+    context.fillBeanGetterDotListInner(beanGetterDotList, beanClass);
   }
 
   public boolean use = false;

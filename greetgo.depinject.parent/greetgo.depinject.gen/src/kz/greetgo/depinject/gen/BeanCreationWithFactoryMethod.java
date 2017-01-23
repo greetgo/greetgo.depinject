@@ -8,9 +8,9 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   public final BeanCreation factorySource;
   public final Method factoryMethod;
 
-  public BeanCreationWithFactoryMethod(Class<?> beanClass, boolean singleton,
+  public BeanCreationWithFactoryMethod(Context context, Class<?> beanClass, boolean singleton,
                                        BeanCreation factorySource, Method factoryMethod) {
-    super(beanClass, singleton);
+    super(context, beanClass, singleton);
     if (factorySource == null) throw new NullPointerException("factorySource == null");
     if (factoryMethod == null) throw new NullPointerException("factoryMethod == null");
     this.factorySource = factorySource;

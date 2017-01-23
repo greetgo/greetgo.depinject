@@ -8,8 +8,11 @@ import java.util.List;
 public class BeanCreationWithBeanFactory extends BeanCreation {
   public final BeanReference beanFactorySource;
 
-  public BeanCreationWithBeanFactory(Class<?> beanClass, boolean singleton, BeanReference beanFactorySource) {
-    super(beanClass, singleton);
+  public BeanCreationWithBeanFactory(Context context,
+                                     Class<?> beanClass,
+                                     boolean singleton,
+                                     BeanReference beanFactorySource) {
+    super(context, beanClass, singleton);
     if (!BeanFactory.class.isAssignableFrom(beanFactorySource.sourceClass)) {
       throw new RuntimeException(beanFactorySource.sourceClass + " is not bean factory; " + beanFactorySource.place);
     }

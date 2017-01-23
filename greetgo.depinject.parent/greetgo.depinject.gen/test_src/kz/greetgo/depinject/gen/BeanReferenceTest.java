@@ -24,7 +24,8 @@ public class BeanReferenceTest {
 
     Type type = TestUtil.getReturnType(ForSimple.class, "method");
 
-    BeanReference beanReference = new BeanReference(type, "place 1");
+    Context context = new Context();
+    BeanReference beanReference = context.newBeanReference(type, "place 1");
 
     assertThat(beanReference.sourceClass.getName()).isEqualTo(SomeClass.class.getName());
     assertThat(beanReference.isList).isFalse();
@@ -43,7 +44,8 @@ public class BeanReferenceTest {
 
     Type type = TestUtil.getReturnType(ForList.class, "method");
 
-    BeanReference beanReference = new BeanReference(type, "place 2");
+    Context context = new Context();
+    BeanReference beanReference = context.newBeanReference(type, "place 2");
 
     assertThat(beanReference.sourceClass.getName()).isEqualTo(SomeClass.class.getName());
     assertThat(beanReference.isList).isTrue();
@@ -60,7 +62,8 @@ public class BeanReferenceTest {
 
     Type type = TestUtil.getReturnType(ForLeftType.class, "method");
 
-    new BeanReference(type, "place 3");
+    Context context = new Context();
+    context.newBeanReference(type, "place 3");
 
   }
 
@@ -76,11 +79,12 @@ public class BeanReferenceTest {
   @Test
   public void fillTargetCreationsFrom() throws Exception {
 
-    BeanReference beanReference = new BeanReference(A1_RefInterface.class, "");
+    Context context = new Context();
+    BeanReference beanReference = context.newBeanReference(A1_RefInterface.class, "");
 
-    BeanCreation refInterface = new BeanCreationWithDefaultConstructor(A1_RefInterface.class, true);
-    BeanCreation beanClass = new BeanCreationWithDefaultConstructor(A2_BeanClass.class, true);
-    BeanCreation leftClass = new BeanCreationWithDefaultConstructor(A3_LeftClass.class, true);
+    BeanCreation refInterface = context.newBeanCreationWithDefaultConstructor(A1_RefInterface.class, true);
+    BeanCreation beanClass = context.newBeanCreationWithDefaultConstructor(A2_BeanClass.class, true);
+    BeanCreation leftClass = context.newBeanCreationWithDefaultConstructor(A3_LeftClass.class, true);
 
     //
     //

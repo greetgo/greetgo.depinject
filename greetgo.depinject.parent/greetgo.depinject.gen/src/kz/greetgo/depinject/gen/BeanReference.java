@@ -3,8 +3,6 @@ package kz.greetgo.depinject.gen;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterArgumentType;
 import kz.greetgo.depinject.gen.errors.LeftException;
-import kz.greetgo.depinject.gen.errors.ManyCandidates;
-import kz.greetgo.depinject.gen.errors.NoCandidates;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -16,8 +14,10 @@ import java.util.stream.Collectors;
 public class BeanReference {
 
   public final String place;
+  private final Context context;
 
-  public BeanReference(Type target, String place) {
+  public BeanReference(Context context, Type target, String place) {
+    this.context = context;
     if (place == null) throw new NullPointerException("place == null");
     this.place = place;
 
@@ -128,9 +128,9 @@ public class BeanReference {
   public void checkConnectivity() {
     if (isList) return;
 
-    if (getterCreations.size() == 0) throw new NoCandidates(this);
+    if (getterCreations.size() == 0) throw context.newNoCandidates(this);
 
-    if (getterCreations.size() > 1) throw new ManyCandidates(this);
+    if (getterCreations.size() > 1) throw context.newManyCandidates(this);
 
   }
 

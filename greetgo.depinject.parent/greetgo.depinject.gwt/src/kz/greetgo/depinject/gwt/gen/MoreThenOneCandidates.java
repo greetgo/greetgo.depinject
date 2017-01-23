@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.gen.errors;
+package kz.greetgo.depinject.gwt.gen;
 
 import java.lang.reflect.Type;
 

@@ -2,8 +2,6 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.BeanPreparation;
-import kz.greetgo.depinject.gen.BeanCreation;
-import kz.greetgo.depinject.gen.BeanGetterDot;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterDefinition;
 import org.testng.annotations.Test;
 
@@ -13,7 +11,7 @@ import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class BeanCreationTest {
+public class ContextTest2 {
 
   class Bean1 {
   }
@@ -22,6 +20,7 @@ public class BeanCreationTest {
   }
 
   public class ParentBean {
+    @SuppressWarnings("unused")
     public BeanGetter<Bean1> parentField;
   }
 
@@ -38,9 +37,11 @@ public class BeanCreationTest {
   public void fillBeanGetterDotListInner() throws Exception {
     List<BeanGetterDot> list = new ArrayList<>();
 
+    Context context = new Context();
+
     //
     //
-    BeanCreation.fillBeanGetterDotListInner(list, MainBean.class);
+    context.fillBeanGetterDotListInner(list, MainBean.class);
     //
     //
 
@@ -67,9 +68,11 @@ public class BeanCreationTest {
 
   @Test(expectedExceptions = IllegalBeanGetterDefinition.class)
   public void fillBeanGetterDotListInner_IllegalBeanGetterDefinition() throws Exception {
+    Context context = new Context();
+
     //
     //
-    BeanCreation.fillBeanGetterDotListInner(new ArrayList<>(), LeftBean.class);
+    context.fillBeanGetterDotListInner(new ArrayList<>(), LeftBean.class);
     //
     //
   }
@@ -77,6 +80,7 @@ public class BeanCreationTest {
   interface I1 extends BeanPreparation<Bean1> {
   }
 
+  @SuppressWarnings("unused")
   interface I2<T> {
   }
 
