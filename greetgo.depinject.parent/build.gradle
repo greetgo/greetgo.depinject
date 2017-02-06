@@ -23,10 +23,8 @@ allprojects {
 subprojects {
   repositories {
     mavenLocal()
-    maven {
-      name 'Our repository'
-      url System.getenv('GG_REPO')
-    }
+    maven { url System.getenv('GG_REPO') }
+    mavenCentral()
   }
 
   dependencies {
