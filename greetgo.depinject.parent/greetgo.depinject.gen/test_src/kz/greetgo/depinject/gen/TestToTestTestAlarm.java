@@ -6,6 +6,6 @@ public class TestToTestTestAlarm {
 
   @Test
   public void alarm() throws Exception {
-    throw new Exception("alarm");
+    throw new Exception("alarm 2");
   }
 }
