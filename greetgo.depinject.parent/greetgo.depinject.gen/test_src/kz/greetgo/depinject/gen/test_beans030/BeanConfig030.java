@@ -7,5 +7,4 @@ import kz.greetgo.depinject.gen.test_beans030.beans2.BeanConfig030_2;
 
 @BeanConfig
 @Include({BeanConfig030_1.class, BeanConfig030_2.class})
-public class BeanConfig030 {
-}
+public class BeanConfig030 {}

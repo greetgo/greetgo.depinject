@@ -5,5 +5,4 @@ import kz.greetgo.depinject.core.FactoredBy;
 
 @Bean
 @FactoredBy(BeanFactory5.class)
-public interface Bean5 {
-}
+public interface Bean5 {}

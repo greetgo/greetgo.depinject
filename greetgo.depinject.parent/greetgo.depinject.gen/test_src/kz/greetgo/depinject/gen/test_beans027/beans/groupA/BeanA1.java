@@ -6,8 +6,7 @@ import kz.greetgo.depinject.gen.test_beans027.interfaces.IBeanA1;
 @Bean
 public class BeanA1 implements IBeanA1, Transactional {
 
-  public BeanA1() throws Exception {
-  }
+  public BeanA1() throws Exception { }
 
   @Override
   public void hello() {

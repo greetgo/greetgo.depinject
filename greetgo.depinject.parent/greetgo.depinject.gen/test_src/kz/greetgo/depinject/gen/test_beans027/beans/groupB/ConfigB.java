@@ -8,5 +8,4 @@ import kz.greetgo.depinject.gen.test_beans027.beans.using_default_factory.BeanCo
 @BeanConfig
 @BeanScanner
 @Include({BeanConfigWithDefaultFactory.class})
-public class ConfigB {
-}
+public class ConfigB {}

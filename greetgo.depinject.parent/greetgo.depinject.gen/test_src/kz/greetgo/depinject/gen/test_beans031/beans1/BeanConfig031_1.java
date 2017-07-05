@@ -1,10 +1,10 @@
-package kz.greetgo.depinject.gen.test_beans31.beans1;
+package kz.greetgo.depinject.gen.test_beans031.beans1;
 
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanScanner;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.core.ScanPackage;
-import kz.greetgo.depinject.gen.test_beans31.beans3.BeanConfig031_3;
+import kz.greetgo.depinject.gen.test_beans031.beans3.BeanConfig031_3;
 
 @BeanConfig
 @BeanScanner

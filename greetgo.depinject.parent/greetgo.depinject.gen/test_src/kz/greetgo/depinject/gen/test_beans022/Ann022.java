@@ -9,5 +9,4 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Ann022 {
-}
+public @interface Ann022 {}

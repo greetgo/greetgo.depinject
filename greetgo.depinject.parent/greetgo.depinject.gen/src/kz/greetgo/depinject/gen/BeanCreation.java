@@ -139,7 +139,7 @@ public abstract class BeanCreation {
       out.tab(tab2).stn("if (e instanceof java.lang.RuntimeException) throw (java.lang.RuntimeException) e;");
       out.tab(tab2).stn("throw new java.lang.RuntimeException(e);");
       out.tab(tab1).stn("}");
-      RuntimeException e;
+
     }
 
     out.tab(tab).stn("}");

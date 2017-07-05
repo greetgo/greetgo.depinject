@@ -1,4 +1,3 @@
 package kz.greetgo.depinject.gen.test_beans003;
 
-public class Bean2 {
-}
+public class Bean2 {}

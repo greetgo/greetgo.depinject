@@ -7,5 +7,4 @@ import kz.greetgo.depinject.gen.test_beans017.beans.core.BeanConfigUsingBeanFact
 
 @BeanConfig
 @Include({BeanConfigUsingBeanFactory.class, BeanConfigBigBeanFactory.class})
-public class BeanConfigUsingBigBeanFactory {
-}
+public class BeanConfigUsingBigBeanFactory {}

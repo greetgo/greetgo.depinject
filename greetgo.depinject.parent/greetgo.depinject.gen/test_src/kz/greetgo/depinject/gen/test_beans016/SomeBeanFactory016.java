@@ -4,7 +4,6 @@ import kz.greetgo.depinject.core.Bean;
 
 @Bean
 public class SomeBeanFactory016 {
-
   @Bean
   @SuppressWarnings("unused")
   public SomeBean016 createBean1() {

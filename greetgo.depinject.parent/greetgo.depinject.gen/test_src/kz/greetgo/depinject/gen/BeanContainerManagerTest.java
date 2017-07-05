@@ -54,8 +54,8 @@ import kz.greetgo.depinject.gen.test_beans029.BeanConfig029;
 import kz.greetgo.depinject.gen.test_beans029.beans4.Bean029_4;
 import kz.greetgo.depinject.gen.test_beans030.BeanConfig030;
 import kz.greetgo.depinject.gen.test_beans030.beans4.Bean030_4;
-import kz.greetgo.depinject.gen.test_beans31.BeanConfig031;
-import kz.greetgo.depinject.gen.test_beans31.beans4.Bean031_4;
+import kz.greetgo.depinject.gen.test_beans031.BeanConfig031;
+import kz.greetgo.depinject.gen.test_beans031.beans4.Bean031_4;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -88,8 +88,7 @@ public class BeanContainerManagerTest {
 
   }
 
-  class SomeLeftClass {
-  }
+  class SomeLeftClass {}
 
   @Include(BeanConfig007.class)
   interface For_prepareToWrite_NoCandidates extends BeanContainer {
@@ -112,8 +111,7 @@ public class BeanContainerManagerTest {
   }
 
   @Include(BeanConfig007.class)
-  interface For_prepareToWrite_NoDuplicateBeansBecauseTheseClassesNotUsed extends BeanContainer {
-  }
+  interface For_prepareToWrite_NoDuplicateBeansBecauseTheseClassesNotUsed extends BeanContainer {}
 
   @Test
   public void prepareToWrite_NoDuplicateBeansBecauseTheseClassesNotUsed() throws Exception {
@@ -130,8 +128,7 @@ public class BeanContainerManagerTest {
   }
 
   @Include(BeanConfig008.class)
-  interface For_prepareToWrite_preparations_1 extends BeanContainer {
-  }
+  interface For_prepareToWrite_preparations_1 extends BeanContainer {}
 
   @Test
   public void prepareToWrite_preparations_1() throws Exception {
@@ -195,8 +192,7 @@ public class BeanContainerManagerTest {
 
 
   @Include(BeanConfig009.class)
-  interface For_prepareToWrite_preparations_2 extends BeanContainer {
-  }
+  interface For_prepareToWrite_preparations_2 extends BeanContainer {}
 
   @Test
   public void prepareToWrite_preparations_2() throws Exception {
@@ -294,8 +290,6 @@ public class BeanContainerManagerTest {
 
     Map<String, BeanCreation> map = bcm.usingBeanCreationList
       .stream().collect(Collectors.toMap(a -> a.beanClass.getSimpleName(), a -> a));
-
-    System.out.println(map);
 
     assertThat(map.get(BeanA3.class.getSimpleName())).isInstanceOf(BeanCreationWithBeanFactory.class);
 
@@ -728,5 +722,4 @@ public class BeanContainerManagerTest {
     assertThat(list.get(4).type).isEqualTo(BeanConfigTree.TreeElementType.ScanPackage);
     assertThat(list.get(4).message).isEqualTo(Bean031_4.class.getPackage().getName());
   }
-
 }

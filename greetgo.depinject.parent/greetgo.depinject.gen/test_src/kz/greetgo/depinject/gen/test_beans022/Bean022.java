@@ -4,5 +4,4 @@ import kz.greetgo.depinject.core.Bean;
 
 @Bean
 @Ann022
-public class Bean022 implements Iface022 {
-}
+public class Bean022 implements Iface022 {}

@@ -5,7 +5,6 @@ import kz.greetgo.depinject.gen.test_beans017.beans.core.LocalBeanFactory;
 
 @Bean
 public class BigBeanFactory extends LocalBeanFactory {
-
   private int windowNumber = 1000;
 
   @Override

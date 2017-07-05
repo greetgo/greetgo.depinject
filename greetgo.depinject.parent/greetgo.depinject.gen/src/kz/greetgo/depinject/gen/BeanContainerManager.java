@@ -111,7 +111,7 @@ public class BeanContainerManager {
       .filter(BeanReference::needGetter)
       .forEachOrdered(br -> beanReferenceMap.computeIfAbsent(br, k -> new ArrayList<>()).add(br));
 
-    writingBeanReferences = beanReferenceMap.keySet().stream().collect(Collectors.toList());
+    writingBeanReferences = new ArrayList<>(beanReferenceMap.keySet());
     writingBeanReferences.sort(Comparator.comparing(BeanReference::compareStr));
 
     //

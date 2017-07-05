@@ -5,8 +5,8 @@ import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.gen.test_beans017.util.UsingBeanFactory;
 
 @Bean
+@SuppressWarnings("unused")
 public class UsingBeanFactoryRoom {
-
   public void takeOffJacket() {
     UsingBeanFactory.log.add("Take off jacket");
   }

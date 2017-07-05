@@ -4,7 +4,6 @@ import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.gen.test_beans017.util.UsingBeanFactory;
 
 public abstract class LocalBeanFactory implements BeanFactory {
-
   protected abstract int nextWindowNumber();
 
   protected abstract int nextComputerNumber();

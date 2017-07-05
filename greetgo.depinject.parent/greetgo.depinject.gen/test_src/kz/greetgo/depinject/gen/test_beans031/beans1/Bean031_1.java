@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.gen.test_beans31.beans1;
+package kz.greetgo.depinject.gen.test_beans031.beans1;
 
 import kz.greetgo.depinject.core.Bean;
 

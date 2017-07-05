@@ -5,5 +5,4 @@ import kz.greetgo.depinject.core.BeanScanner;
 
 @BeanConfig
 @BeanScanner
-public class BeanConfigWithLeftFactoryMethod {
-}
+public class BeanConfigWithLeftFactoryMethod {}

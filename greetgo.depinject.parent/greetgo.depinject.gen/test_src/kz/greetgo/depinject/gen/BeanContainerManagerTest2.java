@@ -24,8 +24,7 @@ import java.util.List;
 public class BeanContainerManagerTest2 {
 
   @Include(BeanConfig010.class)
-  interface NoMethodsInBeanContainerWOW extends BeanContainer {
-  }
+  interface NoMethodsInBeanContainerWOW extends BeanContainer {}
 
   @Test(expectedExceptions = NoMethodsInBeanContainer.class)
   public void writeBeanContainerMethods_NoMethodsInBeanContainer() throws Exception {
@@ -146,5 +145,4 @@ public class BeanContainerManagerTest2 {
   public void prepareToWrite_018_replacer() throws Exception {
     generate(BeanContainer018.class);
   }
-
 }

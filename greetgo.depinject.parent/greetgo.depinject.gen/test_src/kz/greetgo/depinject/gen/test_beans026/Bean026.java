@@ -4,5 +4,4 @@ import kz.greetgo.depinject.core.Bean;
 
 @Bean
 @Ann026
-public class Bean026 {
-}
+public class Bean026 {}

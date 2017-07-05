@@ -8,5 +8,4 @@ import kz.greetgo.depinject.gen.test_beans005.sub_beans_4.BeanConfig005_04;
 @BeanConfig
 @BeanScanner
 @Include(BeanConfig005_04.class)
-public class BeanConfig005_03 {
-}
+public class BeanConfig005_03 {}

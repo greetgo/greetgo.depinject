@@ -8,5 +8,4 @@ import kz.greetgo.depinject.gen.test_beans027.beans.groupB.ConfigB;
 
 @BeanConfig
 @Include({ConfigA.class, ConfigB.class, BeanConfigAfterInjectSync.class})
-public class BeanConfig027 {
-}
+public class BeanConfig027 {}

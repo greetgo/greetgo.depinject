@@ -7,5 +7,4 @@ import kz.greetgo.depinject.core.Include;
 @BeanScanner
 @BeanConfig
 @Include(BeanConfig015_2.class)
-public class BeanConfig015 {
-}
+public class BeanConfig015 {}
