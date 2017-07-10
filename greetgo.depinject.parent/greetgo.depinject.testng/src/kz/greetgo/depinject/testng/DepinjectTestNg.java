@@ -1,6 +1,10 @@
 package kz.greetgo.depinject.testng;
 
-import kz.greetgo.depinject.core.*;
+import kz.greetgo.depinject.core.Bean;
+import kz.greetgo.depinject.core.BeanConfig;
+import kz.greetgo.depinject.core.BeanContainer;
+import kz.greetgo.depinject.core.BeanScanner;
+import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.BeanContainerGenerator;
 import kz.greetgo.java_compiler.JavaCompiler;
 import kz.greetgo.java_compiler.JavaCompilerFactory;
@@ -14,7 +18,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static kz.greetgo.util.ServerUtil.*;
+import static kz.greetgo.util.ServerUtil.addToClasspath;
+import static kz.greetgo.util.ServerUtil.dummyCheck;
+import static kz.greetgo.util.ServerUtil.extractName;
+import static kz.greetgo.util.ServerUtil.extractPackage;
+import static kz.greetgo.util.ServerUtil.resolveFile;
 
 public class DepinjectTestNg {
 
@@ -34,22 +42,22 @@ public class DepinjectTestNg {
 
     String outerPackage = "a" + RND.intStr(10) + ".";
 
-    String containerInterface 
-        = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterface_" + RND.intStr(10);
-    String containerInterfaceImpl 
-        = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterfaceImpl_" + RND.intStr(10);
+    String containerInterface
+      = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterface_" + RND.intStr(10);
+    String containerInterfaceImpl
+      = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterfaceImpl_" + RND.intStr(10);
 
-    String testNgTestStaticFactory 
-        = outerPackage + testNgTestClass.getSimpleName() + "_StaticFactory_" + RND.intStr(10);
-    String testNgTestConfig 
-        = outerPackage + testNgTestClass.getSimpleName() + "_Config_" + RND.intStr(10);
+    String testNgTestStaticFactory
+      = outerPackage + testNgTestClass.getSimpleName() + "_StaticFactory_" + RND.intStr(10);
+    String testNgTestConfig
+      = outerPackage + testNgTestClass.getSimpleName() + "_Config_" + RND.intStr(10);
 
     final File testNgTestConfigJava = writeTestNgTestConfig(srcDir, testNgTestConfig);
 
     final File testNgTestStaticFactoryJava = writeTestNgStaticFactory(srcDir, testNgTestStaticFactory, testNgTestClass);
 
     final File containerInterfaceJava = writeTestNgTestConfig(srcDir, containerInterface,
-        testNgTestClass, testNgTestConfig, classList);
+      testNgTestClass, testNgTestConfig, classList);
 
     addToClasspath(srcDir);
 
@@ -115,7 +123,7 @@ public class DepinjectTestNg {
   }
 
   private static File writeTestNgStaticFactory(String srcDir, String testNgTestStaticFactory, Class<?> testNgTestClass)
-      throws Exception {
+    throws Exception {
 
     final File file = resolveFile(srcDir, testNgTestStaticFactory, ".java");
     dummyCheck(file.getParentFile().mkdirs());

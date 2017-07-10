@@ -26,11 +26,6 @@ public class AbstractDepinjectTestNgTest extends AbstractDepinjectTestNg {
   public BeanGetter<Kampala> kampala;
 
   @Override
-  protected String getSrcTempDir() {
-    return "build";
-  }
-
-  @Override
   protected boolean needToRemoveSrcDir() {
     return false;
   }

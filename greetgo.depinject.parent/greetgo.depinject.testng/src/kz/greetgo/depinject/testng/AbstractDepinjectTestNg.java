@@ -4,6 +4,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static kz.greetgo.util.ServerUtil.dummyCheck;
 
@@ -47,7 +49,19 @@ public abstract class AbstractDepinjectTestNg {
   }
 
   protected String getSrcTempDir() {
-    return System.getProperty("java.io.tmpdir") + "/depinject_testNg";
+
+    if (new File("build").isDirectory()) {
+      return "build/depinject_testNg";
+    }
+
+    if (new File("target").isDirectory()) {
+      return "target/depinject_testNg";
+    }
+
+    {
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+      return System.getProperty("java.io.tmpdir") + "/depinject_testNg_" + sdf.format(new Date());
+    }
   }
 
 }
