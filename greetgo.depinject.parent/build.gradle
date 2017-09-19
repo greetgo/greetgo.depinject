@@ -7,8 +7,9 @@ allprojects {
   apply plugin: 'idea'
   apply plugin: 'eclipse'
   apply plugin: 'maven'
+  apply plugin: 'signing'
 
-  version = '1.1.4'
+  version = '2.0.0'
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
@@ -22,10 +23,10 @@ allprojects {
 
 subprojects {
   repositories {
-    mavenLocal()
-    if (System.getenv('GG_REPO') != null && System.getenv('GG_REPO').length() > 0) {
-      maven { url System.getenv('GG_REPO') }
-    }
+//    mavenLocal()
+//    if (System.getenv('GG_REPO') != null && System.getenv('GG_REPO').length() > 0) {
+//      maven { url System.getenv('GG_REPO') }
+//    }
     mavenCentral()
   }
 
@@ -33,11 +34,11 @@ subprojects {
     //ext.jettyVersion = '8.0+'
     ext.jettyVersion = '9.2+'
     ext.springVersion = '4.2.3.RELEASE'
-    ext.gwtVersion = '2.7.0'
-    ext.greetgoUtilVersion = '0.0.25'
+    ext.gwtVersion = '2.8.0'
+    ext.greetgoUtilVersion = '0.0.27'
     ext.testNgVersion = '6.5.1'
-    ext.classScannerVersion = '0.0.1'
-    ext.greetgoJavaCompilerVersion = "0.0.3"
+    ext.classScannerVersion = '2.0.0'
+    ext.greetgoJavaCompilerVersion = "2.0.0"
 
     //compile 'com.google.code.findbugs:annotations:2.0.1'
 
