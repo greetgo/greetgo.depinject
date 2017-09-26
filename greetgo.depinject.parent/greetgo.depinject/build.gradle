@@ -37,11 +37,16 @@ jar {
   from sourceSets.main.allSource
 }
 
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+  from javadoc.destinationDir
+  classifier = 'javadoc'
+}
 
-<<<<<<< HEAD
-=======
+task sourcesJar(type: Jar) {
+  from sourceSets.main.allSource
+  classifier = 'sources'
+}
 
->>>>>>> master
 uploadArchives {
   repositories.mavenDeployer {
     configuration = configurations.archives
@@ -71,9 +76,6 @@ if (System.getenv('LIB_SIGN_GPG_KEY_ID') != null && System.getenv('LIB_SIGN_GPG_
   }
 }
 
-signing {
-  sign configurations.archives
-}
 
 tasks.withType(Javadoc) {
   options.addStringOption('Xdoclint:none', '-quiet')
