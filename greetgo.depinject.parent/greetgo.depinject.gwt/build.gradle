@@ -1,6 +1,12 @@
 def nowDate = new Date()
 def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
 
+//
+// Мы отключили выгрузку GWT на Maven Central специально, изза сложностей деплоя GWT модулей
+// более того, от технологий связанных с GWT наша компания уходит.
+//                                                                 Е. Колпаков
+//
+
 eclipse {
   jdt {
     //
@@ -73,7 +79,6 @@ tasks.withType(Javadoc) {
   options.addStringOption('Xdoclint:none', '-quiet')
   options.addStringOption('encoding', 'UTF-8')
   options.addStringOption('charSet', 'UTF-8')
-  options.addStringOption("sourcepath", "/home/yakzhanov/11")
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
@@ -91,54 +96,4 @@ artifacts {
   archives javadocJar
 }
 
-project.tasks.create('uploadToMavenCentral', Upload.class) {
-  configuration = configurations.archives
-  repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(
-            userName: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_ID'),
-            password: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_PASSWORD')
-        )
-      }
-
-      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(
-            userName: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_ID'),
-            password: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_PASSWORD')
-        )
-      }
-
-      pom.project {
-        name project.name
-        packaging 'jar'
-
-        description 'DepInject. Dependency injection tool'
-        url 'http://tech.greetgo.kz/libs/greetgo/depinject.php'
-
-        scm {
-          connection 'scm:git:https://github.com/greetgo/depinject'
-          developerConnection 'scm:git:https://github.com/greetgo/depinject'
-          url 'https://github.com/greetgo/depinject'
-        }
-
-        licenses {
-          license {
-            name 'The Apache License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-          }
-        }
-
-        developers {
-          developer {
-            id 'greetgo'
-            name 'Yevgeniy Kolpakov'
-            email 'tech@greet-go.com'
-          }
-        }
-      }
-    }
-  }
-}
