@@ -37,16 +37,11 @@ jar {
   from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar, dependsOn: 'javadoc') {
-  from javadoc.destinationDir
-  classifier = 'javadoc'
-}
 
-task sourcesJar(type: Jar) {
-  from sourceSets.main.allSource
-  classifier = 'sources'
-}
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
 uploadArchives {
   repositories.mavenDeployer {
     configuration = configurations.archives
