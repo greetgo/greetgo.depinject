@@ -2,6 +2,10 @@
 
 Реализация паттерна Dependency Injection на базе кодогенерации от компании greetgo!.
 
+# Ссылки
+
+ - [Концепция](greetgo.depinject.parent/doc/concept.md)
+
 # Особенности
 
  - НЕТ зависимостей;
