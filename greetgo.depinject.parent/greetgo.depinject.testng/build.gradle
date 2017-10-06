@@ -61,8 +61,8 @@ tasks.withType(Javadoc) {
   options.addStringOption("sourcepath", "/home/yakzhanov/11")
 }
 
-
 project.tasks.create('uploadToMavenCentral', Upload.class) {
+  group = "upload"
   configuration = configurations.archives
   repositories {
     mavenDeployer {
