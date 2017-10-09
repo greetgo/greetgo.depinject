@@ -26,11 +26,14 @@
 
 ### Подготовка проекта-примера
 
-Давайте создадим gradle-проект:
+Давайте создадим gradle-проект. Чтобы создать проект, можно:
 
- - [Можно либо одним движением скопипастить и в bash](fast_start.script.sh) (далее прыгаем [сюда](#run-tests))
+  - либо одним движением через bash создать проект - [здесь](fast_start.script.sh),
+    и далее прыгаем [сюда](#run-tests), чтобы пропустить создание вручную;
 
- - Или ручками. Вот структура проекта:
+  - Либо вручную далее по тексту:
+
+Вот структура проекта:
 
     depinject.fast_start/
       build.gradle
@@ -41,6 +44,7 @@
         HelloWorld.java
       src/test/java/depinject/fast_start/
         HelloWorldTest.java
+
 
 Содержимое файла `build.gradle`:
 
@@ -170,13 +174,15 @@ public class HelloWorldTest extends AbstractDepinjectTestNg {
 
 ##### Run Tests
 
-Теперь чтобы это всё запустить, заходим в папку `depinject.fast_start/` и звпскаем комаду
+Теперь чтобы это всё запустить, заходим в папку `depinject.fast_start/` и запскаем комаду:
 
     gradle test
 
 В конце должно вылететь:
 
     BUILD SUCCESSFUL
+
+Все связи отлично соединились, и всё отработало как надо.
 
 ### Описание проекта-примера
 
