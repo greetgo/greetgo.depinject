@@ -1,9 +1,9 @@
 ### Ссылки
 
  - [Очень быстрый старт (через TestNG)]
- - [Быстрый старт (main-функция или war-файл)](greetgo.depinject.parent/doc/quick_start.md)
- - [Концепция](greetgo.depinject.parent/doc/concept.md)
- - [Спецификация](greetgo.depinject.parent/doc/spec.md)
+ - [Быстрый старт (main-функция или war-файл)](quick_start.md)
+ - [Концепция](concept.md)
+ - [Спецификация](spec.md)
 
 
 ## Очень быстрый старт (через TestNG)
