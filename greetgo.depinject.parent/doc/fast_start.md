@@ -1,7 +1,7 @@
 ### Ссылки
 
- - [Быстрый старт (на gradle)](greetgo.depinject.parent/doc/quick_start.md)
-   - [Очень быстрый старт (потому что TestNG)]
+ - [Очень быстрый старт (через TestNG)]
+ - [Быстрый старт (main-функция или war-файл)](greetgo.depinject.parent/doc/quick_start.md)
  - [Концепция](greetgo.depinject.parent/doc/concept.md)
  - [Спецификация](greetgo.depinject.parent/doc/spec.md)
 
@@ -186,6 +186,6 @@ public class HelloWorldTest extends AbstractDepinjectTestNg {
 
 Как видите всё собирается и всё работает.
 
-Так можно всё тестировать. Но если нам понядобиться war-файл или main-функция, то нужно будет создавать BeanContainer
+Так можно всё тестировать. Но если нам понадобиться war-файл или main-функция, то нужно будет создавать BeanContainer
 и инициировать его. И потом ещё нужно будет правильно всё это дело откомпилировать и собрать. Как это сделать рассказано
 в [быстром старте](quick_start.md).
