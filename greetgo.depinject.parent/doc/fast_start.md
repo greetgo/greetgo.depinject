@@ -1,7 +1,7 @@
 ### Ссылки
 
- - [Очень быстрый старт (потому что TestNG)]
-   - [Быстрый старт (на gradle)](greetgo.depinject.parent/doc/quick_start.md)
+ - [Быстрый старт (на gradle)](greetgo.depinject.parent/doc/quick_start.md)
+   - [Очень быстрый старт (потому что TestNG)]
  - [Концепция](greetgo.depinject.parent/doc/concept.md)
  - [Спецификация](greetgo.depinject.parent/doc/spec.md)
 
@@ -26,7 +26,7 @@
 
 ### Подготовка проекта-примера
 
-Давайте создадим такой проект:
+Давайте создадим gradle-проект:
 
 [Можно либо одним движением скопипастить и в bash](fast_start.script.sh) (далее прыгаем [сюда](#run-tests))
 

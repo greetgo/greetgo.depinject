@@ -120,3 +120,5 @@ public class HelloWorldTest extends AbstractDepinjectTestNg {
 
 }
 EOF
+
+ # OK
