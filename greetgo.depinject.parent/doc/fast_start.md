@@ -182,6 +182,7 @@ public class HelloWorldTest extends AbstractDepinjectTestNg {
 
     BUILD SUCCESSFUL
 
+Это сообщение сигнализирует о том, что все тесты запустились и прошли успешно.
 Все связи отлично соединились, и всё отработало как надо.
 
 ### Описание проекта-примера

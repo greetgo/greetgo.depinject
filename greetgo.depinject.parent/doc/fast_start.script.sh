@@ -16,7 +16,7 @@ apply plugin: 'maven'
 apply plugin: 'idea'
 
 repositories {
-  jcenter() //Baruch, hi
+  jcenter()
 }
 
 dependencies {
@@ -122,4 +122,4 @@ public class HelloWorldTest extends AbstractDepinjectTestNg {
 }
 EOF
 
- # OK
+ # Ready
