@@ -1,8 +1,9 @@
 ### Ссылки
 
+ - [Очень быстрый старт (потому что TestNG)](greetgo.depinject.parent/doc/fast_start.md)
+   - [Быстрый старт (на gradle)](greetgo.depinject.parent/doc/quick_start.md)
  - [Концепция]
- - [Проект-пример mvc.war.example (быстрая установка и запуск)](mvc_war_example.md)
- - [Спецификация контроллеров](controller_spec.md)
+ - [Спецификация](greetgo.depinject.parent/doc/spec.md)
 
 ### Концепция
 
