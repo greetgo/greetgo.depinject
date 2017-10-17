@@ -34,6 +34,7 @@ import java.lang.annotation.Target;
  * </p>
  */
 @Documented
+@Deprecated
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ScanPackage {
