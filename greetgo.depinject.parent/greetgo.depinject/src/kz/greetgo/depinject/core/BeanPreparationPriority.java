@@ -17,6 +17,7 @@ import java.lang.annotation.Target;
  * Less priority is using first. More priority is wrap previous.
  * </p>
  */
+@Deprecated
 @Documented
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
