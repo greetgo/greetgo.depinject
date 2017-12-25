@@ -5,6 +5,7 @@ import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
+import kz.greetgo.depinject.gen.errors.NotPublicBeanGetter;
 import kz.greetgo.depinject.gen.test_beans007.BeanConfig007;
 import kz.greetgo.depinject.gen.test_beans007.SomeBeanClass;
 import kz.greetgo.depinject.gen.test_beans008.BeanConfig008;
@@ -56,6 +57,23 @@ import kz.greetgo.depinject.gen.test_beans030.BeanConfig030;
 import kz.greetgo.depinject.gen.test_beans030.beans4.Bean030_4;
 import kz.greetgo.depinject.gen.test_beans031.BeanConfig031;
 import kz.greetgo.depinject.gen.test_beans031.beans4.Bean031_4;
+import kz.greetgo.depinject.gen.test_beans032.p01_in_the_bean.Bean032_01;
+import kz.greetgo.depinject.gen.test_beans032.p01_in_the_bean.BeanConfig032_01;
+import kz.greetgo.depinject.gen.test_beans032.p02_in_parent_class.Bean032_02;
+import kz.greetgo.depinject.gen.test_beans032.p02_in_parent_class.BeanConfig032_02;
+import kz.greetgo.depinject.gen.test_beans032.p02_in_parent_class.ParentBean032_02;
+import kz.greetgo.depinject.gen.test_beans032.p03_in_parent_class_markedClass.Bean032_03;
+import kz.greetgo.depinject.gen.test_beans032.p03_in_parent_class_markedClass.BeanConfig032_03;
+import kz.greetgo.depinject.gen.test_beans032.p03_in_parent_class_markedClass.ParentBean032_03;
+import kz.greetgo.depinject.gen.test_beans032.p04_in_the_bean_OK.Bean032_04;
+import kz.greetgo.depinject.gen.test_beans032.p04_in_the_bean_OK.BeanConfig032_04;
+import kz.greetgo.depinject.gen.test_beans032.p05_in_parent_class_OK.Bean032_05;
+import kz.greetgo.depinject.gen.test_beans032.p05_in_parent_class_OK.BeanConfig032_05;
+import kz.greetgo.depinject.gen.test_beans032.p06_in_parent_class_markedParentClass_OK.Bean032_06;
+import kz.greetgo.depinject.gen.test_beans032.p06_in_parent_class_markedParentClass_OK.BeanConfig032_06;
+import kz.greetgo.depinject.gen.test_beans032.p07_in_the_bean_markedClass_OK.Bean032_07;
+import kz.greetgo.depinject.gen.test_beans032.p07_in_the_bean_markedClass_OK.BeanConfig032_07;
+import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -66,6 +84,7 @@ import java.util.stream.Collectors;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+@SuppressWarnings("RedundantThrows")
 public class BeanContainerManagerTest {
 
   @Include(BeanConfig007.class)
@@ -721,5 +740,164 @@ public class BeanContainerManagerTest {
 
     assertThat(list.get(4).type).isEqualTo(BeanConfigTree.TreeElementType.ScanPackage);
     assertThat(list.get(4).message).isEqualTo(Bean031_4.class.getPackage().getName());
+  }
+
+  @Include(BeanConfig032_01.class)
+  interface BeanContainer032_01 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_01 bean();
+  }
+
+  @Test
+  public void prepareToWrite_notPublicBeanGetter_p01_in_the_bean() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_01.class);
+
+    NotPublicBeanGetter error = null;
+
+    try {
+      //
+      //
+      bcm.prepareToWrite();
+      //
+      //
+
+      Assertions.fail("Must be exception " + NotPublicBeanGetter.class.getSimpleName());
+    } catch (NotPublicBeanGetter e) {
+      error = e;
+    }
+
+    assertThat(error.aClass.getName()).isEqualTo(Bean032_01.class.getName());
+    assertThat(error.beanGetterField.getName()).isEqualTo("notPublicBeanGetterField_5432656255");
+  }
+
+  @Include(BeanConfig032_02.class)
+  interface BeanContainer032_02 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_02 bean();
+  }
+
+  @Test
+  public void prepareToWrite_notPublicBeanGetter_p02_in_parent_class() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_02.class);
+
+    NotPublicBeanGetter error = null;
+
+    try {
+      //
+      //
+      bcm.prepareToWrite();
+      //
+      //
+
+      Assertions.fail("Must be exception " + NotPublicBeanGetter.class.getSimpleName());
+    } catch (NotPublicBeanGetter e) {
+      error = e;
+    }
+
+    assertThat(error.aClass.getName()).isEqualTo(ParentBean032_02.class.getName());
+    assertThat(error.beanGetterField.getName()).isEqualTo("notPublicBeanGetterField_897856654");
+  }
+
+  @Include(BeanConfig032_03.class)
+  interface BeanContainer032_03 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_03 bean();
+  }
+
+  @Test
+  public void prepareToWrite_notPublicBeanGetter_p03_in_parent_class_markedClass() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_03.class);
+
+    NotPublicBeanGetter error = null;
+
+    try {
+      //
+      //
+      bcm.prepareToWrite();
+      //
+      //
+
+      Assertions.fail("Must be exception " + NotPublicBeanGetter.class.getSimpleName());
+    } catch (NotPublicBeanGetter e) {
+      error = e;
+    }
+
+    assertThat(error.aClass.getName()).isEqualTo(ParentBean032_03.class.getName());
+    assertThat(error.beanGetterField.getName()).isEqualTo("notPublicBeanGetterField_26374892");
+  }
+
+  @Include(BeanConfig032_04.class)
+  interface BeanContainer032_04 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_04 bean();
+  }
+
+  @Test
+  public void prepareToWrite_notPublicBeanGetter_p04_in_the_bean_OK() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_04.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+  }
+
+  @Include(BeanConfig032_05.class)
+  interface BeanContainer032_05 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_05 bean();
+  }
+
+  @Test
+  public void prepareToWrite_notPublicBeanGetter_p05_in_parent_class_OK() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_05.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+  }
+
+  @Include(BeanConfig032_06.class)
+  interface BeanContainer032_06 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_06 bean();
+  }
+
+  @Test
+  public void prepareToWrite_notPublicBeanGetter_p06_in_parent_class_markedParentClass_OK() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_06.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+  }
+
+  @Include(BeanConfig032_07.class)
+  interface BeanContainer032_07 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_07 bean();
+  }
+
+  @Test
+  public void prepareToWrite_notPublicBeanGetter_p07_in_the_bean_markedClass_OK() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_07.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
   }
 }
