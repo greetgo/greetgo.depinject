@@ -73,6 +73,8 @@ import kz.greetgo.depinject.gen.test_beans032.p06_in_parent_class_markedParentCl
 import kz.greetgo.depinject.gen.test_beans032.p06_in_parent_class_markedParentClass_OK.BeanConfig032_06;
 import kz.greetgo.depinject.gen.test_beans032.p07_in_the_bean_markedClass_OK.Bean032_07;
 import kz.greetgo.depinject.gen.test_beans032.p07_in_the_bean_markedClass_OK.BeanConfig032_07;
+import kz.greetgo.depinject.gen.test_beans032.p08_in_the_bean_ignoreUnused.Bean032_08;
+import kz.greetgo.depinject.gen.test_beans032.p08_in_the_bean_ignoreUnused.BeanConfig032_08;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
@@ -893,6 +895,24 @@ public class BeanContainerManagerTest {
   public void prepareToWrite_notPublicBeanGetter_p07_in_the_bean_markedClass_OK() throws Exception {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer032_07.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+  }
+
+  @Include(BeanConfig032_08.class)
+  interface BeanContainer032_08 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_08 bean();
+  }
+
+  @Test
+  public void prepareToWrite_notPublicBeanGetter_p08_in_the_bean_ignoreUnused() throws Exception {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_08.class);
 
     //
     //
