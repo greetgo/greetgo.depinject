@@ -4,10 +4,13 @@
 
 ### Ссылки
 
+ - [Лист изменений](doc/change_list.md)
+
  - [Очень быстрый старт (через TestNG)](doc/fast_start.md)
  - [Быстрый старт (main-функция или war-файл)](doc/quick_start.md)
  - [Концепция](doc/concept.md)
  - [Спецификация](doc/spec.md)
+ 
 
 # Особенности
 
