@@ -24,7 +24,28 @@ dependencies {
 
 test { useTestNG() }
 
+task packageSources(type: Jar) {
+  from sourceSets.main.allJava
+  classifier = 'sources'
+}
 
+jar {
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+  from javadoc.destinationDir
+  classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar) {
+  from sourceSets.main.allSource
+  classifier = 'sources'
+}
+
+artifacts {
+  archives javadocJar, sourcesJar
+}
 
 uploadArchives {
   repositories.mavenDeployer {

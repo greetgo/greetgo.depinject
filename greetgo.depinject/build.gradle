@@ -47,6 +47,10 @@ task sourcesJar(type: Jar) {
   classifier = 'sources'
 }
 
+artifacts {
+  archives javadocJar, sourcesJar
+}
+
 uploadArchives {
   repositories.mavenDeployer {
     configuration = configurations.archives
@@ -61,9 +65,6 @@ uploadArchives {
   }
 }
 
-artifacts {
-  archives javadocJar, sourcesJar
-}
 
 if (System.getenv('LIB_SIGN_GPG_KEY_ID') != null && System.getenv('LIB_SIGN_GPG_KEY_ID').length() > 0) {
 
