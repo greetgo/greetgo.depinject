@@ -769,7 +769,7 @@ public class BeanContainerManagerTest {
       error = e;
     }
 
-    assertThat(error.aClass.getName()).isEqualTo(Bean032_01.class.getName());
+    assertThat(error.containsFieldClass.getName()).isEqualTo(Bean032_01.class.getName());
     assertThat(error.beanGetterField.getName()).isEqualTo("notPublicBeanGetterField_5432656255");
   }
 
@@ -798,7 +798,7 @@ public class BeanContainerManagerTest {
       error = e;
     }
 
-    assertThat(error.aClass.getName()).isEqualTo(ParentBean032_02.class.getName());
+    assertThat(error.containsFieldClass.getName()).isEqualTo(ParentBean032_02.class.getName());
     assertThat(error.beanGetterField.getName()).isEqualTo("notPublicBeanGetterField_897856654");
   }
 
@@ -827,7 +827,7 @@ public class BeanContainerManagerTest {
       error = e;
     }
 
-    assertThat(error.aClass.getName()).isEqualTo(ParentBean032_03.class.getName());
+    assertThat(error.containsFieldClass.getName()).isEqualTo(ParentBean032_03.class.getName());
     assertThat(error.beanGetterField.getName()).isEqualTo("notPublicBeanGetterField_26374892");
   }
 

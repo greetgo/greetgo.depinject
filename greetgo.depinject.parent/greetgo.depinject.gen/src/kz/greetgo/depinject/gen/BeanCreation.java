@@ -48,6 +48,10 @@ public abstract class BeanCreation {
     return beanClass.hashCode();
   }
 
+  public void checkBeanGetterNotPublic() {
+    //noting to do in parent
+  }
+
   public String getterVarName() {
     if (varIndex <= 0) throw new LeftException("Left varIndex value = " + varIndex);
     return "getter_native_" + beanClass.getSimpleName() + '_' + varIndex;
@@ -155,7 +159,6 @@ public abstract class BeanCreation {
   @SuppressWarnings("SameParameterValue")
   protected abstract void writeCreateBean(int tab, Outer out, String variableName);
 
-
   public static class BeanPreparationPriorityDot implements Comparable<BeanPreparationPriorityDot> {
     int parenting = 0;
     double fromAnnotation = 0;
@@ -180,6 +183,7 @@ public abstract class BeanCreation {
 
   public void calculatesBeanPreparationPriority(List<BeanCreation> preparations) {
     {
+      //noinspection deprecation
       BeanPreparationPriority annotation = Utils.getAnnotation(beanClass, BeanPreparationPriority.class);
       if (annotation != null) beanPreparationPriority.fromAnnotation = annotation.value();
     }
@@ -213,6 +217,7 @@ public abstract class BeanCreation {
 
       if (rawType instanceof Class) {
         Class<?> rawClass = (Class<?>) rawType;
+        //noinspection deprecation
         if (BeanPreparation.class == rawClass) {
           Type typeArg0 = parameterizedType.getActualTypeArguments()[0];
           return Utils.extractRawClass(typeArg0);

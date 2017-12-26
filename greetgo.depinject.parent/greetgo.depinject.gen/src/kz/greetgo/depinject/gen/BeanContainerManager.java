@@ -133,6 +133,12 @@ public class BeanContainerManager {
     });
 
     //
+    // CHECKING NOT PUBLIC BEAN GETTERS
+    //
+
+    usingBeanCreationList.forEach(BeanCreation::checkBeanGetterNotPublic);
+
+    //
     // THE END OF PREPARATION
     //
 
