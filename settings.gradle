@@ -1,3 +1,5 @@
+rootProject.name = "greetgo.depinject.parent"
+
 include 'greetgo.depinject'
 include 'greetgo.depinject.gwt'
 include 'greetgo.depinject.gwt.stand'
