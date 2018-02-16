@@ -15,11 +15,11 @@
 ### Introduction
 
 Bean-containers are interfaces that extend the interface of BeanContainer, and it seems to contain all the beans.
-In order to refer to a specific bean from a bean-container, it is necessary to define the method in the bean-container interface without parameters (for bean-container, all methods are without parameters). The return type of this method must uniquely determine one bean.
+In order to refer to a specific bean from a bean-container, it is necessary to define the method in the bean container interface without parameters (for bean container, all methods are without parameters). The return type of this method must uniquely determine one bean.
 
 In our example project, the input point is the main function.
 
-In the main function, it is necessary to create a bean-container instance and use it to start some process inside the beans. Then, in order to make jar-file work, it is necessary, to generate a bean-container implementation at the moment of building, and add it to the distribution. In the example project, this distribution will be a jar-file with the main class, which contains all the dependencies.
+In the main function, it is necessary to create a bean container instance and use it to start some process inside the beans. Then, in order to make jar-file work, it is necessary, to generate a bean container implementation at the moment of building, and add it to the distribution. In the example project, this distribution will be a jar-file with the main class, which contains all the dependencies.
 
 ### Preparation of the example project
 
@@ -238,8 +238,8 @@ container using the annotation `@Include`.
 
 `MainLauncher.java` file contains the main function that initiates BeanContainer and pulls HelloWorld bean out and works with it.
 
-`build.gradle` specifies the build option. `generateBeanContainers` task performs an analysis of all the links of all beans for all bean-containers of the specified package and the whole hierarchy of its subpackets, and after the analysis generates the source code of bean-containers. This source code is placed 
-`depinject.quick_start/build/generated/bean_container_impl/depinject/quick_start/launcher/` folder. The implementation of bean-container can be found there as well:
+`build.gradle` specifies the build option. `generateBeanContainers` task performs an analysis of all the links of all beans for all bean containers of the specified package and the whole hierarchy of its subpackets, and after the analysis generates the source code of bean containers. This source code is placed 
+`depinject.quick_start/build/generated/bean_container_impl/depinject/quick_start/launcher/` folder. The implementation of bean container can be found there as well:
 
 ```java
 package depinject.quick_start.launcher;
