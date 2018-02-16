@@ -26,16 +26,16 @@ Implementation of Dependency Injection pattern based on code generation by greet
  - Initialization of beans occurs in the order of use, not in the order of dependencies, therefore,
    if the beans are not used, then they are not created
    > For example, BEAN_1 contains a reference to BIN_2. Now, when initializing BIN_1, BIN_2 will not be initiated. BIN_2
-     will be initiated only when it is called directly. This makes the speed of the system startup
+     will be initiated only when it is accessed directly. This makes the speed of the system startup
      independent of the number of beans.
  - Reflection is not used in bean-containers, hence everything is properly optimized!
 
 # Disadvantages
 
-  - a call to the bean can only be done through the method `get()`. Unfortunately it does not work out directly (as in Spring  
-  @Autowired), because the bean must be initialized at the first call, not when the dependency is formed.
+  - an access to the bean can only be done through the method `get()`. Unfortunately it does not work out directly (as in Spring  
+  @Autowired), because the bean must be initialized at the first access, not when the dependency is formed.
     
-    Call can be done in this way:
+    Access can be done in this way:
   
 ```java
   class SomeBean {
@@ -47,4 +47,4 @@ Implementation of Dependency Injection pattern based on code generation by greet
 ```
   - Fields `BeanGetter` must be `public`! (Because the reflection is not used in production);
   - Complicated build (it is necessary to generate the bean-container code, compile and add it to the distribution);
-  - Currently, only TestNG is supported. (It's great if someone запилит greetgo.depinject.junit) ;
+  - Currently, only TestNG is supported. (It's great if someone implement greetgo.depinject.junit) ;
