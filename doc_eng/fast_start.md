@@ -12,14 +12,14 @@
   - java 1.8+
   - gradle 3.5+ (https://gradle.org/)
 
-### Enter
+### Introduction
 
 It is very easy to use depinject on TestNG.
 For this, the class-test must be inherited from a special abstract class and contain one annotation.
 
 Nothing more is needed.
 
-However, in this case, binding of beans will occur at startup, but for tests this is not critical.
+However, in this case, binding of beans will occur at runtime, but for tests this is not critical.
 
 (Theoretically, it should also be very simple to use it on JUnit, but it still needs to be implemented:) ) 
 
@@ -30,7 +30,7 @@ Let's create a gradle project. To create a project, you can:
   - either create a project by one movement through bash,  - [here](fast_start.script.sh),
     and then jump into [here](#run-tests), in order to skip the manual creation;
 
-  - or manually as described below:
+  - or manually, as described below:
 
 Project file structure:
 
@@ -173,7 +173,7 @@ public class HelloWorldTest extends AbstractDepinjectTestNg {
 
 ##### Run Tests
 
-Now to start it all, go to `depinject.fast_start/` folder and run the command:
+Now, to start it all, go to `depinject.fast_start/` folder and run the command:
 
     gradle test
 
@@ -182,16 +182,16 @@ At the end you will see:
     BUILD SUCCESSFUL
 
 This message signals that all tests have started and were successful.
-All the connections were well connected, and everything worked out as it should.
+All the links were well connected, and everything worked out as it should.
 
 ### Example project description
 
-The file `HelloWorldTest.java` contains a test that connects ` HelloWorld` bin using the depinject library
-and uses it.  In addition, if we go into the file `HelloWorld.java`, we will see that it uses `Hello` 
+The file `HelloWorldTest.java` contains a test that connects `HelloWorld` bean using the depinject library
+and uses it.  In addition, if we go into `HelloWorld.java` file, we will see that it uses `Hello` 
 and `World` classes, and it also gets access to them using depinject.
 
 As you can see everything works.
 
-So you can test everything. But if we need a war file or a main function, we need to create a BeanContainer
+So, you can test everything. But if we need a war file or a main function, we need to create a BeanContainer
 and initiate it. And then it will also be necessary to compile and build all the things correctly. How to do this is described
 in [quick start] (quick_start.md).
