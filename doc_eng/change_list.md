@@ -8,5 +8,5 @@
    > This is done because programmers constantly forget that BeanGetter should be public,
    > and then they catch NullPointerException error and do not understand what's wrong for a long time. Now an error is generated    
      immediately,
-   > and it becomes clear what is wrong.
+   > and it becomes clear what is wrong. 
  - @LetBeNonePublic annotation was added to make it possible to add BeanGetter with non-public access;
