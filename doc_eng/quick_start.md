@@ -7,7 +7,7 @@
 
 ## Quick start (main function или war file)
 
-### What should be preinstalled:
+### Prerequisites:
 
   - java 1.8+
   - gradle 3.5+ (https://gradle.org/)
@@ -19,7 +19,7 @@ In order to refer to a specific bean from a bean-container, it is necessary to d
 
 In our example project, the input point is the main function.
 
-In the main function, it is necessary to create a bean-container instance and use it to start some process inside the beans. Then, in order to make jar-file work, it is necessary, to generate a bean-container implementation at the moment of building and add it to the distribution. In the example project, this distribution will be a jar-file with the main class, which contains all the dependencies.
+In the main function, it is necessary to create a bean-container instance and use it to start some process inside the beans. Then, in order to make jar-file work, it is necessary, to generate a bean-container implementation at the moment of building, and add it to the distribution. In the example project, this distribution will be a jar-file with the main class, which contains all the dependencies.
 
 ### Preparation of the example project
 
@@ -28,7 +28,7 @@ Let's create a gradle project. To create a project, you can:
   - either create a project through bash in one movement - [here](quick_start.script.sh),
     and then jump into [here](#run-hello-world), to skip manual creation;
 
-  - or manually as described below:
+  - or manually, as described below:
 
 Here is the structure of the project:
 
@@ -213,7 +213,7 @@ public class MainLauncher {
 
 ##### Run Hello World
 
-Now to start it all, go to `depinject.quick_start/` folder and run the command:
+Now, to start it all, go to `depinject.quick_start/` folder and run the command:
 
     gradle jar
 
@@ -233,13 +233,13 @@ Here is a message:
 
 The `depinject.quick_start.beans` contains a set of beans that are somehow connected together.
 
-The file `MainBeanContainer.java` specifies the BeanContainer, which contains all the beans. These beans are connected to this
+`MainBeanContainer.java` file specifies the BeanContainer, which contains all the beans. These beans are connected to this
 container using the annotation `@Include`.
 
-`MainLauncher.java` file contains the main function that initiates our BeanContainer and pulls HelloWorld bean out and works with it.
+`MainLauncher.java` file contains the main function that initiates BeanContainer and pulls HelloWorld bean out and works with it.
 
-The `build.gradle` specifies the build option. `generateBeanContainers` task performs an analysis of all the links of all beans for all bean-containers of the specified package and the whole hierarchy of its subpackets, and after the analysis generates the source code of bin-containers. This source code is placed in a folder
-`depinject.quick_start/build/generated/bean_container_impl/depinject/quick_start/launcher/`. The implementation of bean-container can be found there as well:
+`build.gradle` specifies the build option. `generateBeanContainers` task performs an analysis of all the links of all beans for all bean-containers of the specified package and the whole hierarchy of its subpackets, and after the analysis generates the source code of bean-containers. This source code is placed 
+`depinject.quick_start/build/generated/bean_container_impl/depinject/quick_start/launcher/` folder. The implementation of bean-container can be found there as well:
 
 ```java
 package depinject.quick_start.launcher;
