@@ -173,7 +173,7 @@ public class HelloWorldTest extends AbstractDepinjectTestNg {
 
 ##### Run Tests
 
-Now to start it all, go to the folder `depinject.fast_start/` and run the command:
+Now to start it all, go to `depinject.fast_start/` folder and run the command:
 
     gradle test
 
