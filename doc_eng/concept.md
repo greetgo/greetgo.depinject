@@ -58,7 +58,7 @@ A bean config can contain the following annotations: `@BeanScanner`,` @Include` 
 
 `@Include` annotation connects other bean configs, which are indicated in this annotation, to this bean config.
 
-With the help of `@BeanConfig`,`@BeanScanner` and `@Include` annotations, it is possible to create a branched network of beans within the project. It is possible to create several bean-containers, and each bean container contains its own set of beans. Some beans are connected to one bean container, some to another, some beans can be connected to several bean containers.
+With the help of `@BeanConfig`,`@BeanScanner` and `@Include` annotations, it is possible to create a branched network of beans within the project. It is possible to create several bean containers, and each bean container contains its own set of beans. Some beans are connected to one bean container, some to another, some beans can be connected to several bean containers.
 
 In this simple way, it is possible to configure a very flexible system for distributing beans in a project.
 Some beans can only be in the product, some only among the tests, some can be both in the product and tests (for example, those that are to be tested).
