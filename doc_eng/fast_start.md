@@ -28,7 +28,7 @@ However, in this case, binding of beans will occur at startup, but for tests thi
 Let's create a gradle project. To create a project, you can:
 
   - either create a project by one movement through bash,  - [here](fast_start.script.sh),
-    and then jump into [here](#run-tests), in order to skip the creation manually;
+    and then jump into [here](#run-tests), in order to skip the manual creation;
 
   - or manually as described below:
 
