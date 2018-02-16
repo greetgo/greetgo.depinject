@@ -5,58 +5,52 @@
  - [Concept]
  - [Specification](spec.md)
 
-### Концепция
+### Concept
 
-Если объектов в программе очень много и взаимоотношения между ними очень сложные, то код по их инициализации может
-оказаться очень сложным. А ещё сложнее его поддерживать в адекватном состоянии. А ещё всё может усложниться тем,
-что нужно иметь несколько вариантов инициализации объектов.
+If there are a lot of objects in the program and the relations between them are very complex, then the code for initialization can be very complicated. And even more difficult to maintain it in an adequate state. Besides, everything can be complicated by the fact that it is necessary to have several options for initializing the objects.
 
-Было бы превосходно, если бы всю эту работу снять с программиста и передать компьютеру - чтобы он сам это всё делал,
-а программист бы занимался только решением конкретной задачи. Программисту нужно сказать только то, что ему нужно в
-том или ином месте, и "какая-то волшебная штука" ему это давала, притом сразу.
+It would be great if all this work could be discharged from the duty of the programmer and delegated to the computer - so that it would do it itself, and the programmer would only deal with a specific task. The programmer would just need to say what he wanted and "some magical thing" gave it to him, moreover, immediately.
 
-Для решения этой задачи был придуман паттерн Dependency Injection (Внедрение Зависимостей).
-И depinject решает эту задачу.
+Dependency Injection pattern was invented to solve this problem.
+And depinject solves this problem.
 
-Библиотека depinject работает со специальными объектами, которые называются бинами (Bean - боб). В бинах
-описано, что ему нужно и библиотека это предоставляет.
+Depinject library works with special objects called beans. Beans describe what is needed and the library provides.
 
-> Ну а бинам, всегда нужны другие бины, и больше ничего
+> Well, beans always need other beans, and nothing more
 
-И это достаточно легко реализовать, что depinject и делает. Основной алгоритм работы depinject выглядить примерно так:
+It's easy enough to implement, and depinject can. The main algorithm of depinject looks like this:
 
-> Создаём бины с помощью аннотации `@Bean`. Но бины используются только те, которые подключены. Подключаем бины
-  с помощью `@BeanConfig`, не забывая использовать `@BeanScanner`. Далее создаём `BeanContainer`, и, с помощью
-  аннотации `@Include`, подключаем к нему созданные нами `@BeanConfig`-и. Далее из BeanContainer-а вытаскиваем
-  нужные нам бины (которые уже корректно инициированны) и используем их.
-  Бины внутри обращаются друг-к-другу посредством `BeanGetter`-а.
+> We create beans using the annotation `@Bean`. But only connected beans are used. We connect beans with the help of 
+  `@BeanConfig`, not forgetting to use` @BeanScanner`. Next, we create `BeanContainer`, and, using
+  annotations `@Include`, connect created` @BeanConfig` to it. Then, we take the necessary beans  (which are already correctly   
+  initiated) out of BeanContainer and use them.
+  Bins refer to each other via `BeanGetter`.
 
-Используя depinject в сочетании с наследованием можно очень гибко настраивать внутреннюю инфраструктуру проекта. Так как
-depinject создаёт инстанции бинов только по мере необходимости, то можно в бин-контэйнер ложить сотни тысяч бинов и
-система будет запускаться ни чуть не медленнее, чем несколько бинов.
+Using depinject in combination with inheritance, you can very flexibly configure the internal infrastructure of the project. As
+depinject creates instances of beans only as necessary, then you can put hundreds of thousands beans in a bean-container and
+the system will run no slower than several beans.
 
-В depinject-е даже загрузка класса бина происходит по требованию.
+In depinject, even loading a bean class occurs as needed.
 
-### Бины
+### Beans
 
-> Бины - это объекты, которые автоматически созданны и инициированы нужными им связями на другие бины.
+> Beans are objects that are automatically created and initiated by the links they need to other beans.
 
-> Бин-классы - это классы, инстанции которых могут быть бинами. Т.е. бин - это инстанция бин-класса.
+> Bean classes are classes, the instances of which can be beans. I.e. bean is the instance of the bean class.
 
-> Инстанции бин-классов создаются в бин-контэйнере по мере необходимости. 
+> Instances of bean classes are created in the bean-container as needed.
 
-Чтобы класс сделать бин-классом, его необходимо пометить аннотацией `@Bean`. Также у бин-класса должен быть публичный
-контсруктор по умолчанию, иначе система не сможет создавать инстанции этого класса. Существует [всего три способа
-создания бинов](#bean-creation-variants) (- см. ниже).
+In order to turn a class into bean class, it should be marked with `@Bean` annotation. Also, the bean class must have a public
+default constructor, otherwise the system will not be able to create instances of this class. There are [there are only three ways to create beans](#bean-creation-variants) (- see below).
 
-Аннотации `@Bean` не достаточно, чтобы можно было создавать бин. Бин-класс необходимо ещё подключить к бин-контэйнеру.
+The `@Bean` annotation is not enough to create a bean. The bean class must also be connected to the bean-container.
 
-> Подключение бин-классов к бин-контэйнерам происходит с помощью бин-конфигов
+> Connecting bean-classes to bean-containers is done using bean configs
 
-### Бин-конфиги
+### Bean configs
 
-Бин-конфиг - это класс без методов и полей, ни что не наследующий и ни чего не расширяющий. Бин конфиг должен быть
-помечен аннотацией `@BeanConfig` - так он отмечается, что это бин-конфиг.
+A bean config is a class without methods and fields inheriting and extending nothing. Bean config should be marked with
+`@BeanConfig` annotation - this marking means that it is bean config.
 
 Бин-конфиг может содержать аннотации: `@BeanScanner`, `@Include` (одну из них или обе). 
 
