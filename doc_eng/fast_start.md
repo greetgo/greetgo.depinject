@@ -187,7 +187,7 @@ All the connections were well connected, and everything worked out as it should.
 ### Example project description
 
 The file `HelloWorldTest.java` contains a test that connects ` HelloWorld` bin using the depinject library
-and uses it.  In addition, if we go into the file `HelloWorld.java`, we will see that it uses` Hello '
+and uses it.  In addition, if we go into the file `HelloWorld.java`, we will see that it uses `Hello` 
 and `World` classes, and it also gets access to them using depinject.
 
 As you can see everything works.
