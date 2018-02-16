@@ -122,17 +122,17 @@ There are three ways to create a bean:
   - By means of a bean method;
   - By means of a bean factory.
 
-#### Creating a bean using a bean class
+#### Bean creation using a bean class
 
 A bean class is a class marked with `@Bean` annotation. The bean class must have a default constructor in order
 the library was able to create the instance of this bean.
 
-#### Creating a bean using a bean method
+#### Bean creation using a bean method
 
 A bean method is a public method of a certain bean, marked with `@Bean` annotation. The object returned by this method
 automatically become a bean. So, it is possible to create beans without a default constructor.
 
-#### Creating a bean using a bean factory
+#### Bean creation using a bean factory
 
 Interface or abstract class can be marked with `@Bean` annotation. In this case depinject does not know how to create
 such a bean, and it needs help. This assistance can be provided to it by a bean factory.
