@@ -7,7 +7,7 @@
 
 ## Quick start (main function или war file)
 
-### What should be provided:
+### What should be preinstalled:
 
   - java 1.8+
   - gradle 3.5+ (https://gradle.org/)
