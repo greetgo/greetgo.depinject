@@ -17,24 +17,23 @@
 
 ## Specification
 
-Вначале необходимо почитать концепцию - там даются базовые принцыпы depinject. Также можно воспользоваться быстрым или
-очень быстрым стартом, для получения общих представлений о библиотеке.
+First, it is necessary to read the concept - the basic principles of depinject are described there. It is also possible to use fast or very fast start to get general info about the library.
 
-### Возможности
+### Capabilities
 
-  - Инициализация бинов по мере необходимости (а не по мере зависимости);
-  - Кодогенерация вместо рефлексии, чтобы работала оптимизация;
-  - Три способа создания бинов;
-  - Два способа подмены бинов (некий аналог аспектного программирования);
+  - Initializing beans as needed (rather than as dependency);
+  - Code generation instead of reflection, so that optimization works;
+  - Three ways to create beans;
+  - Two ways to substitute beans (the analog of aspect programming);
   
 ### Bean Creation
 
-Бин - это объект, к которому можно получить доступ из бин-класса, посредством интерфейса `BeanGetter`.
+A bean is an object that can be accessed from the bean class using the BeanGetter interface.
 
-Существует только три способа создания бинов:
-  - посредством бин-класса;
-  - посредством бин-метода;
-  - посредством бин-фабрики;
+There are only three ways to create beans:
+   - by means of a bean class;
+   - by means of a bean method;
+   - by means of a bean factory;
 
 #### Bean Creation using Bean Class
 
