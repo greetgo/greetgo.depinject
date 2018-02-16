@@ -1,6 +1,6 @@
 # greetgo.depinject
 
-[English language here](README.eng.md)
+[На русском языке здесь](README.md)
 
 Реализация паттерна Dependency Injection на базе кодогенерации от компании greetgo!.
 

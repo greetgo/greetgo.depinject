@@ -1,21 +1,21 @@
-### Ссылки
+### References
 
- - [Очень быстрый старт (через TestNG)](fast_start.md)
- - [Быстрый старт (main-функция или war-файл)](quick_start.md)
- - [Концепция](concept.md)
- - [Спецификация]
-   - [Создание бинов](#bean-creation)
-     - [Создание бина посредством бин-класса](#bean-creation-with-bean-class)
-     - [Создание бина посредством бин-метода](#bean-creation-with-bean-method)
-     - [Создание бина посредством бин-фабрики](#bean-creation-with-bean-factory)
-   - [Подключение бинов к бин-контэйнерам](#include-beans-to-bean-containers)
-     - [Аннотация `@BeanScanner`](#beanscanner-annotation)
-     - [Аннотация `@ScanPackage`](#scanpackage-annotation)
-     - [Аннотация `@Include`](#include-annotation)
-   - [Бин-контэйнеры](#bean-containers)
-   - [Подмена бинов](#replacers)
+ - [Very quick start (using TestNG)](fast_start.md)
+ - [Quick start (main function, or war file)](quick_start.md)
+ - [Concept](concept.md)
+ - [Specification]
+   - [Creation of beans](#bean-creation)
+     - [Creation of bean using bean class](#bean-creation-using-bean-class)
+     - [Creation of bean using bean method](#bean-creation-using-bean-method)
+     - [Creation of bean using bean factory](#bean-creation-using-bean-factory)
+   - [Including beans to bean containers](#include-beans-to-bean-containers)
+     - [Annotation `@BeanScanner`](#beanscanner-annotation)
+     - [Annotation `@ScanPackage`](#scanpackage-annotation)
+     - [Annotation `@Include`](#include-annotation)
+   - [Bean containers](#bean-containers)
+   - [Bean replacers](#replacers)
 
-## Спецификация
+## Specification
 
 Вначале необходимо почитать концепцию - там даются базовые принцыпы depinject. Также можно воспользоваться быстрым или
 очень быстрым стартом, для получения общих представлений о библиотеке.
@@ -27,8 +27,7 @@
   - Три способа создания бинов;
   - Два способа подмены бинов (некий аналог аспектного программирования);
   
-###### Bean Creation
-### Создание бинов
+### Bean Creation
 
 Бин - это объект, к которому можно получить доступ из бин-класса, посредством интерфейса `BeanGetter`.
 
@@ -37,21 +36,18 @@
   - посредством бин-метода;
   - посредством бин-фабрики;
 
-###### Bean Creation with Bean Class
-#### Создание бина посредством бин-класса
+#### Bean Creation using Bean Class
 
 Бин-класс - это класс помеченный аннотацией `@Bean`. У бин-класса должен быть конструктор по умолчанию, чтобы
 библиотека смогла создать инстанцию этого бина. Система создаёт инстанцию этого класса, используя конструктор
 по умолчанию.
 
-###### Bean Creation with Bean Method
-#### Создание бина посредством бин-метода
+#### Bean Creation using Bean Method
 
 Бин-метод - это публичный метод некого бина, помеченный аннотацией `@Bean`. Объект, возвращаемый этим методом
 автоматически становиться бином. Так можно создавать бины без контруктора по умолчанию.
 
-###### Bean Creation with Bean Factory
-#### Создание бина посредством бин-фабрики
+#### Bean Creation using Bean Factory
 
 Аннотацией `@Bean` можно пометить интерфейс или абстрактный класс. В этом случае система не знает как создавать
 такой бин, и ему нужна помощь. Эту помощь ему может предоставить бин-фабрика
@@ -141,8 +137,7 @@ public class UsingInterfaces {
 
 ```
 
-###### Include Beans to Bean Containers
-### Подключение бинов к бин-контэйнерам
+### Include Beans to Bean Containers
 
 Подключение бина к бин-контэйнеру делается в два этапа:
   1. Подключение бина к бин-конфигу,
@@ -157,8 +152,7 @@ public class UsingInterfaces {
 Использовать аннотацию `@ScanPackage` не рекомендуется, так как, при этом, усложняется рефакторинг кода.
 Аннотация `@ScanPackage` была введена для того, чтобы можно было подключать бины, полученные при кодогенерации.
 
-###### BeanScanner Annotation
-#### Аннотация `@BeanScanner`
+#### BeanScanner Annotation
 
 Аннотация `@BeanScanner` служит для подключения местных бинов к бин-конфигу
 
@@ -185,8 +179,7 @@ public class UsingInterfaces {
 Аннотация `@BeanScanner`, будучи поставленная у бин-конфига (рядом с аннотацией `@BeanConfig`), обязует систему
 подключить к этому бин-конфигу все бины, которые находятся в этом пакете и во всех его подпакетах.
 
-###### ScanPackage Annotation
-#### Аннотация `@ScanPackage`
+#### ScanPackage Annotation
 
 Данная аннотация позволяет подключить не местные бины, т.е. бины, которые находятся в другом пакете, или в других
 пакетах. Эта аннотация указывается у бин-конфига (радом с аннотацией `@BeanConfig`). Также в этой аннотации можно
@@ -220,8 +213,7 @@ public class UsingInterfaces {
 Пользоваться аннотацией `@ScanPackage` крайне не рекомендуется потому что она затрудняет рефакторинг кода. В следующих
 версиях библиотеки эта аннотация возможно будет удалена.
 
-###### Include Annotation
-#### Аннотация `@Include`
+#### Include Annotation
 
 Бины подключаются к бин-конфигу, а бин-конфиг подключается к бин-фабрике с помощью аннотации `@Include`, в которой
 указывается подключаемый бин-конфиг (один или несколько). Также к бин-конфигу можно подключить другие бин-конфиги.
@@ -277,8 +269,7 @@ public interface HelloWorldContainer implements BeanContainer {
 }
 ```
 
-###### Bean Containers
-#### Бин-контэйнеры
+#### Bean Containers
 
 Бин-контэйнер - это интерфейс расширяющий интерфейс `@BeanContainer`. Бин-контэйнер должен содержать один или несколько
 методов. Методы в бин-контэйнере не должны содержать аргументов. Иначе будет ошибка сборки.
@@ -292,8 +283,7 @@ public interface HelloWorldContainer implements BeanContainer {
 Класс, реализующий бин-контэйнер, должен создаваться специальным генератором, компилироваться и включаться в class path.
 Для генерации реализации бин-контэйнеров используется библиотека `greetgo.depinject.gen`, и класс `DepinjectUtil`.
 
-###### Replacers
-#### Подмена бинов
+#### Replacers
 
 Библиотека предоставляет возможность подмены бинов, с помощью подменьщиков бинов (бин-подменщиков).
 Для этого существует специальный интерфейс:
