@@ -12,25 +12,25 @@
   - java 1.8+
   - gradle 3.5+ (https://gradle.org/)
 
-### Enter
+### Introduction
 
-Использовать depinject на TestNG очень просто.
-Для этого класс-тест должен наследоваться от специального абстрактного класса и содержать одну аннотацию.
+It is very easy to use depinject on TestNG.
+For this, the class-test must be inherited from a special abstract class and contain one annotation.
 
-И больше ничего не надо.
+Nothing more is needed.
 
-Правда, при этом, связывание бинов будет происходить при запуске, но для тестов это не критично.
+However, in this case, binding of beans will occur at runtime, but for tests this is not critical.
 
-(Использовать на JUnit, по идее, должно быть тоже очень просто, но это нужно ещё реализовать :) ) 
+(Theoretically, it should also be very simple to use it on JUnit, but it still needs to be implemented:) ) 
 
 ### Example project preparation
 
-Давайте создадим gradle-проект. Чтобы создать проект, можно:
+Let's create a gradle project. To create a project, you can:
 
-  - либо одним движением через bash создать проект - [здесь](fast_start.script.sh),
-    и далее прыгаем [сюда](#run-tests), чтобы пропустить создание вручную;
+  - either create a project by one movement through bash,  - [here](fast_start.script.sh),
+    and then jump into [here](#run-tests), in order to skip the manual creation;
 
-  - Либо вручную далее по тексту:
+  - or manually, as described below:
 
 Project file structure:
 
@@ -173,25 +173,25 @@ public class HelloWorldTest extends AbstractDepinjectTestNg {
 
 ##### Run Tests
 
-Теперь чтобы это всё запустить, заходим в папку `depinject.fast_start/` и запскаем комаду:
+Now, to start it all, go to `depinject.fast_start/` folder and run the command:
 
     gradle test
 
-В конце должно вылететь:
+At the end you will see:
 
     BUILD SUCCESSFUL
 
-Это сообщение сигнализирует о том, что все тесты запустились и прошли успешно.
-Все связи отлично соединились, и всё отработало как надо.
+This message signals that all tests have started and were successful.
+All the links were well connected, and everything worked out as it should.
 
 ### Example project description
 
-В файле `HelloWorldTest.java` содержиться тест, который подключает бин `HelloWorld` посредством библиотеки depinject
-и использует его. К тому же если мы зайдём в файл `HelloWorld.java`, то увидим, что он использует классы `Hello`
-и `World`, и доступы к ним он тоже получает с помощью depinject.
+The file `HelloWorldTest.java` contains a test that connects `HelloWorld` bean using the depinject library
+and uses it.  In addition, if we go into `HelloWorld.java` file, we will see that it uses `Hello` 
+and `World` classes, and it also gets access to them using depinject.
 
-Как видите всё собирается и всё работает.
+As you can see everything works.
 
-Так можно всё тестировать. Но если нам понадобиться war-файл или main-функция, то нужно будет создавать BeanContainer
-и инициировать его. И потом ещё нужно будет правильно всё это дело откомпилировать и собрать. Как это сделать рассказано
-в [быстром старте](quick_start.md).
+So, you can test everything. But if we need a war file or a main function, we need to create a BeanContainer
+and initiate it. And then it will also be necessary to compile and build all the things correctly. How to do this is described
+in [quick start] (quick_start.md).

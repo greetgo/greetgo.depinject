@@ -5,158 +5,139 @@
  - [Concept]
  - [Specification](spec.md)
 
-### Концепция
+### Concept
 
-Если объектов в программе очень много и взаимоотношения между ними очень сложные, то код по их инициализации может
-оказаться очень сложным. А ещё сложнее его поддерживать в адекватном состоянии. А ещё всё может усложниться тем,
-что нужно иметь несколько вариантов инициализации объектов.
+If there are a lot of objects in the program and the relations between them are very complex, then the code for initialization can be very complicated. And even more difficult to maintain it in an adequate state. Besides, everything can be complicated by the fact that it is necessary to have several options for initializing the objects.
 
-Было бы превосходно, если бы всю эту работу снять с программиста и передать компьютеру - чтобы он сам это всё делал,
-а программист бы занимался только решением конкретной задачи. Программисту нужно сказать только то, что ему нужно в
-том или ином месте, и "какая-то волшебная штука" ему это давала, притом сразу.
+It would be great if all this work could be discharged from the duty of the programmer and delegated to the computer - so that it would do it itself, and the programmer would only deal with a specific task. The programmer would just need to say what he wanted and "some magical thing" gave it to him, moreover, immediately.
 
-Для решения этой задачи был придуман паттерн Dependency Injection (Внедрение Зависимостей).
-И depinject решает эту задачу.
+Dependency Injection pattern was invented to solve this problem.
+And depinject solves this problem.
 
-Библиотека depinject работает со специальными объектами, которые называются бинами (Bean - боб). В бинах
-описано, что ему нужно и библиотека это предоставляет.
+Depinject library works with special objects called beans. Beans describe what is needed and the library provides.
 
-> Ну а бинам, всегда нужны другие бины, и больше ничего
+> Well, beans always need other beans, and nothing more
 
-И это достаточно легко реализовать, что depinject и делает. Основной алгоритм работы depinject выглядить примерно так:
+It's easy enough to implement, and depinject can. The main algorithm of depinject looks like this:
 
-> Создаём бины с помощью аннотации `@Bean`. Но бины используются только те, которые подключены. Подключаем бины
-  с помощью `@BeanConfig`, не забывая использовать `@BeanScanner`. Далее создаём `BeanContainer`, и, с помощью
-  аннотации `@Include`, подключаем к нему созданные нами `@BeanConfig`-и. Далее из BeanContainer-а вытаскиваем
-  нужные нам бины (которые уже корректно инициированны) и используем их.
-  Бины внутри обращаются друг-к-другу посредством `BeanGetter`-а.
+> We create beans using the annotation `@Bean`. But only connected beans are used. We connect beans with the help of 
+  `@BeanConfig`, not forgetting to use` @BeanScanner`. Next, we create `BeanContainer`, and, using
+  annotations `@Include`, connect created` @BeanConfig` to it. Then, we take the necessary beans  (which are already correctly   
+  initiated) out of BeanContainer and use them.
+  Bins refer to each other via `BeanGetter`.
 
-Используя depinject в сочетании с наследованием можно очень гибко настраивать внутреннюю инфраструктуру проекта. Так как
-depinject создаёт инстанции бинов только по мере необходимости, то можно в бин-контэйнер ложить сотни тысяч бинов и
-система будет запускаться ни чуть не медленнее, чем несколько бинов.
+Using depinject in combination with inheritance, you can very flexibly configure the internal infrastructure of the project. As
+depinject creates instances of beans only as necessary, then you can put hundreds of thousands beans in a bean container and
+the system will run no slower than several beans.
 
-В depinject-е даже загрузка класса бина происходит по требованию.
+In depinject, even loading a bean class occurs as needed.
 
-### Бины
+### Beans
 
-> Бины - это объекты, которые автоматически созданны и инициированы нужными им связями на другие бины.
+> Beans are objects that are automatically created and initiated by the links they need to other beans.
 
-> Бин-классы - это классы, инстанции которых могут быть бинами. Т.е. бин - это инстанция бин-класса.
+> Bean classes are classes, the instances of which can be beans. I.e. bean is the instance of the bean class.
 
-> Инстанции бин-классов создаются в бин-контэйнере по мере необходимости. 
+> Instances of bean classes are created in the bean container as needed.
 
-Чтобы класс сделать бин-классом, его необходимо пометить аннотацией `@Bean`. Также у бин-класса должен быть публичный
-контсруктор по умолчанию, иначе система не сможет создавать инстанции этого класса. Существует [всего три способа
-создания бинов](#bean-creation-variants) (- см. ниже).
+In order to turn a class into bean class, it should be marked with `@Bean` annotation. Also, the bean class must have a public
+default constructor, otherwise the system will not be able to create instances of this class. There are [there are only three ways to create beans](#bean-creation-variants) (- see below).
 
-Аннотации `@Bean` не достаточно, чтобы можно было создавать бин. Бин-класс необходимо ещё подключить к бин-контэйнеру.
+The `@Bean` annotation is not enough to create a bean. The bean class must also be connected to the bean container.
 
-> Подключение бин-классов к бин-контэйнерам происходит с помощью бин-конфигов
+> Connecting bean classes to bean containers is done using bean configs
 
-### Бин-конфиги
+### Bean configs
 
-Бин-конфиг - это класс без методов и полей, ни что не наследующий и ни чего не расширяющий. Бин конфиг должен быть
-помечен аннотацией `@BeanConfig` - так он отмечается, что это бин-конфиг.
+A bean config is a class without methods and fields inheriting and extending nothing. Bean config should be marked with
+`@BeanConfig` annotation - this marking means that it is bean config.
 
-Бин-конфиг может содержать аннотации: `@BeanScanner`, `@Include` (одну из них или обе). 
+A bean config can contain the following annotations: `@BeanScanner`,` @Include` (one of them or both).
 
-Аннотация `@BeanScanner` обозначает, что данный бин-конфиг подключает все бин-классы, которые находятся в пакете данного
-бин-конфига, а также во всей иерархии подпакетов этого пакета. (Этот конфиг как бы сканирует свой пакет и все
-внутренние пакеты на наличие бинов).
+`@BeanScanner` annotation specifies that this bean config connects all the bea classes that are in the package of this bean config, as well as in the whole hierarchy of subpackages of this package. (This config seems to scan its package and all internal packages for the presence of beans).
 
-Аннотация `@Include` подключает к данному бин-конфигу другие бин-конфиги, которые указанны в этой аннотации.
+`@Include` annotation connects other bean configs, which are indicated in this annotation, to this bean config.
 
-С помощью аннотаций `@BeanConfig`, `@BeanScanner` и `@Include` можно создавать разветвлённую сеть бинов, внутри
-проекта. Можно создать несколько бин-контэйнеров, и каждый бин-контэйнер содержит свой набор бинов. Какие-то бины
-подключены к одному бин-контэйнеру, а какие-то к другом, а какие-то бины могут быть подключены
-к нескольким бин-контэйнерам.
+With the help of `@BeanConfig`,`@BeanScanner` and `@Include` annotations, it is possible to create a branched network of beans within the project. It is possible to create several bean containers, and each bean container contains its own set of beans. Some beans are connected to one bean container, some to another, some beans can be connected to several bean containers.
 
-Таким простым способом можно настроить очень гибкую систему распределения бинов в проекте.
-Какие-то бины могут быть только в продукте, какие-то только среди тестов, какие-то и там и там (например те, которых
-надо тестировать).
+In this simple way, it is possible to configure a very flexible system for distributing beans in a project.
+Some beans can only be in the product, some only among the tests, some can be both in the product and tests (for example, those that are to be tested).
 
-### Точечное соединения бинов
+### Point-to-Point Bean Connections
 
-Подключение одного бина к другому происходит с помощью интерфейса `BeanGetter`, например:
+The connection of one bean to another is done using `BeanGetter` interface, for example:
 
 ```
   public BeanGetter<SomeClass> someBean;
 ```
 
-Сюда подключается бин, который должен быть `instanceOf SomeClass`. Такой бин должен найтись ровно один. Если их
-найдётся больше или вообще ни одного не найдётся, то происходит ошибка сборки.
+This connects the bean, which must be `instanceOfSomeClass`. There should be exactly one bean. If there are more or none at all, then an build error occurs.
 
-> Разработчик специально сделал так, чтобы в этом случае происходила ошибка. Чтобы небыло проблем с возвращением
-  `null`; или проблем с непонятностью: а какой бин сюда подключиться. А с ошибкой всё понятно: конфигурируй так,
-  чтобы был только один бин. И это на практике очень удобно.
+> The developer purposely made in this way to cause an error. To avoid any problems with the return `null`; or problems with    
+  incomprehensibility: which bean to connect here. When here is an error, everything is clear: configure it in such a way,
+   so that there is only one bean. And this is very convenient in practice.
 
-### Множественное соединения бинов
+### Multiple Bean Connections
 
-Можно к одному бину за раз подключить сразу несколько бинов. Делается это с использованием `java.util.List`, например:
+It is possible to connect several beans to a single bean at a time. This is done using `java.util.List`, for example:
 
 ```
   public BeanGetter<List<SomeClass>> beans;
 ```
 
-Сюда подключаются все бины, которые `instanceOf SomeClass`. Если таких бинов нет, то присвоится пустой массив.
-Последовательность, в которой будут лежать бины внутри списка, **НЕ** определена, и возможности её задать нет.
+All the beans that are `instanceOf SomeClass` are connected here. If there are no such beans, an empty array will be assigned.
+The sequence in which the beans within the list will be set is **NOT** defined, and there is no possibility to define it.
 
-### Синглтоны
+### Singletons
 
-Бин-классы могут быть синглтонами, а могут и не быть синглтонами. Если бин не
-должен быть синглтоном, то его надо пометить так: `@Bean(singleton = false)`.
+Bean classes can be singletons, or they may not be singletons. If bean should not be a singleton, then it should be marked like this: `@Bean(singleton = false)`.
 
-По умолчанию бин-класс - синглтон.
+By default, the bean class is a singleton.
 
-Синглтоны создаются и инициируются потокобезопасно.
+Singletons are created and initiated thread-safe.
 
-Следует понимать, что синглтон в depinject-е содержит одну инстанцию в рамках инстанции бин-контэйнера. Если создать
-ещё одну инстанцию бин-контэйнера, то в ней будут создаваться новые инстанции бинов-синглтонов. Поэтому depinject-овский
-синглтон, не совсем синглтон в классическом понимании. Если бин-контэйнер сделать классическим синглтоном, то все
-бины-синглтоны этого контэйнера станут классическими.
+It should be understood that the depinject singleton contains one instance within the bean container instance. If you create one more instance of bean container, then new instances of bean-singletons will be created in it. Therefore depinject
+singleton is not exactly a singleton in the classical sense. If the bean container is made as a classical singleton, then all
+the beans-singletons of this container will become classical.
 
-### Бин-контэйнер
+### Bean Container
 
-Бин-контэйнер представляет из себя интерфейс, который должен расширять интерфейс `BeanContainer`. В интерфейсе
-`BeanContainer` нет ни каких методов - он служит лишь как индикатор. Самже интерфейс бин-контэйнера должен содержать
-методы без параметров. Имена методов значения не имеют. Имеют значения тип возвращаемого значения.
+The bean container is an interface that should extend the interface of `BeanContainer`. `BeanContainer` interface does not have any methods - it serves only as an indicator. The interface of the bean container must contain methods without parameters. Names of methods do not matter. The return type is important.
 
-> Тип возвращаемого значения бин-контэйнера должен однозначно определать какой-то один конкретный бин.
+> The return type of a bean container must uniquely identify one particular bean.
 
-Если типу возвращаемого значения соответствует больше одного бина, или не соответствует вообще ни одного, то
-происходит ошибка сборки.
+If the type of the return value corresponds to more than one bean, or corresponds to no one, then a build error occurs.
 
-Бины к бин-контэйнеру необходимо подключать с помощью аннотации `@Include`.
+Beans must be connected to the bean container using `@ Include` annotation.
 
-Бин-контэйнер реализуется автоматически с помощью кодогенерации. Есть метод `DepinjectUtil.implementBeanContainers`
-из библиотеки `greetgo.depinject.gen`, который сканирует указанный пакет на наличие интерфейсов бин-контэйнера
-и создаёт для каждого найденного интерфейса его реализацию. Потом, эту реализацию, можно инстанциировать
-с помощью метода `Depinject.newInstance`.
+The bean container is implemented automatically by code generation. There is `DepinjectUtil.implementBeanContainers` method
+from `greetgo.depinject.gen` library, which scans the specified package for the presence of bean container interfaces
+and creates its implementation for each found interface . Then, this implementation can be instantiated using  `Depinject.newInstance` method.
 
 ### Bean creation variants
 
-Существует три способа создания бина:
+There are three ways to create a bean:
 
-  - Посредством бин-класса (стандартный вариант);
-  - Посредством бин-метода;
-  - Посредством бин-фабрики.
+  - By means of a bean class (standard);
+  - By means of a bean method;
+  - By means of a bean factory.
 
-#### Создание бина посредством бин-класса
+#### Bean creation using a bean class
 
-Бин-класс - это класс помеченный аннотацией `@Bean`. У бин-класса должен быть конструктор по умолчанию, чтобы
-библиотека смогла создать инстанцию этого бина.
+A bean class is a class marked with `@Bean` annotation. The bean class must have a default constructor in order
+the library was able to create the instance of this bean.
 
-#### Создание бина посредством бин-метода
+#### Bean creation using a bean method
 
-Бин-метод - это публичный метод некого бина, помеченный аннотацией `@Bean`. Объект, возвращаемый этим методом
-автоматически становиться бином. Так можно создавать бины без контруктора по умолчанию.
+A bean method is a public method of a certain bean, marked with `@Bean` annotation. The object returned by this method
+automatically become a bean. So, it is possible to create beans without a default constructor.
 
-#### Создание бина посредством бин-фабрики
+#### Bean creation using a bean factory
 
-Аннотацией `@Bean` можно пометить интерфейс или абстрактный класс. В этом случае depinject не знает как создавать
-такой бин, и ему нужна помощь. Эту помощь ему может предоставить бин-фабрика
+Interface or abstract class can be marked with `@Bean` annotation. In this case depinject does not know how to create
+such a bean, and it needs help. This assistance can be provided to it by a bean factory.
 
-Бин-фабрика - это бин, который реализует интерфейс `BeanFactory`, который в себе содержит один метод:
+A bean factory is a bean that implements the BeanFactory interface, which contains one method:
 
 ```java
 public interface BeanFactory {
@@ -164,18 +145,15 @@ public interface BeanFactory {
 }
 ```
 
-Этот метод служит для создания бинов. Ему передаётся интерфейс или абстрактный класс, помеченный `@Bean`-ом, и то, что
-этот метод вернёт становиться бином. Бин-фабрика указывается в аннотации `@BeanConfig`.
+This method is used to create beans.The interface or abstract class marked with `@Bean` is transferred to it, and what is
+returned by this method will become a bean. Bean factory is specified in `@BeanConfig` annotation.
 
-Также бин-фабрику можно указать в самом интерфейсе или абстрактном классе в аннотации `@FactoredBy`.
+Besides, the bean factory can be specified in the interface or in the abstract class in `@FactoredBy` annotation.
 
-Бин-фабрика, указанная в `@BeanConfig-е` распространяется на все бины, которые относятся к этому бин-конфигу, как по
-пути аннотации `@Include` так и по пути аннотации `@BeanScanner`. Следуя по `@Include` могут встретиться внутренние
-бин-фабрики,
+The bean factory specified in `@BeanConfig` is applied to all beans that are related to this bean-config by `@Include` annotation as well as by` @BeanScanner` annotation. Following `@Include`, internal bean factories can be met,
 
-> внутренние бин-фабрики приоритетнее более общих.
+> internal bean factories are more important than general ones.
 
-Также, бин-фабрика, определённая аннотацией `@FatoredBy`, более приоритетна чем бин-фабрика, определённая бин-конфигом.
+Also, the bean factory, defined by `@FatoredBy` annotation, is more important than the bean factory defined by the bean-config.
 
-Если бин-фабрика не определена, но аннотация `@Bean` встретилась у интерфейса или абстрактного класса, то генерируется
-ошибка сборки.
+If the bean factory is not defined, but `@Bean` annotation was met at the interface or abstract class, build error is generated.

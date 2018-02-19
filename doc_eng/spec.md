@@ -17,42 +17,37 @@
 
 ## Specification
 
-Вначале необходимо почитать концепцию - там даются базовые принцыпы depinject. Также можно воспользоваться быстрым или
-очень быстрым стартом, для получения общих представлений о библиотеке.
+First, it is necessary to read the concept - the basic principles of depinject are described there. It is also possible to use fast or very fast start to get general info about the library.
 
-### Возможности
+### Capabilities
 
-  - Инициализация бинов по мере необходимости (а не по мере зависимости);
-  - Кодогенерация вместо рефлексии, чтобы работала оптимизация;
-  - Три способа создания бинов;
-  - Два способа подмены бинов (некий аналог аспектного программирования);
+  - Initializing beans as needed (rather than as dependency);
+  - Code generation instead of reflection, so that optimization works;
+  - Three ways to create beans;
+  - Two ways to replace beans (the analog of aspect programming);
   
 ### Bean Creation
 
-Бин - это объект, к которому можно получить доступ из бин-класса, посредством интерфейса `BeanGetter`.
+A bean is an object that can be accessed from the bean class using the BeanGetter interface.
 
-Существует только три способа создания бинов:
-  - посредством бин-класса;
-  - посредством бин-метода;
-  - посредством бин-фабрики;
+There are only three ways to create beans:
+   - by means of a bean class;
+   - by means of a bean method;
+   - by means of a bean factory;
 
-#### Bean Creation using Bean Class
+#### Creation of bean using bean class
 
-Бин-класс - это класс помеченный аннотацией `@Bean`. У бин-класса должен быть конструктор по умолчанию, чтобы
-библиотека смогла создать инстанцию этого бина. Система создаёт инстанцию этого класса, используя конструктор
-по умолчанию.
+A bean class is a class marked with @Bean annotation.  The bean class must have a default constructor in order the library was able to create the instance of this bean. The system creates an instance of this class using the default constructor.
 
-#### Bean Creation using Bean Method
+#### Creation of bean using a bean method
 
-Бин-метод - это публичный метод некого бина, помеченный аннотацией `@Bean`. Объект, возвращаемый этим методом
-автоматически становиться бином. Так можно создавать бины без контруктора по умолчанию.
+A bean method is a public method of a certain bean, marked with `@Bean` annotation. The object returned by this method automatically become a bean. So, it is possible to create beans without a default constructor.
 
-#### Bean Creation using Bean Factory
+#### Creation of bean using a bean factory
 
-Аннотацией `@Bean` можно пометить интерфейс или абстрактный класс. В этом случае система не знает как создавать
-такой бин, и ему нужна помощь. Эту помощь ему может предоставить бин-фабрика
+Interface or abstract class can be marked with `@Bean` annotation. In this case depinject does not know how to create such a bean, and it needs help. This assistance can be provided by a bean factory.
 
-Бин-фабрика - это бин, который реализует интерфейс `BeanFactory`, который в себе содержит один метод:
+A bean factory is a bean that implements the BeanFactory interface, which contains one method:
 
 ```java
 public interface BeanFactory {
@@ -60,30 +55,26 @@ public interface BeanFactory {
 }
 ```
 
-Этот метод служит для создания бинов. Ему передаётся интерфейс или абстрактный класс, помеченный `@Bean`-ом, и то, что
-этот метод вернёт становиться бином. Бин-фабрика указывается в аннотации `@BeanConfig`.
+This method is used to create beans.The interface or abstract class marked with `@Bean`is transferred to it, and what is returned by this method will become a bean. Bean factory is specified in `@BeanConfig` annotation.
 
-Также бин-фабрику можно указать в самом интерфейсе или абстрактном классе в аннотации `@FactoredBy`.
+Besides, the bean factory can be specified in the interface or in the abstract class in `@FactoredBy` annotation.
 
-Бин-фабрика, указанная в `@BeanConfig-е` распространяется на все бины, которые относятся к этому бин-конфигу, как по
-пути аннотации `@Include` так и по пути аннотации `@BeanScanner`. Следуя по `@Include` могут встретиться внутренние
-бин-фабрики,
+The bean factory specified in `@BeanConfig` is applied to all beans that are related to this bean-config by @Include annotation as well as by `@BeanScanner` annotation. Following `@Include`, internal bean factories can be met,
 
-> внутренние бин-фабрики приоритетнее более общих.
+> internal bean factories are more important than general ones.
 
-Также, бин-фабрика, определённая аннотацией `@FatoredBy`, более приоритетна чем бин-фабрика,
-определённая бин-конфигом.
+Also, the bean factory, defined by `@FatoredBy` annotation, is more important than the bean factory defined by the bean-config.
 
-Если бин-фабрика не определена, но аннотация `@Bean` встретилась у интерфейса или абстрактного класса, то генерируется
-ошибка сборки.
+If the bean factory is not defined, but `@Bean` annotation was met at the interface or abstract class, build error is generated.
 
-Например можно создавать бины интерфейсы следующим образом:
+
+For example, it is possible to create bean-interface as follows:
 
 ```java
 @BeanConfig(defaultFactoryClass = ExampleFactory.class)
 public class BeanConfigExample {}
 
-@Bean // фабрика тоже бин
+@Bean // the factory also is a  bin
 public class ExampleFactory implements BeanFactory {
   @Override
   public Object createBean(Class<?> beanClass) throws Exception {
@@ -121,7 +112,7 @@ public interface InterfaceAsd {
   String asd();
 }
 
-//Теперь сможем подключать интерфейсы:
+//Now we can connect interfaces:
 @Bean
 public class UsingInterfaces {
   public BeanGetter<Integerface1> f1;
@@ -139,90 +130,84 @@ public class UsingInterfaces {
 
 ### Include Beans to Bean Containers
 
-Подключение бина к бин-контэйнеру делается в два этапа:
-  1. Подключение бина к бин-конфигу,
-  2. Подключение бин-конфига к бин-контэйнеру напрямую или через другой бин-конфиг.
+Connecting the bean to the bean container is done in two stages:
+  1. Connecting a bean to a bean-config,
+  2. Connecting the bean-config to the besn container directly or through another bean-config.
 
-Подключение бина к бин-конфигу делается с помощью [аннотации `@BeanScanner`](#beanscanner-annotation).
+Connecting a bean to a bean-config is done using [`@BeanScanner` annotation](#beanscanner-annotation).
 
-Подключение бин-конфига к бин-контэйнеру или другому бин-конфигу делается
-с помощью [аннотации `@Include`](#include-annotation).
+Connecting a bean-config to a bean container or another bean-config is done using [`@Include` annotation](#include-annotation).
 
-Так же можно подключать бины к бин-конфигу с помощью [аннотации `@ScanPackage`](#scanpackage-annotation).
-Использовать аннотацию `@ScanPackage` не рекомендуется, так как, при этом, усложняется рефакторинг кода.
-Аннотация `@ScanPackage` была введена для того, чтобы можно было подключать бины, полученные при кодогенерации.
+It is also possible to connect beans to a bean configuration using [`@ScanPackage` annotation](#scanpackage-annotation).
+It is not recommended to use `@ScanPackage` annotation, because code refactoring becomes more complicated.
+The `@ScanPackage` annotation was introduced so that to connect the beans received during code generation.
 
 #### BeanScanner Annotation
 
-Аннотация `@BeanScanner` служит для подключения местных бинов к бин-конфигу
+`@BeanScanner` annotation serves to connect local beans to a bean-config
 
-> > Местные бины - это бины, которые находятся в этом пакете и во всех его подпакетах
+> > Local beans are the beans that are in this package and in all of its subpackage
 >
-> > По простому: подпакет - это другой пакет, внутри данного пакета.
+> > In other words: a subpackage is another package inside this package.
 > 
-> Или математически точно:
+> Or mathematically speaking:
 > 
->  > Подпакетом к данному пакету, в терминах библиотеки depinject, называется другой пакет, имя которого начинается
->  > с имени данного пакета.
+>  > A subpackage of this package, in terms of the depinject library, is another package whose name begins
+>  > with the name of this package.
 >
-> Ну и от сюда получается, что
+> Well, it turns out that
 >
-> > Подпакет подпакета тоже подпакет
+> > Subpackage of subpackage is also a subpackage
 >
-> Например у нас имеется два пакета:
+> For example, we have two packages:
 
-    kz.greetgo.main - пакет №1
-    kz.greetgo.main.register.impl - пакет №2
+    kz.greetgo.main - package #1
+    kz.greetgo.main.register.impl - package #2
 
-> Так вот, пакет №2 является подпакетом к пакету №1
+> So, package #2 is a subpackage of package #1
 
-Аннотация `@BeanScanner`, будучи поставленная у бин-конфига (рядом с аннотацией `@BeanConfig`), обязует систему
-подключить к этому бин-конфигу все бины, которые находятся в этом пакете и во всех его подпакетах.
+`@BeanScanner` annotation, being set to the bean-config (next to `@BeanConfig` annotation), obliges the system
+to connect all the beans that are in this package and in all its subpackages to this bean-config.
 
 #### ScanPackage Annotation
 
-Данная аннотация позволяет подключить не местные бины, т.е. бины, которые находятся в другом пакете, или в других
-пакетах. Эта аннотация указывается у бин-конфига (радом с аннотацией `@BeanConfig`). Также в этой аннотации можно
-указать пути к одному или нескольким пакетам. Пути могут быть относительные и абсолютные.
+This annotation allows to connect not local beans, i.e. beans that are in another package, or in other
+packages. This annotation is indicated in the bean-config (next to `@BeanConfig` annotation). Also in this annotation, it is possible to specify paths to one or more packages. Paths can be relative and absolute.
 
-Абсолютный путь к пакету - это и есть имя пакета.
+The absolute path to the package is the name of the package.
 
-Относительный путь начинается с точки или с крышки (^).
+The relative path begins from the point or from the lid (^).
 
-Путь начинающийся с точки указывает на пакет имя которого получается из конкатенации текущего пакета и пути.
+A path starting with a point indicates the package, whose name is obtained from the concatenation of the current package and path.
 
-Например, если в пакете `kz.greetgo.main` расположить бин-конфиг с аннотацией:
+For example, if you place a bean-config with the annotation in `kz.greetgo.main` package:
 
     @ScanPackage(".register.impl")
 
-то к этому бин-конфигу будут подключены бины из пакета `kz.greetgo.main.register.impl` и из всех его подпакетов.
+then beans from `kz.greetgo.main.register.impl` package and from all its subpackages will be connected to this bean-config.
 
-Также путь может начинаться с одной или нескольких крышек (^). Одна крышка означать родительский пакет,
-две - дедушкин, и так далее. После крышки можно ставить точку, а можно не ставить.
+Besides, the path can start with one or more lids (^). One lid means a parent package, two - grandfather's package, and so on. You can put a point after the lid as well as not put.
 
-Например, если в пакете `kz.greetgo.main.report.impl` расположить бин-конфиг с аннотацией:
+For example, if you place a bean-config with the annotation in `kz.greetgo.main.report.impl` package:
 
     @ScanPackage("^^.register.impl")
 
-или
+or
 
     @ScanPackage("^^register.impl")
 
-то к этому бин-конфигу будут подключены бины из пакета `kz.greetgo.main.register.impl` и из всех его подпакетов.
+then beans from `kz.greetgo.main.register.impl` package and from all its subpackages will be connected to this bean-config.
 
-Пользоваться аннотацией `@ScanPackage` крайне не рекомендуется потому что она затрудняет рефакторинг кода. В следующих
-версиях библиотеки эта аннотация возможно будет удалена.
+The use of `@ScanPackage` annotation is highly not recommended because it makes code refraction more difficult.  This annotation may be deleted In the following versions of the library,.
 
 #### Include Annotation
 
-Бины подключаются к бин-конфигу, а бин-конфиг подключается к бин-фабрике с помощью аннотации `@Include`, в которой
-указывается подключаемый бин-конфиг (один или несколько). Также к бин-конфигу можно подключить другие бин-конфиги.
+Beanes are connected to the bean-config, the bean-config is connected to the bean-factory with the help of `@Include` annotation,  which specifies the connectable bean-config (one or more). Also, other bean-configs can be connected to the bean-config.
 
-Можно создать бин-конфиг без бинов вообще. Он будет полезен тем, что к нему подключены другие бин-конфиги. Это
-своего рода бин-конфиг агрегатор, какой-то подсистемы внутри общей системы. И, подключая этот бин-конфиг-агрегатор,
-подключается вся подсистема.
+It is possible to create a bean-config with no beans. It will be useful because other bean-configs are connected to it. It is
+a kind of bean-config aggregator, a kind of subsystem within the common system. And, when connecting this bean-config aggregator,the whole subsystem is connected.
 
-Например, есть бин-конфиги с бинами:
+For example, there are bean-configs with beans:
 
 ```java
 package kz.greetgo.hello;
@@ -246,7 +231,7 @@ package kz.greetgo.world;
 @Bean
 public class Hello {}
 ```
-И бин-конфиг-агрегатор:
+And the bean-config aggregator:
 ```java
 package kz.greetgo.another;
 @BeanConfig
@@ -256,9 +241,8 @@ package kz.greetgo.another;
 })
 public class BeanConfigHelloWorld {}
 ```
-`BeanConfigHelloWorld` не содержит своих бинов, но он содержит бины из `BeanConfigHello` и `BeanConfigWorld` за счёт
-аннотации `@Include`. Тепер, если мы подключим к бин-контэйнеру `BeanConfigHelloWorld`, то бин-контэйнеру будет
-доступны оба бина: `Hello` и `World`. Вот примерно так:
+`BeanConfigHelloWorld` does not contain its beans, but it contains beans from `BeanConfigHello` and` BeanConfigWorld` by means of  `@Include` annotation. Now, if we connect `BeanConfigHelloWorld` to the bean container, then both `Hello` and` World` will be available to the bean container as following:
+
 ```java
 package kz.greetgo.another_another;
 
@@ -271,22 +255,20 @@ public interface HelloWorldContainer implements BeanContainer {
 
 #### Bean Containers
 
-Бин-контэйнер - это интерфейс расширяющий интерфейс `@BeanContainer`. Бин-контэйнер должен содержать один или несколько
-методов. Методы в бин-контэйнере не должны содержать аргументов. Иначе будет ошибка сборки.
+Bean container is an interface that extends the interface of `@BeanContainer`. The bean container must contain one or more
+methods. Methods of the bean container should not contain arguments. Otherwise, there will be a build error.
 
-Тип возвращаемого значения метода бин-контэйнера должен однозначно определять один и только обин бин из того набора
-бинов, которые подключены к этому бин-контэйнеру. Иначе будет ошибка сборки.
+The return type of the bean container method must uniquely identify one and only bean from that set of beans that are connected to this bean container. Otherwise, there will be a build error.
 
-Инстанция бин-контэйнера создаётся методом `Depinject.newInstance`. На вход этого метода, передаётся класс
-бин-контэйнера, а на выходе инстанция этого класса.
+The instance of the bean container is created using `Depinject.newInstance` method. At the input of this method, a bean container class is transferred, and at the output instance of this class is transferred.
 
-Класс, реализующий бин-контэйнер, должен создаваться специальным генератором, компилироваться и включаться в class path.
-Для генерации реализации бин-контэйнеров используется библиотека `greetgo.depinject.gen`, и класс `DepinjectUtil`.
+A class implementing a bean container must be created by a special generator, compiled and included in the class path.
+To generate a bean container implementation, `greetgo.depinject.gen` library and `DepinjectUtil` class are used.
 
 #### Replacers
 
-Библиотека предоставляет возможность подмены бинов, с помощью подменьщиков бинов (бин-подменщиков).
-Для этого существует специальный интерфейс:
+The library provides the possibility of replacing the beans with the help of the bean replacers (bean changers).
+For this purpose, there is a special interface:
 
 ```java
 public interface BeanReplacer {
@@ -294,23 +276,17 @@ public interface BeanReplacer {
 }
 ```
 
-С одним методом: `replaceBean`. Этот метод вызывается для подмены бинов. Первым аргуметом в этот метод передаётся
-оригинальный бин, а вторым аргументов передаётся класс из `BeanGetter`-а. Метод должен вернуть объект, который
-`instanceOf returnClass`. Если такой объект создать нельза или не нужно, то можно вернуть `originalBean`.
+With one method: `replaceBean`. This method is called to replace beans. The first argument to this method is the original bean, and the second argument is the class from `BeanGetter`. The method must return an object that is `instanceOf returnClass`. If such an object can not be created or not needed, then it is possible to return `originalBean`.
 
-Для создания бин-подменьщика необходимо чтобы бин реализовывал этот интерфейс. У бин-контэйнера может быть несколько
-бин-подменщиков.
+To create a bean replacer, the bean is to implement this interface. A bean container may have several bean replacers.
 
-Для одного бина тоже может быть несколько бин-подменьщиков. В этом случае он их применяет в порядке величины
-приоритетности, указанной аннотацией `@ReplacePriority` в бине-подменьщине. Если этой аннотации нет, то считается,
-что эта величина приоритетности такого бина-подменьщика равна нулю. Для одинаковых величин приоритетности
-бины-подменьщики выстраиваются в алфавитном порядке по имени класса бина-подменьщика.
+There can also be several bean replacers for one bean. In this case, it applies them in order of priority indicated by `@ReplacePriority` annotation in bean replacer. If this annotation is not present, it is considered, that priority value of bean replacer is zero. For the same priority values, bean replacers are arranged in alphabetical order by the name of the class of the bean replacer.
 
-Бин-подменьщики применяются не для всех бинов, а только для тех, которые указанны аннотациями:
+Bean replacers are not used for all beans, but only for those indicated by annotations:
 
-  - `@ReplaceInstanceOf` - в этой аннотации указывается интерфейс или класс, который должен расширять или реализовывать
-                           бин, чтобы к нему применился бин-подменьщик;
-  - `@ReplaceWithAnn` - в этой аннотации указывается другая аннотация, которой должен быть помечен бин, чтобы к нему
-                        применился данный бин-подменьщик.
+  - `@ReplaceInstanceOf` - this annotation specifies an interface or class that should expand or implement
+                           a bean, so that a bean replacer can be applied to it;
+  - `@ReplaceWithAnn` - this annotation specifies another annotation, bean must be marked with, so that
+                         this bean replacer can be applied to it.
 
-Эти аннотации указываются у бина-подменьщика.
+Bean replacer is marked with these annotations.

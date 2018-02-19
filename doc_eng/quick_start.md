@@ -5,37 +5,32 @@
  - [Concept](concept.md)
  - [Specification](spec.md)
 
-## Быстрый старт (main-функция или war-файл)
+## Quick start (main function или war file)
 
-### Что должно быть предуставнолено:
+### Prerequisites:
 
   - java 1.8+
   - gradle 3.5+ (https://gradle.org/)
 
-### Введение
+### Introduction
 
-Бин-контэйнерами, являются интерфейсы, расширяющие интерфейс BeanContainer, и он как бы содержит в себе все бины.
-И чтобы обратиться к конкретному бину из бин-контэйнера, необходимо в интерфейсе бин-контэйнера определить метод без
-параметров (у бинконтэйнера все методы без параметров). Возвращаемый тип этого метода должен однозначно определять
-один бин.
+Bean-containers are interfaces that extend the interface of BeanContainer, and it seems to contain all the beans.
+In order to refer to a specific bean from a bean-container, it is necessary to define the method in the bean container interface without parameters (for bean container, all methods are without parameters). The return type of this method must uniquely determine one bean.
 
-В нашем проекте-примере входной точкой является функция main. 
+In our example project, the input point is the main function.
 
-В функции main необходимо создать инстанцию бин-контэйнера и использовать её для запуска какого-нибудь
-процесса внутри бинов. И далее, чтобы работал jar-файл, необходимо, при сборке, сгенерировать реализацию бин-контэйнера
-и добавить её в дистрибутив. К проекте-примере таким дистрибутивом будет jar-файл c main-классом, который в
-себе содержит все зависимости.
+In the main function, it is necessary to create a bean container instance and use it to start some process inside the beans. Then, in order to make jar-file work, it is necessary, to generate a bean container implementation at the moment of building, and add it to the distribution. In the example project, this distribution will be a jar-file with the main class, which contains all the dependencies.
 
-### Подготовка проекта-примера
+### Preparation of the example project
 
-Давайте создадим gradle-проект. Чтобы создать проект, можно:
+Let's create a gradle project. To create a project, you can:
 
-  - либо одним движением через bash создать проект - [здесь](quick_start.script.sh),
-    и далее прыгаем [сюда](#run-hello-world), чтобы пропустить создание вручную;
+  - either create a project through bash in one movement - [here](quick_start.script.sh),
+    and then jump into [here](#run-hello-world), to skip manual creation;
 
-  - Либо вручную далее по тексту:
+  - or manually, as described below:
 
-Вот структура проекта:
+Here is the structure of the project:
 
     depinject.quick_start/
       build.gradle
@@ -51,7 +46,7 @@
       src/test/java/depinject/quick_start/gen/
         GenerateAndCompileBeanContainers.java
 
-Содержимое файла `build.gradle`:
+Contents of file `build.gradle`:
 
 ```groovy
 apply plugin: 'java'
@@ -65,16 +60,16 @@ repositories {
 dependencies {
   ext.depinjectVersion = '2.0.0'
 
-  //Эта либа очень маленькая и не содержит зависимостей
+  //This is very small and does not contain any dependencies
   compile "kz.greetgo.depinject:greetgo.depinject:$depinjectVersion"
 
-  //Эта нужна для генерации реализации BeanConfig-ов - в продакшн она не идёт
+  //This is needed to generate BeanConfig implementation -  it does not go to production
   testCompile "kz.greetgo.depinject:greetgo.depinject.gen:$depinjectVersion"
 }
 
 task generateBeanContainers(
   type: JavaExec,
-  description: 'Эта таска генерирует реализацию BeanContainer-ов и компилирует их'
+  description: 'This task generates a BeanContainers' implementation and compiles them'
 ) {
   ext.genDir = "${project.buildDir}/generated/bean_container_impl"
 
@@ -86,14 +81,14 @@ task generateBeanContainers(
 
 task beanContainerJar(
   type: Jar,
-  description: 'Эта таска генерирует jar-файл с исходниками реализации BeanContainer-ов'
+  description: 'This task generates a jar file with the BeanContainers implementation sources'
 ) {
   dependsOn generateBeanContainers
   baseName "bean-containers"
   from generateBeanContainers.genDir
 }
 
-//Тут генерируется основной JAR-файл
+//The main JAR file is generated here
 jar {
   dependsOn beanContainerJar
 
@@ -101,17 +96,17 @@ jar {
     attributes "Main-Class": "depinject.quick_start.launcher.MainLauncher"
   }
 
-  //Собрать все зависимости в одном файле
+  //Collect all the dependencies in one file
   from {
     configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
   }
 
-  //Добавить к основному JAR-у реализацию BeanContainer-ов
+  //Add the implementation of BeanContainers to the main JAR
   with beanContainerJar
 }
 ```
 
-Содержимое файла `BeanConfigHelloWorld.java`:
+Contents of file `BeanConfigHelloWorld.java`:
 
 ```java
 package depinject.quick_start.beans;
@@ -125,7 +120,7 @@ public class BeanConfigHelloWorld {}
 
 ```
 
-Содержимое файла `Hello.java`:
+Contents of file `Hello.java`:
 
 ```java
 package depinject.quick_start.beans;
@@ -143,7 +138,7 @@ public class Hello {
 
 ```
 
-Содержимое файла `World.java`:
+Contents of file `World.java`:
 
 ```java
 package depinject.quick_start.beans;
@@ -160,7 +155,7 @@ public class World {
 }
 ```
 
-Содержимое файла `HelloWorld.java`:
+Contents of file `HelloWorld.java`:
 
 ```java
 package depinject.quick_start.beans;
@@ -181,7 +176,7 @@ public class HelloWorld {
 }
 ```
 
-Содержимое файла `MainBeanContainer.java`:
+Contents of file `MainBeanContainer.java`:
 
 ```java
 package depinject.quick_start.launcher;
@@ -197,7 +192,7 @@ public interface MainBeanContainer extends BeanContainer {
 }
 ```
 
-Содержимое файла `MainLauncher.java`:
+Contents of file `MainLauncher.java`:
 
 ```java
 package depinject.quick_start.launcher;
@@ -218,37 +213,33 @@ public class MainLauncher {
 
 ##### Run Hello World
 
-Теперь чтобы это всё запустить, заходим в папку `depinject.quick_start/` и запскаем комаду:
+Now, to start it all, go to `depinject.quick_start/` folder and run the command:
 
     gradle jar
 
-В конце должно вылететь:
+At the end you will see:
 
     BUILD SUCCESSFUL
 
-Получили откомпилированный jar-файл. Теперь запускаем его командой:
+We got the compiled jar file. Now we run it with the command:
 
     java -jar build/libs/depinject.quick_start.jar
 
-Вылетает сообщение:
+Here is a message:
 
     Hello World!!!
 
-### Описание проекта-примера
+### Description of the example project
 
-В пакете `depinject.quick_start.beans` находиться некий набор бинов, которые между собой как-нибудь перевязаны.
+The `depinject.quick_start.beans` contains a set of beans that are somehow connected together.
 
-В файле `MainBeanContainer.java` указан BeanContainer, в котором содержаться все бины. Эти бины подключены к этому
-контэйнеру с помощью аннотации `@Include`.
+`MainBeanContainer.java` file specifies the BeanContainer, which contains all the beans. These beans are connected to this
+container using the annotation `@Include`.
 
-В файле `MainLauncher.java` содержится main-функция, которая инициирует наш BeanContainer и вытаскивает из
-него бин HelloWorld и работает с ним.
+`MainLauncher.java` file contains the main function that initiates BeanContainer and pulls HelloWorld bean out and works with it.
 
-В `build.gradle` указан вариант сборки. Таска `generateBeanContainers` производит анализ всех связей всех бинов для
-всех бин-контэйнеров указанного пакета и всей иерархии его подпакетов, и после анализа генерирует исходный код
-бин-контэйнеров. Этот исходный код помещается в папку
-`depinject.quick_start/build/generated/bean_container_impl/depinject/quick_start/launcher/`. Там можно найти реализацию
-бин-контэйнера:
+`build.gradle` specifies the build option. `generateBeanContainers` task performs an analysis of all the links of all beans for all bean containers of the specified package and the whole hierarchy of its subpackets, and after the analysis generates the source code of bean containers. This source code is placed 
+`depinject.quick_start/build/generated/bean_container_impl/depinject/quick_start/launcher/` folder. The implementation of bean container can be found there as well:
 
 ```java
 package depinject.quick_start.launcher;
