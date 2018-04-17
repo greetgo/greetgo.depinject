@@ -1,3 +1,14 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    if (System.getenv('GG_REPO')?.trim()) maven { url System.getenv('GG_REPO') }
+    mavenCentral()
+  }
+  dependencies {
+    classpath "kz.greetgo.plugins:greetgo.gradle.plugins:0.0.2"
+  }
+}
+
 def nowDate = new Date()
 def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
 def vendorName = "greetgo!"
@@ -8,6 +19,8 @@ allprojects {
   apply plugin: 'eclipse'
   apply plugin: 'maven'
   apply plugin: 'signing'
+  //noinspection UnnecessaryQualifiedReference
+  apply plugin: kz.greetgo.gradle.plugins.ShortJavaPathPlugin
 
   version = '2.0.1'
 
@@ -23,7 +36,8 @@ allprojects {
 
 subprojects {
   repositories {
-    if (System.getenv('GG_REPO') != null && System.getenv('GG_REPO').length() > 0) maven {url System.getenv('GG_REPO')}
+    mavenLocal()
+    if (System.getenv('GG_REPO')?.trim()) maven { url System.getenv('GG_REPO') }
     mavenCentral()
   }
 
@@ -43,13 +57,6 @@ subprojects {
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
   }
 
-  compileJava {
-    options.encoding = "UTF-8"
-  }
-  compileTestJava {
-    options.encoding = "UTF-8"
-  }
-
   project.eclipse.classpath.file.whenMerged { cp ->
     if (project.hasProperty("sourceCompatibility")) {
       cp.entries.findAll { it.path.contains('JRE_CONTAINER') }.each {
@@ -62,54 +69,18 @@ subprojects {
 
   jar {
     manifest {
-      attributes 'Implementation-Title': project.name,
-          'Implementation-Version': version, 'Implementation-Vendor': vendorName,
-          'Built-By': System.getProperty("user.name"), 'Built-At': nowFormattedDate
-    }
-  }
-
-  sourceSets {
-    main {
-      java.srcDirs = ["src"]
-      resources.srcDirs = ["src", "src_resources"]
-    }
-    test {
-      java.srcDirs = ["test_src"]
-      resources.srcDirs = ["test_src", "test_src_resources"]
-    }
-  }
-
-  test { useTestNG() }
-
-//  task sourcesJar(type: Jar) {
-//    from sourceSets.main.allSource
-//    classifier = 'sources'
-//  }
-//
-//  task javadocJar(type: Jar) {
-//    classifier = 'javadoc'
-//    from javadoc
-//  }
-//
-//  artifacts {
-//    archives javadocJar, sourcesJar
-//  }
-
-
-  if (System.getenv('LIB_SIGN_GPG_KEY_ID') != null && System.getenv('LIB_SIGN_GPG_KEY_ID').length() > 0) {
-
-    gradle.taskGraph.whenReady { taskGraph ->
-      if (taskGraph.allTasks.any { it instanceof Sign }) {
-        allprojects { ext."signing.keyId" = System.getenv('LIB_SIGN_GPG_KEY_ID') }
-        allprojects { ext."signing.secretKeyRingFile" = System.getenv('LIB_SIGN_GPG_KEY_LOCATION') }
-        allprojects { ext."signing.password" = System.getenv('LIB_SIGN_GPG_KEY_PASSWORD') }
+      manifest {
+        attributes 'Implementation-Title': project.name
+        attributes 'Implementation-Version': version
+        attributes 'Implementation-Vendor': vendorName
+        attributes 'Created-By': System.getProperty("user.name")
+        attributes 'Created-At': nowFormattedDate
       }
     }
   }
 
-  signing {
-    sign configurations.archives
-  }
+
+  test { useTestNG() }
 
   tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')

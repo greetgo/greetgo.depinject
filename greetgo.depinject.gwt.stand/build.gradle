@@ -1,6 +1,3 @@
-def nowDate = new Date()
-def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
-
 eclipse {
   jdt {
     //
@@ -21,17 +18,10 @@ eclipse {
   }
 }
 
-configurations { repoUpload }
-
 dependencies {
   compile project(':greetgo.depinject.gwt')
   compile project(':greetgo.depinject')
 
   compile "com.google.gwt:gwt-user:${gwtVersion}"
   compile "com.google.gwt:gwt-dev:${gwtVersion}"
-
 }
-
-test { useTestNG() }
-
-
