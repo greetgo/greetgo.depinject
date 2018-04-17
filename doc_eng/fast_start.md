@@ -193,5 +193,5 @@ and `World` classes, and it also gets access to them using depinject.
 As you can see everything works.
 
 So, you can test everything. But if we need a war file or a main function, we need to create a BeanContainer
-and initiate it. And then it will also be necessary to compile and build all the things correctly. How to do this is described
-in [quick start] (quick_start.md).
+and initiate it. And then it will also be necessary to compile and build all the things correctly.
+How to do this is described in [quick start](quick_start.md).

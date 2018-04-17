@@ -7,9 +7,13 @@
 
 ### Concept
 
-If there are a lot of objects in the program and the relations between them are very complex, then the code for initialization can be very complicated. And even more difficult to maintain it in an adequate state. Besides, everything can be complicated by the fact that it is necessary to have several options for initializing the objects.
+If there are a lot of objects in the program and the relations between them are very complex, then the code for
+initialization can be very complicated. And even more difficult to maintain it in an adequate state. Besides,
+everything can be complicated by the fact that it is necessary to have several options for initializing the objects.
 
-It would be great if all this work could be discharged from the duty of the programmer and delegated to the computer - so that it would do it itself, and the programmer would only deal with a specific task. The programmer would just need to say what he wanted and "some magical thing" gave it to him, moreover, immediately.
+It would be great if all this work could be discharged from the duty of the programmer and delegated
+to the computer - so that it would do it itself, and the programmer would only deal with a specific task.
+The programmer would just need to say what he wanted and "some magical thing" gave it to him, moreover, immediately.
 
 Dependency Injection pattern was invented to solve this problem.
 And depinject solves this problem.
@@ -73,9 +77,9 @@ The connection of one bean to another is done using `BeanGetter` interface, for 
 
 This connects the bean, which must be `instanceOfSomeClass`. There should be exactly one bean. If there are more or none at all, then an build error occurs.
 
-> The developer purposely made in this way to cause an error. To avoid any problems with the return `null`; or problems with    
-  incomprehensibility: which bean to connect here. When here is an error, everything is clear: configure it in such a way,
-   so that there is only one bean. And this is very convenient in practice.
+> The developer purposely made in this way to cause an error. To avoid any problems with the return `null`; or
+  problems with incomprehensibility: which bean to connect here. When here is an error, everything is clear: configure
+  it in such a way, so that there is only one bean. And this is very convenient in practice.
 
 ### Multiple Bean Connections
 
@@ -85,24 +89,29 @@ It is possible to connect several beans to a single bean at a time. This is done
   public BeanGetter<List<SomeClass>> beans;
 ```
 
-All the beans that are `instanceOf SomeClass` are connected here. If there are no such beans, an empty array will be assigned.
-The sequence in which the beans within the list will be set is **NOT** defined, and there is no possibility to define it.
+All the beans that are `instanceOf SomeClass` are connected here. If there are no such beans, an empty array will
+be assigned. The sequence in which the beans within the list will be set is **NOT** defined, and there
+is no possibility to define it.
 
 ### Singletons
 
-Bean classes can be singletons, or they may not be singletons. If bean should not be a singleton, then it should be marked like this: `@Bean(singleton = false)`.
+Bean classes can be singletons, or they may not be singletons. If bean should not be a singleton, then it should be
+marked like this: `@Bean(singleton = false)`.
 
 By default, the bean class is a singleton.
 
 Singletons are created and initiated thread-safe.
 
-It should be understood that the depinject singleton contains one instance within the bean container instance. If you create one more instance of bean container, then new instances of bean-singletons will be created in it. Therefore depinject
-singleton is not exactly a singleton in the classical sense. If the bean container is made as a classical singleton, then all
-the beans-singletons of this container will become classical.
+It should be understood that the depinject singleton contains one instance within the bean container instance. If you
+create one more instance of bean container, then new instances of bean-singletons will be created in it. Therefore
+depinject singleton is not exactly a singleton in the classical sense. If the bean container is made as a classical
+singleton, then all the beans-singletons of this container will become classical.
 
 ### Bean Container
 
-The bean container is an interface that should extend the interface of `BeanContainer`. `BeanContainer` interface does not have any methods - it serves only as an indicator. The interface of the bean container must contain methods without parameters. Names of methods do not matter. The return type is important.
+The bean container is an interface that should extend the interface of `BeanContainer`. `BeanContainer` interface does
+not have any methods - it serves only as an indicator. The interface of the bean container must contain methods without
+parameters. Names of methods do not matter. The return type is important.
 
 > The return type of a bean container must uniquely identify one particular bean.
 
@@ -110,9 +119,10 @@ If the type of the return value corresponds to more than one bean, or correspond
 
 Beans must be connected to the bean container using `@ Include` annotation.
 
-The bean container is implemented automatically by code generation. There is `DepinjectUtil.implementBeanContainers` method
-from `greetgo.depinject.gen` library, which scans the specified package for the presence of bean container interfaces
-and creates its implementation for each found interface . Then, this implementation can be instantiated using  `Depinject.newInstance` method.
+The bean container is implemented automatically by code generation. There is `DepinjectUtil.implementBeanContainers`
+method from `greetgo.depinject.gen` library, which scans the specified package for the presence of bean container
+interfaces and creates its implementation for each found interface . Then, this implementation can be instantiated
+using  `Depinject.newInstance` method.
 
 ### Bean creation variants
 
@@ -145,15 +155,19 @@ public interface BeanFactory {
 }
 ```
 
-This method is used to create beans.The interface or abstract class marked with `@Bean` is transferred to it, and what is
-returned by this method will become a bean. Bean factory is specified in `@BeanConfig` annotation.
+This method is used to create beans.The interface or abstract class marked with `@Bean` is transferred to it,
+and what is returned by this method will become a bean. Bean factory is specified in `@BeanConfig` annotation.
 
 Besides, the bean factory can be specified in the interface or in the abstract class in `@FactoredBy` annotation.
 
-The bean factory specified in `@BeanConfig` is applied to all beans that are related to this bean-config by `@Include` annotation as well as by` @BeanScanner` annotation. Following `@Include`, internal bean factories can be met,
+The bean factory specified in `@BeanConfig` is applied to all beans that are related to this bean-config
+by `@Include` annotation as well as by` @BeanScanner` annotation. Following `@Include`, internal bean factories
+can be met,
 
 > internal bean factories are more important than general ones.
 
-Also, the bean factory, defined by `@FatoredBy` annotation, is more important than the bean factory defined by the bean-config.
+Also, the bean factory, defined by `@FatoredBy` annotation, is more important than the bean factory defined by
+the bean-config.
 
-If the bean factory is not defined, but `@Bean` annotation was met at the interface or abstract class, build error is generated.
+If the bean factory is not defined, but `@Bean` annotation was met at the interface or abstract class,
+build error is generated.

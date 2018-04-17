@@ -5,9 +5,9 @@
  - [Concept](concept.md)
  - [Specification]
    - [Creation of beans](#bean-creation)
-     - [Creation of bean using bean class](#bean-creation-using-bean-class)
-     - [Creation of bean using bean method](#bean-creation-using-bean-method)
-     - [Creation of bean using bean factory](#bean-creation-using-bean-factory)
+     - [Creation of bean using bean class](#creation-of-bean-using-bean-class)
+     - [Creation of bean using bean method](#creation-of-bean-using-a-bean-method)
+     - [Creation of bean using bean factory](#creation-of-bean-using-a-bean-factory)
    - [Including beans to bean containers](#include-beans-to-bean-containers)
      - [Annotation `@BeanScanner`](#beanscanner-annotation)
      - [Annotation `@ScanPackage`](#scanpackage-annotation)
@@ -132,7 +132,7 @@ public class UsingInterfaces {
 
 Connecting the bean to the bean container is done in two stages:
   1. Connecting a bean to a bean-config,
-  2. Connecting the bean-config to the besn container directly or through another bean-config.
+  2. Connecting the bean-config to the bean container directly or through another bean-config.
 
 Connecting a bean to a bean-config is done using [`@BeanScanner` annotation](#beanscanner-annotation).
 
@@ -172,21 +172,25 @@ to connect all the beans that are in this package and in all its subpackages to 
 #### ScanPackage Annotation
 
 This annotation allows to connect not local beans, i.e. beans that are in another package, or in other
-packages. This annotation is indicated in the bean-config (next to `@BeanConfig` annotation). Also in this annotation, it is possible to specify paths to one or more packages. Paths can be relative and absolute.
+packages. This annotation is indicated in the bean-config (next to `@BeanConfig` annotation). Also in this annotation,
+it is possible to specify paths to one or more packages. Paths can be relative and absolute.
 
 The absolute path to the package is the name of the package.
 
 The relative path begins from the point or from the lid (^).
 
-A path starting with a point indicates the package, whose name is obtained from the concatenation of the current package and path.
+A path starting with a point indicates the package, whose name is obtained from the concatenation of the current
+package and path.
 
 For example, if you place a bean-config with the annotation in `kz.greetgo.main` package:
 
     @ScanPackage(".register.impl")
 
-then beans from `kz.greetgo.main.register.impl` package and from all its subpackages will be connected to this bean-config.
+then beans from `kz.greetgo.main.register.impl` package and from all its subpackages will be connected to
+this bean-config.
 
-Besides, the path can start with one or more lids (^). One lid means a parent package, two - grandfather's package, and so on. You can put a point after the lid as well as not put.
+Besides, the path can start with one or more lids (^). One lid means a parent package, two - grandfather's package,
+and so on. You can put a point after the lid as well as not put.
 
 For example, if you place a bean-config with the annotation in `kz.greetgo.main.report.impl` package:
 
@@ -196,16 +200,21 @@ or
 
     @ScanPackage("^^register.impl")
 
-then beans from `kz.greetgo.main.register.impl` package and from all its subpackages will be connected to this bean-config.
+then beans from `kz.greetgo.main.register.impl` package and from all its subpackages will be connected to this
+bean-config.
 
-The use of `@ScanPackage` annotation is highly not recommended because it makes code refraction more difficult.  This annotation may be deleted In the following versions of the library,.
+The use of `@ScanPackage` annotation is highly not recommended because it makes code refraction more difficult.
+This annotation may be deleted In the following versions of the library,.
 
 #### Include Annotation
 
-Beanes are connected to the bean-config, the bean-config is connected to the bean-factory with the help of `@Include` annotation,  which specifies the connectable bean-config (one or more). Also, other bean-configs can be connected to the bean-config.
+Beans are connected to the bean-config, the bean-config is connected to the bean-factory with the help of `@Include`
+annotation,  which specifies the connectible bean-config (one or more). Also, other bean-configs can be connected
+to the bean-config.
 
-It is possible to create a bean-config with no beans. It will be useful because other bean-configs are connected to it. It is
-a kind of bean-config aggregator, a kind of subsystem within the common system. And, when connecting this bean-config aggregator,the whole subsystem is connected.
+It is possible to create a bean-config with no beans. It will be useful because other bean-configs are connected to it.
+It is a kind of bean-config aggregator, a kind of subsystem within the common system. And, when connecting this
+bean-config aggregator,the whole subsystem is connected.
 
 For example, there are bean-configs with beans:
 
@@ -241,7 +250,9 @@ package kz.greetgo.another;
 })
 public class BeanConfigHelloWorld {}
 ```
-`BeanConfigHelloWorld` does not contain its beans, but it contains beans from `BeanConfigHello` and` BeanConfigWorld` by means of  `@Include` annotation. Now, if we connect `BeanConfigHelloWorld` to the bean container, then both `Hello` and` World` will be available to the bean container as following:
+`BeanConfigHelloWorld` does not contain its beans, but it contains beans from `BeanConfigHello`
+and` BeanConfigWorld` by means of  `@Include` annotation. Now, if we connect `BeanConfigHelloWorld` to the bean
+container, then both `Hello` and` World` will be available to the bean container as following:
 
 ```java
 package kz.greetgo.another_another;
@@ -255,12 +266,14 @@ public interface HelloWorldContainer implements BeanContainer {
 
 #### Bean Containers
 
-Bean container is an interface that extends the interface of `@BeanContainer`. The bean container must contain one or more
-methods. Methods of the bean container should not contain arguments. Otherwise, there will be a build error.
+Bean container is an interface that extends the interface of `@BeanContainer`. The bean container must contain one
+or more methods. Methods of the bean container should not contain arguments. Otherwise, there will be a build error.
 
-The return type of the bean container method must uniquely identify one and only bean from that set of beans that are connected to this bean container. Otherwise, there will be a build error.
+The return type of the bean container method must uniquely identify one and only bean from that set of beans that
+are connected to this bean container. Otherwise, there will be a build error.
 
-The instance of the bean container is created using `Depinject.newInstance` method. At the input of this method, a bean container class is transferred, and at the output instance of this class is transferred.
+The instance of the bean container is created using `Depinject.newInstance` method. At the input of this method,
+a bean container class is transferred, and at the output instance of this class is transferred.
 
 A class implementing a bean container must be created by a special generator, compiled and included in the class path.
 To generate a bean container implementation, `greetgo.depinject.gen` library and `DepinjectUtil` class are used.
@@ -276,15 +289,21 @@ public interface BeanReplacer {
 }
 ```
 
-With one method: `replaceBean`. This method is called to replace beans. The first argument to this method is the original bean, and the second argument is the class from `BeanGetter`. The method must return an object that is `instanceOf returnClass`. If such an object can not be created or not needed, then it is possible to return `originalBean`.
+With one method: `replaceBean`. This method is called to replace beans. The first argument to this method is the
+original bean, and the second argument is the class from `BeanGetter`. The method must return an object that
+is `instanceOf returnClass`. If such an object can not be created or not needed, then it is possible to
+return `originalBean`.
 
 To create a bean replacer, the bean is to implement this interface. A bean container may have several bean replacers.
 
-There can also be several bean replacers for one bean. In this case, it applies them in order of priority indicated by `@ReplacePriority` annotation in bean replacer. If this annotation is not present, it is considered, that priority value of bean replacer is zero. For the same priority values, bean replacers are arranged in alphabetical order by the name of the class of the bean replacer.
+There can also be several bean replacers for one bean. In this case, it applies them in order of priority
+indicated by `@ReplacePriority` annotation in bean replacer. If this annotation is not present, it is considered,
+that priority value of bean replacer is zero. For the same priority values, bean replacers are arranged in
+alphabetical order by the name of the class of the bean replacer.
 
 Bean replacers are not used for all beans, but only for those indicated by annotations:
 
-  - `@ReplaceInstanceOf` - this annotation specifies an interface or class that should expand or implement
+  - `@ReplaceInstanceOf` - this annotation specifies an interface or class that should extend or implement
                            a bean, so that a bean replacer can be applied to it;
   - `@ReplaceWithAnn` - this annotation specifies another annotation, bean must be marked with, so that
                          this bean replacer can be applied to it.
