@@ -10,6 +10,7 @@ import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class Context {
     List<BeanContainerMethod> ret = new ArrayList<>();
 
     for (Method method : beanContainer.getMethods()) {
+      if (Modifier.isStatic(method.getModifiers())) continue;
       if (method.getParameterTypes().length > 0) {
         throw new BeanContainerMethodCannotContainAnyArguments(beanContainer, method);
       }

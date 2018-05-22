@@ -22,7 +22,7 @@ allprojects {
   //noinspection UnnecessaryQualifiedReference
   apply plugin: kz.greetgo.gradle.plugins.ShortJavaPathPlugin
 
-  version = '2.0.1'
+  version = '2.0.2'
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
