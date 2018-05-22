@@ -79,7 +79,25 @@ tasks.withType(Javadoc) {
   options.addStringOption('Xdoclint:none', '-quiet')
   options.addStringOption('encoding', 'UTF-8')
   options.addStringOption('charSet', 'UTF-8')
+  options.addStringOption("sourcepath", "${buildDir}/unpacked/dev-gwt-jar")
 }
+
+def findGwtDevJar() {
+  for (File f : sourceSets.main.runtimeClasspath) {
+    if (f.getName().startsWith("gwt-dev-") && f.getName().endsWith(".jar")) {
+      return f
+    }
+  }
+
+  throw new RuntimeException("No gwt-dev.jar in sourceSets.main.runtimeClasspath of " + project)
+}
+
+task prepareGwtSourcePath(type: Copy) {
+  from zipTree(findGwtDevJar())
+  into file("${buildDir}/unpacked/dev-gwt-jar")
+}
+
+javadoc.dependsOn prepareGwtSourcePath
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
   from javadoc.destinationDir
