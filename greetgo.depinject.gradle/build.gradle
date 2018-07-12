@@ -1,0 +1,18 @@
+apply plugin: 'groovy'
+
+dependencies {
+  compile gradleApi()
+  compile localGroovy()
+}
+
+sourceSets.main.groovy.srcDirs = ["src_groovy"]
+sourceSets.test.groovy.srcDirs = ["test_src_groovy"]
+
+sourceSets.main.resources {
+  srcDirs += sourceSets.main.groovy.srcDirs
+  exclude '**/*.groovy'
+}
+sourceSets.test.resources {
+  srcDirs += sourceSets.test.groovy.srcDirs
+  exclude '**/*.groovy'
+}
