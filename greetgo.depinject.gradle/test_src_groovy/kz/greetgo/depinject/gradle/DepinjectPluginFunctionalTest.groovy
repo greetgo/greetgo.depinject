@@ -30,24 +30,21 @@ class DepinjectPluginFunctionalTest extends Specification {
       plugins {
         id 'kz.greetgo.depinject.plugin'
       }
-      task helloWorld {
-        doLast {
-          println 'Hello world!'
-        }
-      }
     """
 
     when:
     def result = GradleRunner.create()
       .withProjectDir(testProjectDir.root)
       .withPluginClasspath(pluginClasspath)
-      .withArguments('helloWorld')
+      .withArguments('hi')
       .build()
+
+    println "result.output = [[" + result.output + "]]"
 
     println "buildFile = " + buildFile
 
     then:
-    result.output.contains('Hello world!')
-    result.task(":helloWorld").outcome == SUCCESS
+    result.output.contains('Hi to everybody')
+    result.task(":hi").outcome == SUCCESS
   }
 }
