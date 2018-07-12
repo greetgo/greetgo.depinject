@@ -24,13 +24,15 @@ class DepinjectPluginFunctionalTest extends Specification {
     pluginClasspath = pluginClasspathResource.readLines().collect { new File(it) }
   }
 
-  def "hello world task prints hello world"() {
+  def "some probes"() {
     given:
     buildFile << """
       plugins {
         id 'kz.greetgo.depinject.plugin'
       }
     """
+
+    testProjectDir.newFolder("asd").createNewFile()
 
     when:
     def result = GradleRunner.create()

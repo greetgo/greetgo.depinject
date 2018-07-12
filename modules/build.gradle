@@ -1,0 +1,20 @@
+plugins {
+  id 'com.adarshr.test-logger' version '1.3.1'
+}
+
+testlogger {
+  // pick a theme - mocha, standard or plain
+  theme 'standard'
+
+  // set to false to disable detailed failure logs
+  showExceptions true
+
+  // set threshold in milliseconds to highlight slow tests
+  slowThreshold 1000
+
+  // displays a breakdown of passes, failures and skips along with total duration
+  showSummary true
+
+  // enable to see standard out and error streams inline with the test results
+  showStandardStreams true
+}

@@ -2,6 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
 
 task createClasspathManifest {
+  group 'build'
   def outputDir = file("$buildDir/$name")
 
   inputs.files sourceSets.main.runtimeClasspath
@@ -10,13 +11,25 @@ task createClasspathManifest {
   doLast {
     outputDir.mkdirs()
     file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
+    file("$outputDir/test-classpath.txt").text = sourceSets.test.runtimeClasspath.join("\n")
   }
 }
+
+task cleanAndCreateClasspathManifest {
+  group 'build'
+  dependsOn clean
+  dependsOn createClasspathManifest
+}
+
+createClasspathManifest.shouldRunAfter clean
 
 dependencies {
   testCompile("org.spockframework:spock-core:1.1-groovy-2.4") {
     exclude module: 'groovy-all'
   }
+
+  testCompile project(":greetgo.depinject.gen")
+  testCompile project(":modules")
 
   testRuntime files(createClasspathManifest)
 }
@@ -41,3 +54,4 @@ sourceSets.test.resources {
   srcDirs += sourceSets.test.groovy.srcDirs
   exclude '**/*.groovy'
 }
+sourceSets.test.java.srcDirs += "sources_for_tests/test1"
