@@ -1,8 +1,37 @@
+plugins {
+  id 'java-gradle-plugin'
+}
+
 apply plugin: 'groovy'
 
+task createClasspathManifest {
+  def outputDir = file("$buildDir/$name")
+
+  inputs.files sourceSets.main.runtimeClasspath
+  outputs.dir outputDir
+
+  doLast {
+    outputDir.mkdirs()
+    file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
+  }
+}
+
 dependencies {
-  compile gradleApi()
   compile localGroovy()
+  testCompile gradleTestKit()
+  compile "org.codehaus.groovy:groovy-all:2.4.12"
+  testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+
+  testRuntime files(createClasspathManifest)
+}
+
+gradlePlugin {
+  plugins {
+    depinjectPlugin {
+      id = 'kz.greetgo.depinject.plugin'
+      implementationClass = 'kz.greetgo.depinject.gradle.DepinjectPlugin'
+    }
+  }
 }
 
 sourceSets.main.groovy.srcDirs = ["src_groovy"]
