@@ -1,0 +1,27 @@
+task depinjectGeneration(type: JavaExec) {
+  group "depinject"
+  main = 'kz.greetgo.malina.GenerateSrc'
+  args = ["$buildDir/src_generate_out"]
+  classpath sourceSets.test.runtimeClasspath
+}
+
+task depinjectCompileGenerated(type: JavaCompile) {
+  group "depinject"
+  dependsOn depinjectGeneration
+  source = "$buildDir/src_generate_out"
+  classpath = sourceSets.test.runtimeClasspath
+  destinationDir = file("$buildDir/src_generate_classes")
+}
+
+task depinject(type: Jar) {
+  group "depinject"
+  dependsOn depinjectCompileGenerated
+  baseName jar.baseName + "-depinject-bean-containers"
+  from file("$buildDir/src_generate_classes")
+}
+
+jar.dependsOn depinject
+
+dependencies {
+  compile files(depinject.archivePath)
+}

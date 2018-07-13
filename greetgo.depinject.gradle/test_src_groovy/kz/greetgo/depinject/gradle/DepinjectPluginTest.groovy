@@ -125,7 +125,7 @@ class DepinjectPluginTest {
 
     newFile("build.gradle") << """
       apply plugin: 'java'
-      
+
       dependencies {
         compile files($testClasspathStr)
       }

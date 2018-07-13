@@ -1,0 +1,3 @@
+rootProject.name = 'depinject_investigation'
+include "malina"
+include "moon"

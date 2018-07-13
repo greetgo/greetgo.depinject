@@ -1,0 +1,24 @@
+dependencies {
+  compile project(":malina")
+}
+
+task viewMainClasspath {
+  doLast {
+    println sourceSets.main.runtimeClasspath.collect { "MAIN " + it }.join("\n")
+  }
+}
+task viewTestClasspath {
+  doLast {
+    println sourceSets.test.runtimeClasspath.collect { "TEST " + it }.join("\n")
+  }
+}
+
+task runMoon(type: JavaExec) {
+  main = 'kz.greetgo.moon.Moon'
+  args = []
+  classpath sourceSets.test.runtimeClasspath
+
+  doFirst {
+    println sourceSets.test.runtimeClasspath.collect { "TEST " + it }.join("\n")
+  }
+}
