@@ -41,7 +41,7 @@ public class DepinjectUtil {
     return new String(s);
   }
 
-  public static void implementBeanContainers(String packageName, String srcDir) throws Exception {
+  public static List<File> generateBeanContainersSources(String packageName, String srcDir) {
     List<File> filesToCompile = new ArrayList<>();
 
     {
@@ -59,6 +59,12 @@ public class DepinjectUtil {
       }
     }
 
+    return filesToCompile;
+  }
+
+  public static void implementBeanContainers(String packageName, String srcDir) {
+    List<File> filesToCompile = generateBeanContainersSources(packageName, srcDir);
+
     final JavaCompiler compiler = JavaCompilerFactory.createDefault();
 
     for (File file : filesToCompile) {
@@ -70,6 +76,5 @@ public class DepinjectUtil {
     implementBeanContainers(packageName, srcDir);
 
     ServerUtil.addToClasspath(srcDir);
-
   }
 }

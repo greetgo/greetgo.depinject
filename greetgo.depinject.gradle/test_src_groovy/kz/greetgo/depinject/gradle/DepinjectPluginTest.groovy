@@ -7,13 +7,11 @@ import org.gradle.testkit.runner.GradleRunner
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
 
 import static java.lang.Math.abs
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import static modules.Modules.depinjectGradle
 import static org.fest.assertions.api.Assertions.assertThat
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -39,6 +37,10 @@ class DepinjectPluginTest {
     }
 
     testClasspath = testClasspathResource.readLines().collect { new File(it) }
+
+//    testClasspath.collect {
+//      println "--- test class path : " + it
+//    }
   }
 
   Path testProjectDir
@@ -114,72 +116,6 @@ class DepinjectPluginTest {
   }
 
   @Test
-  void "test java compilation"() {
-
-    def testClasspathStr = testClasspath
-      .collect { it.absolutePath.replace('\\', '\\\\') } // escape backslashes in Windows paths
-      .collect { "'$it'" }
-      .join(", ")
-
-    newFile("build.gradle") << """
-      apply plugin: 'java'
-      
-      dependencies {
-        compile files($testClasspathStr)
-      }
-
-      [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-      [compileJava, compileTestJava]*.options*.debugOptions*.debugLevel = "source,lines,vars"
-
-      sourceSets.main.java.srcDirs = ["src"]
-      sourceSets.test.java.srcDirs = ["test_src"]
-      sourceSets.main.resources.srcDirs = ["src_resources"]
-      sourceSets.test.resources.srcDirs = ["test_resources"]
-
-      sourceSets.main.resources {
-        srcDirs += sourceSets.main.java.srcDirs
-        exclude '**/*.java'
-      }
-      sourceSets.test.resources {
-        srcDirs += sourceSets.test.java.srcDirs
-        exclude '**/*.java'
-      }
-
-      task runTest(type: JavaExec) {
-        main = 'kz.greetgo.tests.Test'
-        args = []
-        classpath sourceSets.test.runtimeClasspath
-      }
-    """.stripIndent()
-
-    new AntBuilder().copy(todir: dir("src").toPath()) {
-      fileset(dir: depinjectGradle().resolve("sources_for_tests/test1"), includes: "**")
-    }
-
-    newFile("src/kz/greetgo/tests/Test.java") << """
-      package kz.greetgo.tests;
-
-      public class Test {
-        public static void main(String []args) {
-          kz.greetgo.depinject.Depinject x;
-          System.out.println("Hello World!!! --- from test");
-        }
-      }
-    """.stripIndent()
-
-    def result = GradleRunner.create()
-      .withProjectDir(projectDir())
-      .withPluginClasspath(pluginClasspath)
-      .withArguments('runTest')
-      .build()
-
-    println "result.output = [[" + result.output + "]]"
-
-//    assertThat(result.output.contains('Hi to everybody')).isTrue()
-    assertThat(result.task(":runTest").outcome).isEqualTo(SUCCESS)
-  }
-
-  @Test
   void "test depinject"() {
 
     def testClasspathStr = testClasspath
@@ -202,11 +138,34 @@ class DepinjectPluginTest {
       sourceSets.main.resources.srcDirs = ["src_resources"]
       sourceSets.test.resources.srcDirs = ["test_resources"]
 
+      task generate(type: JavaExec) {
+        main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
+        args = ['impl', '-p', 'kz.greetgo.tests', '-s', "\$buildDir/src_generate_out"]
+        classpath sourceSets.test.runtimeClasspath
+      }
+
+      task compileGenerated(type: JavaCompile) {
+        dependsOn generate
+        source = "\$buildDir/src_generate_out"
+        classpath = sourceSets.test.runtimeClasspath
+        destinationDir = file("\$buildDir/src_generate_classes")
+      }
+
+      task beanContainerJar(type: Jar) {
+        dependsOn compileGenerated
+        baseName "test-bean-container"
+        from file("\$buildDir/src_generate_classes")
+      }
+
       task runTest(type: JavaExec) {
+        dependsOn beanContainerJar
         main = 'kz.greetgo.tests.run.Main'
         args = []
         classpath sourceSets.test.runtimeClasspath
+        classpath beanContainerJar
+        classpath file("\$buildDir/src_generate_classes")
       }
+
     """.stripIndent()
 
     new AntBuilder().copy(todir: dir("src").toPath()) {
@@ -222,7 +181,7 @@ class DepinjectPluginTest {
     println "result.output = [[" + result.output + "]]"
 
 //    assertThat(result.output.contains('Hi to everybody')).isTrue()
-    assertThat(result.task(":runTest").outcome).isEqualTo(SUCCESS)
+    assertThat(result.task(":generate").outcome).isEqualTo(SUCCESS)
   }
 
 }
