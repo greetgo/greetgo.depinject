@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Default Suite">
+  <test name="greetgo.depinject.parent">
+    <classes>
+      <class name="kz.greetgo.depinject.gradle.DepinjectPluginTest">
+        <methods>
+          <include name="depinject start"/>
+        </methods>
+      </class> <!-- kz.greetgo.depinject.gradle.DepinjectPluginTest -->
+    </classes>
+  </test> <!-- greetgo.depinject.parent -->
+</suite> <!-- Default Suite -->

@@ -1,8 +1,5 @@
 package kz.greetgo.depinject.gradle
 
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
-import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -68,7 +65,7 @@ class DepinjectPluginTest {
   }
 
   @Test
-  void "Prepare depinject tasks"() {
+  void "depinject start"() {
 
     def testClasspathStr = testClasspath
       .collect { it.absolutePath.replace('\\', '\\\\') } // escape backslashes in Windows paths
@@ -76,6 +73,10 @@ class DepinjectPluginTest {
       .join(", ")
 
     newFile("build.gradle") << """
+      plugins {
+        id 'kz.greetgo.depinject.plugin'
+      }
+
       apply plugin: 'java'
 
       version = '12.23.34'
@@ -92,31 +93,12 @@ class DepinjectPluginTest {
       sourceSets.main.resources.srcDirs = ["src_resources"]
       sourceSets.test.resources.srcDirs = ["test_resources"]
 
-      task generate(type: JavaExec) {
-        main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
-        args = ['impl', '-p', 'kz.greetgo.tests', '-s', "\$buildDir/depinject_generated_src"]
-        classpath sourceSets.test.runtimeClasspath
-      }
-
-      task depinjectCompile(type: JavaCompile) {
-        dependsOn generate
-        source = "\$buildDir/depinject_generated_src"
-        classpath = sourceSets.test.runtimeClasspath
-        destinationDir = file("\$buildDir/depinject_generated_classes")
-      }
-
-      task depinjectJar(type: Jar) {
-        dependsOn depinjectCompile
-        baseName jar.baseName + "-depinject"
-        from file("\$buildDir/depinject_generated_classes")
-      }
-
       task runTest(type: JavaExec) {
-        dependsOn depinjectJar
+        //dependsOn depinjectJar
         main = 'kz.greetgo.tests.run.Main'
         args = []
         classpath sourceSets.test.runtimeClasspath
-        classpath depinjectJar
+        //classpath depinjectJar
       }
 
     """.stripIndent()
@@ -128,7 +110,8 @@ class DepinjectPluginTest {
     def result = GradleRunner.create()
       .withProjectDir(projectDir())
       .withPluginClasspath(pluginClasspath)
-      .withArguments('runTest')
+//      .withArguments('runTest')
+      .withArguments('generate')
       .build()
 
     println "result.output = [[" + result.output + "]]"

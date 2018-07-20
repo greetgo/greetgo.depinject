@@ -66,3 +66,9 @@ task testSimpleProbe(type: Test) {
   useTestNG()
   options.suites("test_runs/simple_probe.xml")
 }
+
+task testDepinjectStart(type: Test) {
+  group 'verification'
+  useTestNG()
+  options.suites("test_runs/depinject_start.xml")
+}
