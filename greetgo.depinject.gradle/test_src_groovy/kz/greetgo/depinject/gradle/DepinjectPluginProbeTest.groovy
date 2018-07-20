@@ -16,7 +16,7 @@ import static modules.Modules.depinjectGradle
 import static org.fest.assertions.api.Assertions.assertThat
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
-class DepinjectPluginTest {
+class DepinjectPluginProbeTest {
   final Random random = new Random()
 
   List<File> pluginClasspath
@@ -65,6 +65,54 @@ class DepinjectPluginTest {
     def ret = dir(pathAndName)
     ret.getParentFile().mkdirs()
     return ret
+  }
+
+  @Test
+  void "Check plugin name from properties"() {
+    Project project = ProjectBuilder.builder().build()
+    project.pluginManager.apply 'kz.greetgo.depinject.plugin'
+
+    newFile("build.gradle") << """
+      task asd {
+        doLast {
+          println 'Hi to all'
+        }
+      }
+    """.stripIndent()
+    newFile("asd/wow.txt") << """
+      Привет
+    """.stripIndent()
+
+    BuildResult result = GradleRunner.create()
+      .withProjectDir(projectDir())
+      .withArguments("asd")
+      .build()
+
+    assertThat(result.task(":asd").getOutcome()).isEqualTo(SUCCESS)
+
+    assertThat(result.output.contains("Hi to all")).isTrue()
+  }
+
+  @Test
+  void "Simple probe kz.greetgo.depinject.plugin"() {
+
+    newFile("build.gradle") << """
+      plugins {
+        id 'kz.greetgo.depinject.plugin'
+      }
+    """.stripIndent()
+
+    def result = GradleRunner.create()
+      .withProjectDir(projectDir())
+      .withPluginClasspath(pluginClasspath)
+      .withArguments('hi')
+      .build()
+
+    println "result.output = [[" + result.output + "]]"
+    println pluginClasspath
+
+    assertThat(result.output.contains('Hi to everybody')).isTrue()
+    assertThat(result.task(":hi").outcome).isEqualTo(SUCCESS)
   }
 
   @Test
