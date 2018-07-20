@@ -9,7 +9,7 @@ class DepinjectPlugin implements Plugin<Project> {
   void apply(Project project) {
     project.task("hi") {
       doLast {
-        println "Hi to everybody"
+        println "Hi to everybody 3456"
       }
     }
   }

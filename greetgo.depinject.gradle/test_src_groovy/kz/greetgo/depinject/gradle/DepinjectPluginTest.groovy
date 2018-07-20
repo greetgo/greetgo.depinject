@@ -126,6 +126,8 @@ class DepinjectPluginTest {
     newFile("build.gradle") << """
       apply plugin: 'java'
 
+      version = '12.23.34'
+
       dependencies {
         compile files($testClasspathStr)
       }
@@ -140,30 +142,29 @@ class DepinjectPluginTest {
 
       task generate(type: JavaExec) {
         main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
-        args = ['impl', '-p', 'kz.greetgo.tests', '-s', "\$buildDir/src_generate_out"]
+        args = ['impl', '-p', 'kz.greetgo.tests', '-s', "\$buildDir/depinject_generated_src"]
         classpath sourceSets.test.runtimeClasspath
       }
 
-      task compileGenerated(type: JavaCompile) {
+      task depinjectCompile(type: JavaCompile) {
         dependsOn generate
-        source = "\$buildDir/src_generate_out"
+        source = "\$buildDir/depinject_generated_src"
         classpath = sourceSets.test.runtimeClasspath
-        destinationDir = file("\$buildDir/src_generate_classes")
+        destinationDir = file("\$buildDir/depinject_generated_classes")
       }
 
-      task beanContainerJar(type: Jar) {
-        dependsOn compileGenerated
-        baseName "test-bean-container"
-        from file("\$buildDir/src_generate_classes")
+      task depinjectJar(type: Jar) {
+        dependsOn depinjectCompile
+        baseName jar.baseName + "-depinject"
+        from file("\$buildDir/depinject_generated_classes")
       }
 
       task runTest(type: JavaExec) {
-        dependsOn beanContainerJar
+        dependsOn depinjectJar
         main = 'kz.greetgo.tests.run.Main'
         args = []
         classpath sourceSets.test.runtimeClasspath
-        classpath beanContainerJar
-        classpath file("\$buildDir/src_generate_classes")
+        classpath depinjectJar
       }
 
     """.stripIndent()
