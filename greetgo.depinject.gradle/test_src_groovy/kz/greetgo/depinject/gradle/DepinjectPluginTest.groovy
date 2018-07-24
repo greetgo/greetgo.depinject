@@ -50,7 +50,7 @@ class DepinjectPluginTest {
   @BeforeMethod
   void initTestProjectDir() {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss-SSS-")
-    testProjectDir = Paths.get("build/test_projects/pr-" + sdf.format(new Date()) + abs(random.nextInt()))
+    testProjectDir = Paths.get("build/projects-for-tests/pr-" + sdf.format(new Date()) + abs(random.nextInt()))
     testProjectName = "test"
   }
 
@@ -111,13 +111,14 @@ class DepinjectPluginTest {
       .withProjectDir(projectDir())
       .withPluginClasspath(pluginClasspath)
 //      .withArguments('runTest')
-      .withArguments('generate')
+//      .withArguments('depinjectCompile')
+      .withArguments('depinjectJar')
       .build()
 
     println "result.output = [[" + result.output + "]]"
 
 //    assertThat(result.output.contains('Hi to everybody')).isTrue()
-    assertThat(result.task(":generate").outcome).isEqualTo(SUCCESS)
+    assertThat(result.task(":depinjectGenerate").outcome).isEqualTo(SUCCESS)
   }
 
 }
