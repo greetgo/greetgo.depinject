@@ -94,11 +94,11 @@ class DepinjectPluginTest {
       sourceSets.test.resources.srcDirs = ["test_resources"]
 
       task runTest(type: JavaExec) {
-        //dependsOn depinjectJar
+        dependsOn depinjectJar
         main = 'kz.greetgo.tests.run.Main'
         args = []
         classpath sourceSets.test.runtimeClasspath
-        //classpath depinjectJar
+        classpath depinjectJar
       }
 
     """.stripIndent()
@@ -110,9 +110,9 @@ class DepinjectPluginTest {
     def result = GradleRunner.create()
       .withProjectDir(projectDir())
       .withPluginClasspath(pluginClasspath)
-//      .withArguments('runTest')
+      .withArguments('runTest')
 //      .withArguments('depinjectCompile')
-      .withArguments('depinjectJar')
+//      .withArguments('depinjectJar')
       .build()
 
     println "result.output = [[" + result.output + "]]"

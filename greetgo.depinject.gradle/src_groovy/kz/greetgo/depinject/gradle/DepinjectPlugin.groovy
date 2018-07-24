@@ -27,55 +27,52 @@ class DepinjectPlugin implements Plugin<Project> {
     this.configurationActionContainer = configurationActionContainer
   }
 
+  JavaExec generateTask
+  JavaCompile compileTask
+  Jar depinjectJar
+
   @Override
   void apply(Project project) {
-    project.task("hi") {
-      doLast {
-        println "Hi to everybody"
-      }
-    }
+    generateTask = project.task('depinjectGenerate', type: JavaExec)    as JavaExec
+    compileTask  = project.task('depinjectCompile',  type: JavaCompile) as JavaCompile
+    depinjectJar = project.task('depinjectJar',      type: Jar)         as Jar
 
     configurationActionContainer.add(new Action<Project>() {
       void execute(Project p) {
         applyAction(p)
       }
     })
-
   }
 
   private static File buildResolve(Project project, String sub) {
     return project.buildDir.toPath().resolve(sub).toFile()
   }
 
-  private static Jar getJar(Project project) {
+  @SuppressWarnings("GroovyUnusedDeclaration")
+  private static <T extends Task> T getJar(Project project, Class<T> ignore) {
     Set<Task> jarTaskSet = project.getTasksByName("jar", false)
     if (jarTaskSet.isEmpty()) throw new RuntimeException("No task jar")
     if (jarTaskSet.size() > 1) throw new RuntimeException("Too many jar tasks")
     //noinspection ChangeToOperator
-    return jarTaskSet.iterator().next() as Jar;
+    return jarTaskSet.iterator().next() as T
   }
 
+  @SuppressWarnings("GrMethodMayBeStatic")
   void applyAction(Project project) {
-    Task generateTask = project.task('depinjectGenerate', type: JavaExec) {
-      classpath getTestClasspath(project)
-      main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
-      args = ['impl',
-              '-p', 'kz.greetgo.tests',
-              '-s', buildResolve(project, "depinject_generated_src").getAbsolutePath()
-      ]
-    }
 
-    Task compileTask = project.task('depinjectCompile', type: JavaCompile) {
-      dependsOn generateTask
-      classpath = getTestClasspath(project)
-      source = buildResolve(project, "depinject_generated_src")
-      destinationDir = buildResolve(project, "depinject_generated_classes")
-    }
+    generateTask.classpath getTestClasspath(project)
+    generateTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
+    generateTask.args = ['impl',
+                         '-p', 'kz.greetgo.tests',
+                         '-s', buildResolve(project, "depinject_generated_src").getAbsolutePath()]
 
-    project.task("depinjectJar", type: Jar) {
-      dependsOn compileTask
-      baseName getJar(project).getBaseName() + "-depinject"
-      from buildResolve(project, "depinject_generated_classes")
-    }
+    compileTask.dependsOn generateTask
+    compileTask.classpath = getTestClasspath(project)
+    compileTask.source = buildResolve(project, "depinject_generated_src")
+    compileTask.destinationDir = buildResolve(project, "depinject_generated_classes")
+
+    depinjectJar.dependsOn compileTask
+    depinjectJar.baseName = getJar(project, Jar).getBaseName() + "-depinject"
+    depinjectJar.from buildResolve(project, "depinject_generated_classes")
   }
 }
