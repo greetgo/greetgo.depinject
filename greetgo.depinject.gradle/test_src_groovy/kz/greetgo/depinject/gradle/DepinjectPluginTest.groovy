@@ -90,11 +90,11 @@ class DepinjectPluginTest {
       sourceSets.test.resources.srcDirs = ["test_resources"]
 
       task runTest(type: JavaExec) {
-        dependsOn depinjectTestClasses
+        //dependsOn depinjectCompile
         main = 'kz.greetgo.tests.run.Main'
         args = []
         classpath sourceSets.test.runtimeClasspath
-        classpath depinjectTestClasses
+//        classpath depinjectCompile
       }
 
     """.stripIndent()

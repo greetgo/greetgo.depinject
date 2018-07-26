@@ -22,26 +22,36 @@ class DepinjectPlugin implements Plugin<Project> {
     return javaPluginConvention.getSourceSets().findByName(sourceSetName).getRuntimeClasspath()
   }
 
+  private static FileCollection getCompileClasspath(Project project, String sourceSetName) {
+    JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
+    return javaPluginConvention.getSourceSets().findByName(sourceSetName).getCompileClasspath()
+  }
+
+  private static FileCollection getOutput(Project project, String sourceSetName) {
+    JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
+    return javaPluginConvention.getSourceSets().findByName(sourceSetName).getOutput()
+  }
+
   @Inject
   DepinjectPlugin(ProjectConfigurationActionContainer configurationActionContainer) {
     this.configurationActionContainer = configurationActionContainer
   }
 
   JavaExec depinjectGenerateSrcTask
-  JavaCompile depinjectClassesTask
+  JavaCompile depinjectCompileTask
   Jar depinjectJarTask
 
   JavaExec depinjectGenerateTestSrcTask
-  JavaCompile depinjectTestClassesTask
+  JavaCompile depinjectTestCompileTask
 
   @Override
   void apply(Project project) {
     depinjectGenerateSrcTask = project.task('depinjectGenerateSrc', type: JavaExec) as JavaExec
-    depinjectClassesTask = project.task('depinjectClasses', type: JavaCompile) as JavaCompile
+    depinjectCompileTask = project.task('depinjectCompile', type: JavaCompile) as JavaCompile
     depinjectJarTask = project.task('depinjectJar', type: Jar) as Jar
 
     depinjectGenerateTestSrcTask = project.task('depinjectGenerateTestSrc', type: JavaExec) as JavaExec
-    depinjectTestClassesTask = project.task('depinjectTestClasses', type: JavaCompile) as JavaCompile
+    depinjectTestCompileTask = project.task('depinjectTestCompile', type: JavaCompile) as JavaCompile
 
     configurationActionContainer.add(new Action<Project>() {
       void execute(Project p) {
@@ -63,38 +73,65 @@ class DepinjectPlugin implements Plugin<Project> {
     return jarTaskSet.iterator().next() as T
   }
 
+  private static File getGeneratedSrcDir(Project project) {
+    return buildResolve(project, "depinject_generated_src")
+  }
+
+  private static File getGeneratedTestSrcDir(Project project) {
+    return buildResolve(project, "depinject_generated_test_src")
+  }
+
+  private static File getClassesDir(Project project) {
+    return buildResolve(project, "depinject_classes")
+  }
+
+  private static File getTestClassesDir(Project project) {
+    return buildResolve(project, "depinject_test_classes")
+  }
+
   @SuppressWarnings("GrMethodMayBeStatic")
   void applyAction(Project project) {
 
-    depinjectGenerateSrcTask.classpath getClasspath(project, "test")
+    depinjectGenerateSrcTask.dependsOn getTask(project, "compileJava", Task)
+    depinjectGenerateSrcTask.classpath getCompileClasspath(project, "test").getFiles()
     depinjectGenerateSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
     depinjectGenerateSrcTask.args = ['impl',
                                      '-p', 'kz.greetgo.tests',
-                                     '-s', buildResolve(project, "depinject_generated_src").getAbsolutePath()]
+                                     '-s', getGeneratedSrcDir(project).getAbsolutePath()]
 
-    depinjectClassesTask.dependsOn depinjectGenerateSrcTask
-    depinjectClassesTask.classpath = getClasspath(project, "main")
-    depinjectClassesTask.source = buildResolve(project, "depinject_generated_src")
-    depinjectClassesTask.destinationDir = buildResolve(project, "depinject_classes")
+    depinjectCompileTask.dependsOn depinjectGenerateSrcTask
+    depinjectCompileTask.classpath = getCompileClasspath(project, "main")
+    depinjectCompileTask.source = getGeneratedSrcDir(project)
+    depinjectCompileTask.destinationDir = getClassesDir(project)
+    depinjectCompileTask.doLast {
+      JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
+      javaPluginConvention.getSourceSets().findByName("main").getOutput().dir(buildResolve(project, "depinject_classes"))
+    }
 
-    depinjectJarTask.dependsOn depinjectClassesTask
+    getTask(project, "classes", Task).dependsOn depinjectCompileTask
+
+    depinjectJarTask.dependsOn depinjectCompileTask
     depinjectJarTask.baseName = getTask(project, 'jar', Jar).getBaseName() + "-depinject"
-    depinjectJarTask.from buildResolve(project, "depinject_classes")
+    depinjectJarTask.from getClassesDir(project)
 
-    getTask(project, "build", Task).dependsOn depinjectJarTask
+    getTask(project, "assemble", Task).dependsOn depinjectJarTask
 
     // * * * * * * for test env
 
-    depinjectGenerateTestSrcTask.dependsOn depinjectClassesTask
+    depinjectGenerateTestSrcTask.dependsOn depinjectCompileTask
     depinjectGenerateTestSrcTask.classpath getClasspath(project, "test")
     depinjectGenerateTestSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
     depinjectGenerateTestSrcTask.args = ['impl',
                                          '-p', 'kz.greetgo.tests',
-                                         '-s', buildResolve(project, "depinject_generated_test_src").getAbsolutePath()]
+                                         '-s', getGeneratedTestSrcDir(project).getAbsolutePath()]
 
-    depinjectTestClassesTask.dependsOn depinjectGenerateTestSrcTask
-    depinjectTestClassesTask.classpath = getClasspath(project, "test")
-    depinjectTestClassesTask.source = buildResolve(project, "depinject_generated_test_src")
-    depinjectTestClassesTask.destinationDir = buildResolve(project, "depinject_test_classes")
+    depinjectTestCompileTask.dependsOn depinjectGenerateTestSrcTask
+    depinjectTestCompileTask.classpath = getClasspath(project, "test")
+    depinjectTestCompileTask.source = getGeneratedTestSrcDir(project)
+    depinjectTestCompileTask.destinationDir = getTestClassesDir(project)
+    depinjectTestCompileTask.doLast {
+      JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
+      javaPluginConvention.getSourceSets().findByName("test").getOutput().dir(getTestClassesDir(project))
+    }
   }
 }
