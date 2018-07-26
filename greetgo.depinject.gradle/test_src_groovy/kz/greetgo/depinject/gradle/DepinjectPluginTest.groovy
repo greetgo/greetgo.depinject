@@ -90,11 +90,11 @@ class DepinjectPluginTest {
       sourceSets.test.resources.srcDirs = ["test_resources"]
 
       task runTest(type: JavaExec) {
-        dependsOn depinjectJar
+        dependsOn depinjectTestClasses
         main = 'kz.greetgo.tests.run.Main'
         args = []
         classpath sourceSets.test.runtimeClasspath
-        classpath depinjectJar
+        classpath depinjectTestClasses
       }
 
     """.stripIndent()
@@ -114,7 +114,7 @@ class DepinjectPluginTest {
     println "result.output = [[" + result.output + "]]"
 
 //    assertThat(result.output.contains('Hi to everybody')).isTrue()
-    assertThat(result.task(":depinjectGenerate").outcome).isEqualTo(SUCCESS)
+    assertThat(result.task(":depinjectGenerateSrc").outcome).isEqualTo(SUCCESS)
   }
 
 }

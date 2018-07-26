@@ -17,9 +17,9 @@ class DepinjectPlugin implements Plugin<Project> {
 
   private final ProjectConfigurationActionContainer configurationActionContainer
 
-  private static FileCollection getTestClasspath(Project project) {
+  private static FileCollection getClasspath(Project project, String sourceSetName) {
     JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
-    return javaPluginConvention.getSourceSets().findByName("test").getRuntimeClasspath()
+    return javaPluginConvention.getSourceSets().findByName(sourceSetName).getRuntimeClasspath()
   }
 
   @Inject
@@ -27,15 +27,21 @@ class DepinjectPlugin implements Plugin<Project> {
     this.configurationActionContainer = configurationActionContainer
   }
 
-  JavaExec generateTask
-  JavaCompile compileTask
-  Jar depinjectJar
+  JavaExec depinjectGenerateSrcTask
+  JavaCompile depinjectClassesTask
+  Jar depinjectJarTask
+
+  JavaExec depinjectGenerateTestSrcTask
+  JavaCompile depinjectTestClassesTask
 
   @Override
   void apply(Project project) {
-    generateTask = project.task('depinjectGenerate', type: JavaExec)    as JavaExec
-    compileTask  = project.task('depinjectCompile',  type: JavaCompile) as JavaCompile
-    depinjectJar = project.task('depinjectJar',      type: Jar)         as Jar
+    depinjectGenerateSrcTask = project.task('depinjectGenerateSrc', type: JavaExec) as JavaExec
+    depinjectClassesTask = project.task('depinjectClasses', type: JavaCompile) as JavaCompile
+    depinjectJarTask = project.task('depinjectJar', type: Jar) as Jar
+
+    depinjectGenerateTestSrcTask = project.task('depinjectGenerateTestSrc', type: JavaExec) as JavaExec
+    depinjectTestClassesTask = project.task('depinjectTestClasses', type: JavaCompile) as JavaCompile
 
     configurationActionContainer.add(new Action<Project>() {
       void execute(Project p) {
@@ -49,10 +55,10 @@ class DepinjectPlugin implements Plugin<Project> {
   }
 
   @SuppressWarnings("GroovyUnusedDeclaration")
-  private static <T extends Task> T getJar(Project project, Class<T> ignore) {
-    Set<Task> jarTaskSet = project.getTasksByName("jar", false)
-    if (jarTaskSet.isEmpty()) throw new RuntimeException("No task jar")
-    if (jarTaskSet.size() > 1) throw new RuntimeException("Too many jar tasks")
+  private static <T extends Task> T getTask(Project project, String taskName, Class<T> ignore) {
+    Set<Task> jarTaskSet = project.getTasksByName(taskName, false)
+    if (jarTaskSet.isEmpty()) throw new RuntimeException("No task " + taskName)
+    if (jarTaskSet.size() > 1) throw new RuntimeException("Too many " + taskName + " tasks")
     //noinspection ChangeToOperator
     return jarTaskSet.iterator().next() as T
   }
@@ -60,19 +66,35 @@ class DepinjectPlugin implements Plugin<Project> {
   @SuppressWarnings("GrMethodMayBeStatic")
   void applyAction(Project project) {
 
-    generateTask.classpath getTestClasspath(project)
-    generateTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
-    generateTask.args = ['impl',
-                         '-p', 'kz.greetgo.tests',
-                         '-s', buildResolve(project, "depinject_generated_src").getAbsolutePath()]
+    depinjectGenerateSrcTask.classpath getClasspath(project, "test")
+    depinjectGenerateSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
+    depinjectGenerateSrcTask.args = ['impl',
+                                     '-p', 'kz.greetgo.tests',
+                                     '-s', buildResolve(project, "depinject_generated_src").getAbsolutePath()]
 
-    compileTask.dependsOn generateTask
-    compileTask.classpath = getTestClasspath(project)
-    compileTask.source = buildResolve(project, "depinject_generated_src")
-    compileTask.destinationDir = buildResolve(project, "depinject_generated_classes")
+    depinjectClassesTask.dependsOn depinjectGenerateSrcTask
+    depinjectClassesTask.classpath = getClasspath(project, "main")
+    depinjectClassesTask.source = buildResolve(project, "depinject_generated_src")
+    depinjectClassesTask.destinationDir = buildResolve(project, "depinject_classes")
 
-    depinjectJar.dependsOn compileTask
-    depinjectJar.baseName = getJar(project, Jar).getBaseName() + "-depinject"
-    depinjectJar.from buildResolve(project, "depinject_generated_classes")
+    depinjectJarTask.dependsOn depinjectClassesTask
+    depinjectJarTask.baseName = getTask(project, 'jar', Jar).getBaseName() + "-depinject"
+    depinjectJarTask.from buildResolve(project, "depinject_classes")
+
+    getTask(project, "build", Task).dependsOn depinjectJarTask
+
+    // * * * * * * for test env
+
+    depinjectGenerateTestSrcTask.dependsOn depinjectClassesTask
+    depinjectGenerateTestSrcTask.classpath getClasspath(project, "test")
+    depinjectGenerateTestSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
+    depinjectGenerateTestSrcTask.args = ['impl',
+                                         '-p', 'kz.greetgo.tests',
+                                         '-s', buildResolve(project, "depinject_generated_test_src").getAbsolutePath()]
+
+    depinjectTestClassesTask.dependsOn depinjectGenerateTestSrcTask
+    depinjectTestClassesTask.classpath = getClasspath(project, "test")
+    depinjectTestClassesTask.source = buildResolve(project, "depinject_generated_test_src")
+    depinjectTestClassesTask.destinationDir = buildResolve(project, "depinject_test_classes")
   }
 }
