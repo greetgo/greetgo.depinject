@@ -37,21 +37,10 @@ class DepinjectPlugin implements Plugin<Project> {
     this.configurationActionContainer = configurationActionContainer
   }
 
-  JavaExec depinjectGenerateSrcTask
-  JavaCompile depinjectCompileTask
-  Jar depinjectJarTask
-
-  JavaExec depinjectGenerateTestSrcTask
-  JavaCompile depinjectTestCompileTask
 
   @Override
   void apply(Project project) {
-    depinjectGenerateSrcTask = project.task('depinjectGenerateSrc', type: JavaExec) as JavaExec
-    depinjectCompileTask = project.task('depinjectCompile', type: JavaCompile) as JavaCompile
-    depinjectJarTask = project.task('depinjectJar', type: Jar) as Jar
 
-    depinjectGenerateTestSrcTask = project.task('depinjectGenerateTestSrc', type: JavaExec) as JavaExec
-    depinjectTestCompileTask = project.task('depinjectTestCompile', type: JavaCompile) as JavaCompile
 
     configurationActionContainer.add(new Action<Project>() {
       void execute(Project p) {
@@ -92,46 +81,53 @@ class DepinjectPlugin implements Plugin<Project> {
   @SuppressWarnings("GrMethodMayBeStatic")
   void applyAction(Project project) {
 
-    depinjectGenerateSrcTask.dependsOn getTask(project, "compileJava", Task)
-    depinjectGenerateSrcTask.classpath getCompileClasspath(project, "test").getFiles()
-    depinjectGenerateSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
-    depinjectGenerateSrcTask.args = ['impl',
-                                     '-p', 'kz.greetgo.tests',
-                                     '-s', getGeneratedSrcDir(project).getAbsolutePath()]
+    JavaExec generateSrcTask = project.task('depinjectGenerateSrc', type: JavaExec) as JavaExec
+    generateSrcTask.dependsOn getTask(project, "compileJava", Task)
+    generateSrcTask.classpath getCompileClasspath(project, "test").getFiles()
+    generateSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
+    generateSrcTask.args = ['impl',
+                            '-p', 'kz.greetgo.tests',
+                            '-s', getGeneratedSrcDir(project).getAbsolutePath()]
 
-    depinjectCompileTask.dependsOn depinjectGenerateSrcTask
-    depinjectCompileTask.classpath = getCompileClasspath(project, "main")
-    depinjectCompileTask.source = getGeneratedSrcDir(project)
-    depinjectCompileTask.destinationDir = getClassesDir(project)
-    depinjectCompileTask.doLast {
+    JavaCompile compileTask = project.task('depinjectCompile', type: JavaCompile) as JavaCompile
+    compileTask.dependsOn generateSrcTask
+    compileTask.classpath = getCompileClasspath(project, "main")
+    compileTask.source = getGeneratedSrcDir(project)
+    compileTask.destinationDir = getClassesDir(project)
+    compileTask.doLast {
       JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
       javaPluginConvention.getSourceSets().findByName("main").getOutput().dir(buildResolve(project, "depinject_classes"))
     }
 
-    getTask(project, "classes", Task).dependsOn depinjectCompileTask
+    getTask(project, "classes", Task).dependsOn compileTask
 
-    depinjectJarTask.dependsOn depinjectCompileTask
-    depinjectJarTask.baseName = getTask(project, 'jar', Jar).getBaseName() + "-depinject"
-    depinjectJarTask.from getClassesDir(project)
+    Jar jarTask = project.task('depinjectJar', type: Jar) as Jar
+    jarTask.dependsOn compileTask
+    jarTask.baseName = getTask(project, 'jar', Jar).getBaseName() + "-depinject"
+    jarTask.from getClassesDir(project)
 
-    getTask(project, "assemble", Task).dependsOn depinjectJarTask
+    getTask(project, "assemble", Task).dependsOn jarTask
 
     // * * * * * * for test env
 
-    depinjectGenerateTestSrcTask.dependsOn depinjectCompileTask
-    depinjectGenerateTestSrcTask.classpath getClasspath(project, "test")
-    depinjectGenerateTestSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
-    depinjectGenerateTestSrcTask.args = ['impl',
-                                         '-p', 'kz.greetgo.tests',
-                                         '-s', getGeneratedTestSrcDir(project).getAbsolutePath()]
+    JavaExec generateTestSrcTask = project.task('depinjectGenerateTestSrc', type: JavaExec) as JavaExec
+    generateTestSrcTask.dependsOn getTask(project, "compileTestJava", Task)
+    generateTestSrcTask.classpath getCompileClasspath(project, "test").getFiles()
+    generateTestSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
+    generateTestSrcTask.args = ['impl',
+                                '-p', 'kz.greetgo.tests',
+                                '-s', getGeneratedTestSrcDir(project).getAbsolutePath()]
 
-    depinjectTestCompileTask.dependsOn depinjectGenerateTestSrcTask
-    depinjectTestCompileTask.classpath = getClasspath(project, "test")
-    depinjectTestCompileTask.source = getGeneratedTestSrcDir(project)
-    depinjectTestCompileTask.destinationDir = getTestClassesDir(project)
-    depinjectTestCompileTask.doLast {
+    JavaCompile testCompileTask = project.task('depinjectTestCompile', type: JavaCompile) as JavaCompile
+    testCompileTask.dependsOn generateTestSrcTask
+    testCompileTask.classpath = getCompileClasspath(project, "test")
+    testCompileTask.source = getGeneratedTestSrcDir(project)
+    testCompileTask.destinationDir = getTestClassesDir(project)
+    testCompileTask.doLast {
       JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
       javaPluginConvention.getSourceSets().findByName("test").getOutput().dir(getTestClassesDir(project))
     }
+
+    getTask(project, "testClasses", Task).dependsOn testCompileTask
   }
 }
