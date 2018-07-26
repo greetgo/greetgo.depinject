@@ -1,5 +1,10 @@
 package kz.greetgo.depinject.gen;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -114,5 +119,40 @@ public class Utils {
 
   public static String codeName(Class<?> aClass) {
     return aClass.getName().replaceAll("\\$", ".");
+  }
+
+  public static String streamToStr(InputStream inputStream) {
+    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+    copyStreams(inputStream, bOut, 512);
+    try {
+      return bOut.toString("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @SuppressWarnings("unused")
+  public static void copyStreams(InputStream inputStream, OutputStream outputStream) {
+    copyStreams(inputStream, outputStream, 4 * 1024);
+  }
+
+  public static void copyStreams(InputStream inputStream, OutputStream outputStream, int bufferSize) {
+    byte buffer[] = new byte[bufferSize];
+
+    try {
+      try {
+        while (true) {
+
+          int readCount = inputStream.read(buffer);
+          if (readCount < 0) return;
+          outputStream.write(buffer, 0, readCount);
+
+        }
+      } finally {
+        inputStream.close();
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

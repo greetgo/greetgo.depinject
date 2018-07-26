@@ -77,4 +77,9 @@ public class DepinjectUtil {
 
     ServerUtil.addToClasspath(srcDir);
   }
+
+  public static DepinjectVersion version() {
+    String version = Utils.streamToStr(DepinjectUtil.class.getResourceAsStream("/depinject_version.txt")).trim();
+    return DepinjectVersion.parse(version);
+  }
 }

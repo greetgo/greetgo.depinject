@@ -34,10 +34,6 @@ class DepinjectPluginTest {
     }
 
     testClasspath = testClasspathResource.readLines().collect { new File(it) }
-
-//    testClasspath.collect {
-//      println "--- test class path : " + it
-//    }
   }
 
   Path testProjectDir

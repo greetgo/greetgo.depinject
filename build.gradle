@@ -15,7 +15,8 @@ allprojects {
   apply plugin: 'maven'
   apply plugin: 'signing'
 
-  version = '2.0.3'
+  //version = '2.0.3'
+  version = rootProject.file('greetgo.depinject/src_resources/depinject_version.txt').text.trim()
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
@@ -36,13 +37,13 @@ subprojects {
     ext.springVersion = '4.2.3.RELEASE'
     ext.gwtVersion = '2.8.0'
     ext.greetgoUtilVersion = '0.0.27'
-    ext.testNgVersion = '6.5.1'
+    ext.testNgVersion = '6.14.3'
     ext.classScannerVersion = '2.0.0'
     ext.greetgoJavaCompilerVersion = "2.0.0"
 
     //compile 'com.google.code.findbugs:annotations:2.0.1'
 
-    testCompile "org.testng:testng:${testNgVersion}"
+    testCompile "org.testng:testng:$testNgVersion"
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
   }
 

@@ -15,7 +15,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 public class DepinjectUtilTest {
 
-
   private class A {
     @SuppressWarnings("unused")
     public List<String> x;
@@ -36,7 +35,7 @@ public class DepinjectUtilTest {
   }
 
   @Test
-  public void typeToClass_class() throws Exception {
+  public void typeToClass_class() {
     //
     //
     final Class<?> aClass = DepinjectUtil.typeToClass(String.class);
@@ -113,7 +112,7 @@ public class DepinjectUtilTest {
   }
 
   @Test(enabled = false)
-  public void simpleCall() throws Exception {
+  public void simpleCall() {
     final BeanContainerForTestingUtil impl = Depinject.newInstance(BeanContainerForTestingUtil.class);
 
     DependsOnAlone dependsOnAlone = impl.getDependsOnAlone();
@@ -135,5 +134,17 @@ public class DepinjectUtilTest {
     //
     //
 
+  }
+
+  @Test
+  public void version() {
+    //
+    //
+    DepinjectVersion version = DepinjectUtil.version();
+    //
+    //
+
+    assertThat(version).isNotNull();
+    assertThat(version.version1).isGreaterThan(0);
   }
 }
