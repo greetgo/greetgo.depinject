@@ -1,5 +1,14 @@
 package kz.greetgo.depinject.gen;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
+import static kz.greetgo.depinject.gen.DepinjectUtil.generateBeanContainersSources;
+import static kz.greetgo.depinject.gen.DepinjectUtil.implementBeanContainers;
+
 public class DepinjectGenerate {
   public static void main(String[] args) {
     System.exit(new DepinjectGenerate().exec(args));
@@ -28,9 +37,9 @@ public class DepinjectGenerate {
   private void help() {
     System.err.println("    ");
     System.err.println("Using: java ... " + getClass().getName()
-      + " impl -p <package name> -s <out src dir> [-c]");
+      + " impl -p <package_name1>[:<package_name2>[:...]] -s <out src dir> [-c]");
     System.err.println("    ");
-    System.err.println("      Scan <package name> for interfaces extends BeanContainer and generate its implementation.");
+    System.err.println("      Scan <package_name1>, <package_name2>, ... for interfaces extends BeanContainer and generate its implementation.");
     System.err.println("    Place generated implementations into <err src dir>. Package of implementation is same");
     System.err.println("    as implementing interface.");
     System.err.println("    ");
@@ -38,8 +47,8 @@ public class DepinjectGenerate {
       + " if specified this flag, then generated source would be compiled in <out src dir>");
   }
 
-  private static class Parameters {
-    String packageName;
+  private static class Arguments {
+    List<String> packageNameList = new ArrayList<>();
     String outSrcDir;
     boolean compile;
 
@@ -56,7 +65,7 @@ public class DepinjectGenerate {
           if (args.length == i + 1) {
             throw new RuntimeException("Please specify argument for parameter -p");
           }
-          packageName = args[i + 1];
+          packageNameList = Arrays.stream(args[i + 1].split(":")).collect(Collectors.toList());
           i += 2;
           continue;
         }
@@ -71,7 +80,7 @@ public class DepinjectGenerate {
         throw new RuntimeException("Unknown option " + x);
       }
 
-      if (packageName == null) {
+      if (packageNameList == null || packageNameList.isEmpty()) {
         throw new RuntimeException("Please specify parameter -p");
       }
       if (outSrcDir == null) {
@@ -82,7 +91,7 @@ public class DepinjectGenerate {
     @Override
     public String toString() {
       return "Parameters{" +
-        "packageName='" + packageName + '\'' +
+        "packageNameList='" + packageNameList.stream().collect(joining(":")) + '\'' +
         ", outSrcDir='" + outSrcDir + '\'' +
         ", compile=" + compile +
         '}';
@@ -90,16 +99,16 @@ public class DepinjectGenerate {
   }
 
   private void impl(String[] args, @SuppressWarnings("SameParameterValue") int startFrom) {
-    Parameters parameters = new Parameters();
-    parameters.parse(args, startFrom);
+    Arguments arguments = new Arguments();
+    arguments.parse(args, startFrom);
 
-    if (parameters.compile) {
-      DepinjectUtil.implementBeanContainers(parameters.packageName, parameters.outSrcDir);
+    if (arguments.compile) {
+      arguments.packageNameList.forEach(pn -> implementBeanContainers(pn, arguments.outSrcDir));
       return;
     }
 
     {
-      DepinjectUtil.generateBeanContainersSources(parameters.packageName, parameters.outSrcDir);
+      arguments.packageNameList.forEach(pn -> generateBeanContainersSources(pn, arguments.outSrcDir));
       return;
     }
   }

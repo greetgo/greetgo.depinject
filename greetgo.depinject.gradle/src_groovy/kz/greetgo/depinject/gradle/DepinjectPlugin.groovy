@@ -17,19 +17,9 @@ class DepinjectPlugin implements Plugin<Project> {
 
   private final ProjectConfigurationActionContainer configurationActionContainer
 
-  private static FileCollection getClasspath(Project project, String sourceSetName) {
-    JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
-    return javaPluginConvention.getSourceSets().findByName(sourceSetName).getRuntimeClasspath()
-  }
-
   private static FileCollection getCompileClasspath(Project project, String sourceSetName) {
     JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
     return javaPluginConvention.getSourceSets().findByName(sourceSetName).getCompileClasspath()
-  }
-
-  private static FileCollection getOutput(Project project, String sourceSetName) {
-    JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
-    return javaPluginConvention.getSourceSets().findByName(sourceSetName).getOutput()
   }
 
   @Inject
@@ -40,8 +30,6 @@ class DepinjectPlugin implements Plugin<Project> {
 
   @Override
   void apply(Project project) {
-
-
     configurationActionContainer.add(new Action<Project>() {
       void execute(Project p) {
         applyAction(p)
