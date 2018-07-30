@@ -22,4 +22,12 @@ class DepinjectPluginExt {
   String packagesColon() {
     return packageList.stream().collect(Collectors.joining(":"))
   }
+
+  String depinjectGeneratedSrc = "depinject_generated_src"
+  String depinjectClasses = "depinject_classes"
+
+  String depinjectGeneratedTestSrc = "depinject_generated_test_src"
+  String depinjectTestClasses = "depinject_test_classes"
+
+  String depinjectJarPostfix = "-depinject"
 }

@@ -54,20 +54,20 @@ class DepinjectPlugin implements Plugin<Project> {
     return jarTaskSet.iterator().next() as T
   }
 
-  private static File getGeneratedSrcDir(Project project) {
-    return buildResolve(project, "depinject_generated_src")
+  private File getGeneratedSrcDir(Project project) {
+    return buildResolve(project, pluginExt.depinjectGeneratedSrc)
   }
 
-  private static File getGeneratedTestSrcDir(Project project) {
-    return buildResolve(project, "depinject_generated_test_src")
+  private File getGeneratedTestSrcDir(Project project) {
+    return buildResolve(project, pluginExt.depinjectGeneratedTestSrc)
   }
 
-  private static File getClassesDir(Project project) {
-    return buildResolve(project, "depinject_classes")
+  private File getClassesDir(Project project) {
+    return buildResolve(project, pluginExt.depinjectClasses)
   }
 
-  private static File getTestClassesDir(Project project) {
-    return buildResolve(project, "depinject_test_classes")
+  private File getTestClassesDir(Project project) {
+    return buildResolve(project, pluginExt.depinjectTestClasses)
   }
 
   @SuppressWarnings("GrMethodMayBeStatic")
@@ -96,7 +96,7 @@ class DepinjectPlugin implements Plugin<Project> {
 
     Jar jarTask = project.task('depinjectJar', type: Jar) as Jar
     jarTask.dependsOn compileTask
-    jarTask.baseName = getTask(project, 'jar', Jar).getBaseName() + "-depinject"
+    jarTask.baseName = getTask(project, 'jar', Jar).getBaseName() + pluginExt.depinjectJarPostfix
     jarTask.from getClassesDir(project)
 
     getTask(project, "assemble", Task).dependsOn jarTask

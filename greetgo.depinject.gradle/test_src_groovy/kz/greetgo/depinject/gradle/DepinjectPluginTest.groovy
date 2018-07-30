@@ -91,6 +91,7 @@ class DepinjectPluginTest {
       
       depinject {
         scanPackage "kz.greetgo.tests"
+        depinjectGeneratedSrc = "gen_src"
       }
       
       task runTest(type: JavaExec) {
