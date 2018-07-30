@@ -88,7 +88,11 @@ class DepinjectPluginTest {
       sourceSets.test.java.srcDirs = ["test_src"]
       sourceSets.main.resources.srcDirs = ["src_resources"]
       sourceSets.test.resources.srcDirs = ["test_resources"]
-
+      
+      depinject {
+        scanPackage "kz.greetgo.tests"
+      }
+      
       task runTest(type: JavaExec) {
         main = 'kz.greetgo.tests.run.Main'
         args = []

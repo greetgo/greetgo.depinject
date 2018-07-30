@@ -27,9 +27,13 @@ class DepinjectPlugin implements Plugin<Project> {
     this.configurationActionContainer = configurationActionContainer
   }
 
+  DepinjectPluginExt pluginExt
 
   @Override
   void apply(Project project) {
+
+    pluginExt = project.extensions.create("depinject", DepinjectPluginExt)
+
     configurationActionContainer.add(new Action<Project>() {
       void execute(Project p) {
         applyAction(p)
@@ -72,9 +76,10 @@ class DepinjectPlugin implements Plugin<Project> {
     JavaExec generateSrcTask = project.task('depinjectGenerateSrc', type: JavaExec) as JavaExec
     generateSrcTask.dependsOn getTask(project, "compileJava", Task)
     generateSrcTask.classpath getCompileClasspath(project, "test").getFiles()
+    generateSrcTask.doFirst { pluginExt.checkPackages() }
     generateSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
     generateSrcTask.args = ['impl',
-                            '-p', 'kz.greetgo.tests',
+                            '-p', pluginExt.packagesColon(),
                             '-s', getGeneratedSrcDir(project).getAbsolutePath()]
 
     JavaCompile compileTask = project.task('depinjectCompile', type: JavaCompile) as JavaCompile
@@ -103,7 +108,7 @@ class DepinjectPlugin implements Plugin<Project> {
     generateTestSrcTask.classpath getCompileClasspath(project, "test").getFiles()
     generateTestSrcTask.main = 'kz.greetgo.depinject.gen.DepinjectGenerate'
     generateTestSrcTask.args = ['impl',
-                                '-p', 'kz.greetgo.tests',
+                                '-p', pluginExt.packagesColon(),
                                 '-s', getGeneratedTestSrcDir(project).getAbsolutePath()]
 
     JavaCompile testCompileTask = project.task('depinjectTestCompile', type: JavaCompile) as JavaCompile
