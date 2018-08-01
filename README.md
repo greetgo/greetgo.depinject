@@ -1,41 +1,41 @@
 # greetgo.depinject
 
-[English language here](README.eng.md)
+[Здесь на русском](README.rus.md)
 
-Реализация паттерна Dependency Injection на базе кодогенерации от компании greetgo!.
+Implementation of Dependency Injection pattern based on code generation by greetgo!.
 
-### Ссылки
+### References
 
- - [Лист изменений](doc/change_list.md)
+ - [Change list](doc_eng/change_list.md)
 
- - [Очень быстрый старт (через TestNG)](doc/fast_start.md)
- - [Быстрый старт (main-функция или war-файл)](doc/quick_start.md)
- - [Концепция](doc/concept.md)
- - [Спецификация](doc/spec.md)
+ - [Very quick start (using TestNG)](doc_eng/fast_start.md)
+ - [Quick start (main function, or war file)](doc_eng/quick_start.md)
+ - [Concept](doc_eng/concept.md)
+ - [Specification](doc_eng/spec.md)
  
 
-# Особенности
+# Features
 
- - НЕТ зависимостей;
- - Минималистичный размер;
-   > То, что уходит в продакшн, содержит только один класс с одним маленьким статическим методом, а всё
-     остальное интерфейсы и аннотации
- - Определение топологии бинов (скорость этой операции = O(n*n), где n - количество бинов), происходит на этапе
-   компиляции, а не при запуске;
-   > Это позволяет сделать запуск системы всегда быстрым, и не зависимым от количества бинов в системе
- - Инициализация бинов происходит в очерёдности использования, а не в очерёдности зависимостей, поэтому,
-   если бины не используются, то они и не создаются
-   > Например БИН_1 содержит ссылку на БИН_2. Дак вот, при инициализации БИН_1, БИН_2 инициироваться НЕ будет. БИН_2
-     будет инициирован только при непосредственном обращении к нему. Это делает скорость запуска системы
-     независимой от количества бинов.
- - Рефлексия в бин-контэйнерах не используется, следовательно всё грамотно оптимизируется!
+ - NO dependencies;
+ - Minimum size;
+   > What goes into production, contains only one class with one small static method, the rest is
+   > interfaces and annotations
+ - The definition of the beans topology (the speed of this operation is O (n*n), where n - the number of beans), occurs
+   at the compilation stage, not at runtime;
+   > This allows to make the system runtime always fast, and independent of the number of beans in the system
+ - Initialization of beans occurs in the order of use, not in the order of dependencies, therefore,
+   if the beans are not used, they are not created
+   > For example, BEAN_1 contains a reference to BEAN_2. Now, when initializing BEAN_1, BEAN_2 will not be initiated. BEAN_2
+   > will be initiated only when it is accessed directly. This makes the speed of the system runtime
+   > independent of the number of beans.
+ - Reflection is not used in bean-containers, hence everything is properly optimized!
 
-# Недостатки
+# Disadvantages
 
-  - обращение к бину можно делать только через метод `get()`. К сожалению напрямую (как в Spring-овском @Autowired)
-    не получиться, потому что бин надо инициировать при первом обращении к нему, а не при формировании зависимости.
+  - an access to the bean can only be done through the method `get()`. Unfortunately, it does not work out directly
+  (as in Spring `@Autowired`), because the bean must be initialized at the first access, not when the dependency is formed.
     
-    Обращаться можно примерно так:
+    Access can be done in this way:
   
 ```java
   class SomeBean {
@@ -45,6 +45,6 @@
     }
   }
 ```
-  - Поля `BeanGetter` должны быть обязательно `public`! (Потому что рефлексия в продакшне не используется);
-  - Усложнённая сборка (нужно генерировать код бин-контэйнеров, компилировать его и добавлять в дистрибутив);
-  - На данный момент поддерживается только TestNG. (Здорово, если кто-то запилит greetgo.depinject.junit) ;
+  - Fields `BeanGetter` must be `public`! (Because the reflection is not used in production);
+  - Complicated build (it is necessary to generate the bean-container code, compile and add it to the distribution);
+  - Currently, only TestNG is supported. (It's great if someone implements `greetgo.depinject.junit`) ;
