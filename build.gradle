@@ -15,7 +15,6 @@ allprojects {
   apply plugin: 'maven'
   apply plugin: 'signing'
 
-  //version = '2.0.3'
   version = rootProject.file('greetgo.depinject/src_resources/depinject_version.txt').text.trim()
 
   sourceCompatibility = 1.8

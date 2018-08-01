@@ -1,3 +1,7 @@
+plugins {
+  id "com.gradle.plugin-publish" version "0.10.0"
+}
+
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
 
@@ -41,6 +45,19 @@ gradlePlugin {
     depinjectPlugin {
       id = 'kz.greetgo.depinject.plugin'
       implementationClass = 'kz.greetgo.depinject.gradle.DepinjectPlugin'
+    }
+  }
+}
+
+pluginBundle {
+  website = 'https://github.com/greetgo/greetgo.depinject'
+  vcsUrl = 'https://github.com/greetgo/greetgo.depinject.git'
+  description = 'Automatically generated BeanContainer implemenations'
+  tags = ['greetgo', 'depinject', 'DI', 'Dependency Injection']
+
+  plugins {
+    depinjectPlugin {
+      displayName = 'greetgo.depinject plugin to generate BeanContainer implementation automatically'
     }
   }
 }
