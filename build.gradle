@@ -38,7 +38,7 @@ subprojects {
     ext.greetgoUtilVersion = '0.0.27'
     ext.testNgVersion = '6.14.3'
     ext.classScannerVersion = '2.0.0'
-    ext.greetgoJavaCompilerVersion = "2.0.0"
+    ext.greetgoJavaCompilerVersion = "2.0.1"
 
     //compile 'com.google.code.findbugs:annotations:2.0.1'
 

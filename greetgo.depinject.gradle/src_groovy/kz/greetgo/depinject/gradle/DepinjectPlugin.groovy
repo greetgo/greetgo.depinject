@@ -5,6 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
+import org.gradle.api.internal.file.DefaultFileCollectionFactory
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
@@ -20,6 +21,17 @@ class DepinjectPlugin implements Plugin<Project> {
   private static FileCollection getCompileClasspath(Project project, String sourceSetName) {
     JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
     return javaPluginConvention.getSourceSets().findByName(sourceSetName).getCompileClasspath()
+  }
+
+  private static FileCollection getCompileClasspathWithRuntime(Project project, String sourceSetName) {
+    JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
+    FileCollection retClasspath = javaPluginConvention.getSourceSets().findByName(sourceSetName).getCompileClasspath()
+
+    JavaCompile compileTask = getTask(project, "compileJava", JavaCompile)
+
+    def destinationDirCol = new DefaultFileCollectionFactory().fixed("additional", compileTask.destinationDir)
+
+    return retClasspath + destinationDirCol
   }
 
   @Inject
@@ -84,7 +96,7 @@ class DepinjectPlugin implements Plugin<Project> {
 
     JavaCompile compileTask = project.task('depinjectCompile', type: JavaCompile) as JavaCompile
     compileTask.dependsOn generateSrcTask
-    compileTask.classpath = getCompileClasspath(project, "main")
+    compileTask.classpath = getCompileClasspathWithRuntime(project, "main")
     compileTask.source = getGeneratedSrcDir(project)
     compileTask.destinationDir = getClassesDir(project)
     compileTask.doLast {

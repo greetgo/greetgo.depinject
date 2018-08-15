@@ -80,12 +80,6 @@ test {
   // options.suites( "src/test/resources/testsPostgresDB.xml" )
 }
 
-task testSimpleProbe(type: Test) {
-  group 'verification'
-  useTestNG()
-  options.suites("test_runs/simple_probe.xml")
-}
-
 task testDepinjectStart(type: Test) {
   group 'verification'
   useTestNG()
