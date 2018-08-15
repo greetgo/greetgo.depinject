@@ -84,6 +84,7 @@ class DepinjectPlugin implements Plugin<Project> {
 
   @SuppressWarnings("GrMethodMayBeStatic")
   void applyAction(Project project) {
+    JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
 
     JavaExec generateSrcTask = project.task('depinjectGenerateSrc', type: JavaExec) as JavaExec
     generateSrcTask.dependsOn getTask(project, "compileJava", Task)
@@ -100,9 +101,14 @@ class DepinjectPlugin implements Plugin<Project> {
     compileTask.source = getGeneratedSrcDir(project)
     compileTask.destinationDir = getClassesDir(project)
     compileTask.doLast {
-      JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
-      javaPluginConvention.getSourceSets().findByName("main").getOutput().dir(buildResolve(project, "depinject_classes"))
+
     }
+
+    javaPluginConvention.getSourceSets().findByName("main").getOutput().dir(getClassesDir(project))
+
+    def classesTask = getTask(project, "classes", Task)
+    println "*************** "
+    println "*************** classesTask.getClass() = " + classesTask.getClass()
 
     getTask(project, "classes", Task).dependsOn compileTask
 
@@ -125,13 +131,15 @@ class DepinjectPlugin implements Plugin<Project> {
 
     JavaCompile testCompileTask = project.task('depinjectTestCompile', type: JavaCompile) as JavaCompile
     testCompileTask.dependsOn generateTestSrcTask
-    testCompileTask.classpath = getCompileClasspath(project, "test")
+    testCompileTask.classpath = getCompileClasspathWithRuntime(project, "test")
     testCompileTask.source = getGeneratedTestSrcDir(project)
     testCompileTask.destinationDir = getTestClassesDir(project)
     testCompileTask.doLast {
-      JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
-      javaPluginConvention.getSourceSets().findByName("test").getOutput().dir(getTestClassesDir(project))
+      //JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention)
+
     }
+
+    javaPluginConvention.getSourceSets().findByName("test").getOutput().dir(getTestClassesDir(project))
 
     getTask(project, "testClasses", Task).dependsOn testCompileTask
   }
