@@ -106,10 +106,6 @@ class DepinjectPlugin implements Plugin<Project> {
 
     javaPluginConvention.getSourceSets().findByName("main").getOutput().dir(getClassesDir(project))
 
-    def classesTask = getTask(project, "classes", Task)
-    println "*************** "
-    println "*************** classesTask.getClass() = " + classesTask.getClass()
-
     getTask(project, "classes", Task).dependsOn compileTask
 
     Jar jarTask = project.task('depinjectJar', type: Jar) as Jar
