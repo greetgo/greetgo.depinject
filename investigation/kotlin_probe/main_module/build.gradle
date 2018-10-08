@@ -1,6 +1,8 @@
-plugins {
-  id "kz.greetgo.depinject.plugin" version "2.1.3"
-}
+//plugins {
+//  id "kz.greetgo.depinject.plugin" version "2.1.3"
+//}
+
+apply plugin: "kz.greetgo.depinject.plugin"
 
 dependencies {
   compile project(":kotlin_probe:module1")

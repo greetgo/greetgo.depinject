@@ -1,12 +1,16 @@
 buildscript {
   ext.kotlin_version = '1.2.71'
+  ext.greetgoDepinjectVersion = rootProject.file('../greetgo.depinject/src_resources/depinject_version.txt').text.trim()
+
   repositories {
     mavenLocal()
     if (System.getenv('GG_REPO')?.trim()) maven { url System.getenv('GG_REPO').trim() }
     mavenCentral()
   }
+
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "kz.greetgo.depinject:greetgo.depinject.gradle:$greetgoDepinjectVersion"
   }
 }
 
