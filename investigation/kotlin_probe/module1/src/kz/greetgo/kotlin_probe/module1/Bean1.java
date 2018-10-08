@@ -10,7 +10,7 @@ public class Bean1 {
   public BeanGetter<Bean2> bean2;
 
   public void printHelloWorld() {
-    System.out.println("Hello World from " + getClass());
+    System.out.println("Hello World from " + getClass().getSimpleName());
     bean2.get().printHelloWorld();
   }
 }

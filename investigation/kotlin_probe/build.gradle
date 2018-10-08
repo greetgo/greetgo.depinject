@@ -4,7 +4,7 @@ dependencies {
 
 task launchMain(type: JavaExec) {
   group "scripts"
-  main = "kz.greetgo.kotline_probe.main.launcher.MainLauncher"
+  main = "kz.greetgo.kotlin_probe.main.launcher.MainLauncher"
   classpath = sourceSets.main.runtimeClasspath
 }
 

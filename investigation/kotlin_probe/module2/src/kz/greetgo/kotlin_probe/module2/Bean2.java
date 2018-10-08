@@ -5,6 +5,6 @@ import kz.greetgo.depinject.core.Bean;
 @Bean
 public class Bean2 {
   public void printHelloWorld() {
-    System.out.println("Hello World from " + getClass());
+    System.out.println("Hello World from " + getClass().getSimpleName());
   }
 }

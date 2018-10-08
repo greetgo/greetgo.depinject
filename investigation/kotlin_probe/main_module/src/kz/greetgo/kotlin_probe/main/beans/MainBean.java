@@ -1,4 +1,4 @@
-package kz.greetgo.kotline_probe.main.beans;
+package kz.greetgo.kotlin_probe.main.beans;
 
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
@@ -10,7 +10,7 @@ public class MainBean {
   public BeanGetter<Bean1> bean1;
 
   public void printHelloWorld() {
-    System.out.println("Hello World from " + getClass());
+    System.out.println("Hello World from " + getClass().getSimpleName());
     bean1.get().printHelloWorld();
   }
 }

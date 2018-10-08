@@ -1,4 +1,4 @@
-package kz.greetgo.kotline_probe.main.beans;
+package kz.greetgo.kotlin_probe.main.beans;
 
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanScanner;

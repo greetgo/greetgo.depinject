@@ -1,7 +1,7 @@
-package kz.greetgo.kotline_probe.main.launcher;
+package kz.greetgo.kotlin_probe.main.launcher;
 
 import kz.greetgo.depinject.Depinject;
-import kz.greetgo.kotline_probe.main.beans.MainBean;
+import kz.greetgo.kotlin_probe.main.beans.MainBean;
 
 public class MainLauncher {
   public static void main(String[] args) {
