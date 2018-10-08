@@ -98,7 +98,8 @@ public class BeanContainerManager {
     usingBeanReferences.forEach(BeanReference::checkConnectivity);
 
     Map<GetterCreation, List<GetterCreation>> getterCreationMap = new HashMap<>();
-    usingBeanReferences.stream().flatMap(a -> a.getterCreations.stream())
+    usingBeanReferences.stream()
+      .flatMap(a -> a.getterCreations.stream())
       .filter(GetterCreation::needGetter)
       .forEachOrdered(a -> getterCreationMap.computeIfAbsent(a, k -> new ArrayList<>()).add(a));
 

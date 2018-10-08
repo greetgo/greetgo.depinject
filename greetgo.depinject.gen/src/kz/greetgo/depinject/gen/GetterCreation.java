@@ -13,8 +13,14 @@ public class GetterCreation {
   public final BeanCreation beanCreation;
 
   public GetterCreation(Class<?> getterClass, BeanCreation beanCreation) {
-    if (getterClass == null) throw new NullPointerException("getterClass == null");
-    if (beanCreation == null) throw new NullPointerException("beanCreation == null");
+    if (getterClass == null) {
+      throw new NullPointerException("getterClass == null");
+    }
+
+    if (beanCreation == null) {
+      throw new NullPointerException("beanCreation == null");
+    }
+
     this.getterClass = getterClass;
     this.beanCreation = beanCreation;
   }
@@ -27,7 +33,7 @@ public class GetterCreation {
   public boolean use = false;
 
   public void markToUse() {
-    if (use) return;
+    if (use) { return; }
     use = true;
     beanCreation.markToUse();
     preparations.forEach(BeanCreation::markToUse);
@@ -38,16 +44,25 @@ public class GetterCreation {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) { return true; }
+    if (o == null || getClass() != o.getClass()) { return false; }
 
     GetterCreation that = (GetterCreation) o;
 
-    if (!beanCreation.equals(that.beanCreation)) return false;
-    if (!preparations.equals(that.preparations)) return false;
-    if (!replacers.equals(that.replacers)) return false;
+    if (!beanCreation.equals(that.beanCreation)) {
+      return false;
+    }
+    if (!preparations.equals(that.preparations)) {
+      return false;
+    }
+    if (!replacers.equals(that.replacers)) {
+      return false;
+    }
 
-    if (replacers.size() > 0 && !getterClass.equals(that.getterClass)) return false;
+    //noinspection RedundantIfStatement
+    if (replacers.size() > 0 && !getterClass.equals(that.getterClass)) {
+      return false;
+    }
 
     return true;
   }
@@ -57,7 +72,7 @@ public class GetterCreation {
     int result = beanCreation.hashCode();
     result = 31 * result + preparations.hashCode();
     result = 31 * result + replacers.hashCode();
-    if (replacers.size() > 0) result = 31 * result + getterClass.hashCode();
+    if (replacers.size() > 0) { result = 31 * result + getterClass.hashCode(); }
     return result;
   }
 
@@ -72,14 +87,16 @@ public class GetterCreation {
   }
 
   private int varIndex() {
-    if (varIndex <= 0) throw new RuntimeException("Left var index = " + varIndex);
+    if (varIndex <= 0) {
+      throw new RuntimeException("Left var index = " + varIndex);
+    }
     return varIndex;
   }
 
   private boolean wasUsePreparations = false;
 
   public void usePreparations(List<BeanCreation> allPreparations) {
-    if (wasUsePreparations) return;
+    if (wasUsePreparations) { return; }
     wasUsePreparations = true;
 
     Class<?> currentClass = beanCreation.beanClass;
@@ -105,7 +122,7 @@ public class GetterCreation {
   }
 
   public void writeGetter(int tab, Outer outer) {
-    if (!needGetter()) return;
+    if (!needGetter()) { return; }
     if (beanCreation.singleton) {
       writeGetterSingleton(tab, outer);
     } else {
@@ -159,12 +176,16 @@ public class GetterCreation {
   }
 
   private String cachedValueVarName() {
-    if (!needGetter()) throw new LeftException("gje4kkf556djd5h3");
+    if (!needGetter()) {
+      throw new LeftException("gje4kkf556djd5h3");
+    }
     return "cachedValue_withPreparations_" + className() + '_' + varIndex();
   }
 
   private String gettingMethodName() {
-    if (!needGetter()) throw new LeftException("hs74fh64h74ht56feh5");
+    if (!needGetter()) {
+      throw new LeftException("hs74fh64h74ht56feh5");
+    }
     return "get_withPreparations_" + className() + '_' + varIndex();
   }
 
@@ -229,21 +250,20 @@ public class GetterCreation {
     o.tab(tab).stn("}");
   }
 
-//  public Class<?> lastClass() {
-//    if (preparations.size() == 0) return beanCreation.beanClass;
-//    return preparations.get(preparations.size() - 1).beanClass;
-//  }
-
   public final List<BeanCreation> replacers = new ArrayList<>();
 
   private boolean wasUseReplacers = false;
 
   public void useReplacers(List<BeanCreation> allReplacers) {
-    if (wasUseReplacers) return;
+    if (wasUseReplacers) {
+      return;
+    }
     wasUseReplacers = true;
 
     Class<?> checkingClass = beanCreation.beanClass;
-    if (BeanReplacer.class.isAssignableFrom(checkingClass)) return;
+    if (BeanReplacer.class.isAssignableFrom(checkingClass)) {
+      return;
+    }
 
     for (BeanCreation replacer : allReplacers) {
       if (replacer.replaceChecker != null && replacer.replaceChecker.check(checkingClass)) {

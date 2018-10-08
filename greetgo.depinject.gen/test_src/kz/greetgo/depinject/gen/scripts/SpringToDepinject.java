@@ -49,7 +49,7 @@ public class SpringToDepinject {
 
   private void scanDirAndConvertSpringsFiles(File dir) throws Exception {
     final File[] subs = dir.listFiles();
-    if (subs == null) return;
+    if (subs == null) { return; }
     for (File sub : subs) {
       if (sub.isDirectory()) {
         scanDirAndConvertSpringsFiles(sub);
@@ -92,7 +92,7 @@ public class SpringToDepinject {
         sb.append(var).append('|');
         //}
       }
-      if (sb.length() > 0) sb.setLength(sb.length() - 1);
+      if (sb.length() > 0) { sb.setLength(sb.length() - 1); }
       vars = sb.toString();
     }
 

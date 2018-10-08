@@ -21,6 +21,7 @@ public class BeanCreationWithBeanFactory extends BeanCreation {
 
   @Override
   public String toString() {
+    //noinspection SpellCheckingInspection
     return (use ? '{' : '(')
       + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT")
       + " created by " + beanFactorySource.firstBeanToString()

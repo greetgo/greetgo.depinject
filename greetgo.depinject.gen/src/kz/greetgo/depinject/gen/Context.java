@@ -64,7 +64,7 @@ public class Context {
     List<BeanContainerMethod> ret = new ArrayList<>();
 
     for (Method method : beanContainer.getMethods()) {
-      if (Modifier.isStatic(method.getModifiers())) continue;
+      if (Modifier.isStatic(method.getModifiers())) { continue; }
       if (method.getParameterTypes().length > 0) {
         throw new BeanContainerMethodCannotContainAnyArguments(beanContainer, method);
       }

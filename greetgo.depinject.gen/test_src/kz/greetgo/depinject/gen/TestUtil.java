@@ -8,7 +8,7 @@ public class TestUtil {
   public static Type getReturnType(Class<?> aClass, String methodName) {
 
     for (Method method : aClass.getMethods()) {
-      if (methodName.equals(method.getName())) return method.getGenericReturnType();
+      if (methodName.equals(method.getName())) { return method.getGenericReturnType(); }
     }
 
     throw new IllegalArgumentException("No method with name = " + methodName);

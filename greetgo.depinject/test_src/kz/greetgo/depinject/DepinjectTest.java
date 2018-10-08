@@ -5,11 +5,10 @@ import org.testng.annotations.Test;
 
 public class DepinjectTest {
 
-  class TestBeanContainer implements BeanContainer {
-  }
+  class TestBeanContainer implements BeanContainer {}
 
   @Test(expectedExceptions = NoImplementor.class)
-  public void newInstance_ClassNotFoundException() throws Exception {
+  public void newInstance_ClassNotFoundException() {
     Depinject.newInstance(TestBeanContainer.class);
   }
 }

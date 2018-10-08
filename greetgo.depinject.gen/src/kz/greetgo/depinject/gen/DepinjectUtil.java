@@ -16,7 +16,9 @@ import java.util.List;
 
 public class DepinjectUtil {
   public static Class<?> typeToClass(Type type) {
-    if (type instanceof Class) return (Class<?>) type;
+    if (type instanceof Class) {
+      return (Class<?>) type;
+    }
     if (type instanceof ParameterizedType) {
       ParameterizedType pt = (ParameterizedType) type;
       return (Class<?>) pt.getRawType();
@@ -29,10 +31,13 @@ public class DepinjectUtil {
   }
 
   private static String toCode0(Type type) {
-    if (type instanceof Class) return ((Class<?>) type).getName();
+    if (type instanceof Class) {
+      return ((Class<?>) type).getName();
+    }
     return type.toString();
   }
 
+  @SuppressWarnings("unused")
   public static String spaces(int spaces) {
     char s[] = new char[spaces];
     for (int i = 0, n = s.length; i < n; i++) {
@@ -47,8 +52,12 @@ public class DepinjectUtil {
     {
       ClassScanner classScanner = new ClassScannerDef();
       for (Class<?> aClass : classScanner.scanPackage(packageName)) {
-        if (!BeanContainer.class.isAssignableFrom(aClass)) continue;
-        if (aClass.getAnnotation(Include.class) == null) continue;
+        if (!BeanContainer.class.isAssignableFrom(aClass)) {
+          continue;
+        }
+        if (aClass.getAnnotation(Include.class) == null) {
+          continue;
+        }
 
         BeanContainerGenerator bcg = new BeanContainerGenerator();
         bcg.beanContainerInterface = aClass;

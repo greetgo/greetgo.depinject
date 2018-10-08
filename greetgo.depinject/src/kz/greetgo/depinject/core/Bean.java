@@ -1,9 +1,13 @@
 package kz.greetgo.depinject.core;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Defines bean class. This class will be instantiated by some method 
+ * Defines bean class. This class will be instantiated by some method
  */
 @Documented
 @Target({ElementType.TYPE, ElementType.METHOD})

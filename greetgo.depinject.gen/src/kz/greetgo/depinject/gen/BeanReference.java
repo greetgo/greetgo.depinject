@@ -17,8 +17,11 @@ public class BeanReference {
   private final Context context;
 
   public BeanReference(Context context, Type target, String place) {
+    if (place == null) {
+      throw new NullPointerException("place == null");
+    }
+
     this.context = context;
-    if (place == null) throw new NullPointerException("place == null");
     this.place = place;
 
     if (target instanceof Class) {
@@ -63,19 +66,30 @@ public class BeanReference {
   private String compareStr = null;
 
   public String compareStr() {
-    if (compareStr == null) compareStr = (isList ? "A_" : "B_") + sourceClass.getName();
+    if (compareStr == null) { compareStr = (isList ? "A_" : "B_") + sourceClass.getName(); }
     return compareStr;
   }
 
+  @SuppressWarnings("RedundantIfStatement")
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     BeanReference that = (BeanReference) o;
 
-    if (isList != that.isList) return false;
-    if (!getterCreations.equals(that.getterCreations)) return false;
+    if (isList != that.isList) {
+      return false;
+    }
+
+    if (!getterCreations.equals(that.getterCreations)) {
+      return false;
+    }
 
     return true;
   }
@@ -90,7 +104,9 @@ public class BeanReference {
   private boolean wasFillTargetCreations = false;
 
   public void fillTargetCreationsFrom(List<BeanCreation> candidates) {
-    if (wasFillTargetCreations) return;
+    if (wasFillTargetCreations) {
+      return;
+    }
     wasFillTargetCreations = true;
 
     for (BeanCreation candidate : candidates) {
@@ -105,13 +121,17 @@ public class BeanReference {
   public boolean use = false;
 
   public void markToUse() {
-    if (use) return;
+    if (use) {
+      return;
+    }
     use = true;
     getterCreations.forEach(GetterCreation::markToUse);
   }
 
   public String firstBeanToString() {
-    if (getterCreations.size() == 0) return "NO_BEAN";
+    if (getterCreations.size() == 0) {
+      return "NO_BEAN";
+    }
     return getterCreations.get(0).toString();
   }
 
@@ -126,11 +146,15 @@ public class BeanReference {
   }
 
   public void checkConnectivity() {
-    if (isList) return;
+    if (isList) { return; }
 
-    if (getterCreations.size() == 0) throw context.newNoCandidates(this);
+    if (getterCreations.size() == 0) {
+      throw context.newNoCandidates(this);
+    }
 
-    if (getterCreations.size() > 1) throw context.newManyCandidates(this);
+    if (getterCreations.size() > 1) {
+      throw context.newManyCandidates(this);
+    }
 
   }
 
@@ -149,7 +173,7 @@ public class BeanReference {
   private boolean wasUsePreparations = false;
 
   public void usePreparations(List<BeanCreation> allPreparations) {
-    if (wasUsePreparations) return;
+    if (wasUsePreparations) { return; }
     wasUsePreparations = true;
     getterCreations.forEach(tc -> tc.usePreparations(allPreparations));
   }
@@ -157,7 +181,7 @@ public class BeanReference {
   private boolean wasUseReplacers = false;
 
   public void useReplacers(List<BeanCreation> allReplacers) {
-    if (wasUseReplacers) return;
+    if (wasUseReplacers) { return; }
     wasUseReplacers = true;
     getterCreations.forEach(tc -> tc.useReplacers(allReplacers));
   }
@@ -176,17 +200,21 @@ public class BeanReference {
   }
 
   private String gettingMethodName() {
-    if (!needGetter()) throw new LeftException("jhb4jhb5hjb6jn7");
+    if (!needGetter()) {
+      throw new LeftException("jhb4jhb5hjb6jn7");
+    }
     return "get_ref_" + (isList ? "list_" : "") + sourceClass.getSimpleName() + '_' + varIndex();
   }
 
   private int varIndex() {
-    if (varIndex <= 0) throw new RuntimeException("Left var index = " + varIndex);
+    if (varIndex <= 0) {
+      throw new RuntimeException("Left var index = " + varIndex);
+    }
     return varIndex;
   }
 
   public void writeGetter(int tab, Outer outer) {
-    if (!needGetter()) return;
+    if (!needGetter()) { return; }
     outer.nl();
     if (isList) {
       writeGetterAsList(tab, outer);

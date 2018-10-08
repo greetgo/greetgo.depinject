@@ -11,23 +11,27 @@ public abstract class LocalBeanFactory implements BeanFactory {
   @Override
   public Object createBean(Class<?> beanClass) {
 
-    if (beanClass == UsingBeanFactoryWindow.class) return new UsingBeanFactoryWindow() {
-      final int myNumber = nextWindowNumber();
+    if (beanClass == UsingBeanFactoryWindow.class) {
+      return new UsingBeanFactoryWindow() {
+        final int myNumber = nextWindowNumber();
 
-      @Override
-      public void lookOut() {
-        UsingBeanFactory.log.add("Look out window " + myNumber);
-      }
-    };
+        @Override
+        public void lookOut() {
+          UsingBeanFactory.log.add("Look out window " + myNumber);
+        }
+      };
+    }
 
-    if (beanClass == UsingBeanFactoryComputer.class) return new UsingBeanFactoryComputer() {
-      final int myNumber = nextComputerNumber();
+    if (beanClass == UsingBeanFactoryComputer.class) {
+      return new UsingBeanFactoryComputer() {
+        final int myNumber = nextComputerNumber();
 
-      @Override
-      public void turnOn() {
-        UsingBeanFactory.log.add("Turn on computer " + myNumber);
-      }
-    };
+        @Override
+        public void turnOn() {
+          UsingBeanFactory.log.add("Turn on computer " + myNumber);
+        }
+      };
+    }
 
     throw new RuntimeException("Unknown " + beanClass);
   }

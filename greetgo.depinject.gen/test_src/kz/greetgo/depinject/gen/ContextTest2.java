@@ -99,7 +99,7 @@ public class ContextTest2 {
     //
     //
 
-    if (result == null) throw new NullPointerException();
+    if (result == null) { throw new NullPointerException(); }
 
     assertThat(result.getName()).isEqualTo(Bean1.class.getName());
   }

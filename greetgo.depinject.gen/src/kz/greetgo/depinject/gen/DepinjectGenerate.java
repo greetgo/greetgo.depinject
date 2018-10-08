@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.joining;
 import static kz.greetgo.depinject.gen.DepinjectUtil.generateBeanContainersSources;
 import static kz.greetgo.depinject.gen.DepinjectUtil.implementBeanContainers;
 
@@ -91,7 +90,7 @@ public class DepinjectGenerate {
     @Override
     public String toString() {
       return "Parameters{" +
-        "packageNameList='" + packageNameList.stream().collect(joining(":")) + '\'' +
+        "packageNameList='" + String.join(":", packageNameList) + '\'' +
         ", outSrcDir='" + outSrcDir + '\'' +
         ", compile=" + compile +
         '}';

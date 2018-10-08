@@ -26,21 +26,24 @@ public abstract class BeanCreation {
 
   public BeanCreation(Context context, Class<?> beanClass, boolean singleton) {
     this.context = context;
-    if (beanClass == null) throw new NullPointerException("beanClass == null");
+    if (beanClass == null) { throw new NullPointerException("beanClass == null"); }
     this.beanClass = beanClass;
     this.singleton = singleton;
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     BeanCreation that = (BeanCreation) o;
 
-    if (!beanClass.equals(that.beanClass)) return false;
-
-    return true;
+    return beanClass.equals(that.beanClass);
   }
 
   @Override
@@ -53,17 +56,17 @@ public abstract class BeanCreation {
   }
 
   public String getterVarName() {
-    if (varIndex <= 0) throw new LeftException("Left varIndex value = " + varIndex);
+    if (varIndex <= 0) { throw new LeftException("Left varIndex value = " + varIndex); }
     return "getter_native_" + beanClass.getSimpleName() + '_' + varIndex;
   }
 
   private String gettingMethodName() {
-    if (varIndex <= 0) throw new LeftException("Left varIndex value = " + varIndex);
+    if (varIndex <= 0) { throw new LeftException("Left varIndex value = " + varIndex); }
     return "get_native_" + beanClass.getSimpleName() + '_' + varIndex;
   }
 
   public String cachedValueVarName() {
-    if (varIndex <= 0) throw new LeftException("Left varIndex value = " + varIndex);
+    if (varIndex <= 0) { throw new LeftException("Left varIndex value = " + varIndex); }
     return "cachedValue_native_" + beanClass.getSimpleName() + '_' + varIndex;
   }
 
@@ -78,7 +81,7 @@ public abstract class BeanCreation {
   public boolean use = false;
 
   public void markToUse() {
-    if (use) return;
+    if (use) { return; }
     use = true;
     beanGetterDotList.forEach(a -> a.beanReference.markToUse());
     markToUseAdditions();
@@ -168,7 +171,7 @@ public abstract class BeanCreation {
     public int compareTo(BeanPreparationPriorityDot o) {
       {
         int cmp = Integer.compare(parenting, o.parenting);
-        if (cmp != 0) return cmp;
+        if (cmp != 0) { return cmp; }
       }
       return Double.compare(fromAnnotation, o.fromAnnotation);
     }
@@ -185,7 +188,9 @@ public abstract class BeanCreation {
     {
       //noinspection deprecation
       BeanPreparationPriority annotation = Utils.getAnnotation(beanClass, BeanPreparationPriority.class);
-      if (annotation != null) beanPreparationPriority.fromAnnotation = annotation.value();
+      if (annotation != null) {
+        beanPreparationPriority.fromAnnotation = annotation.value();
+      }
     }
 
     preparations.stream()
@@ -209,7 +214,7 @@ public abstract class BeanCreation {
 
   static Class<?> getPreparingClass(Type type, Set<Class<?>> cacheSet) {
 
-    if (type == null) return null;
+    if (type == null) { return null; }
 
     if (type instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) type;
@@ -229,12 +234,12 @@ public abstract class BeanCreation {
 
     if (type instanceof Class) {
       Class<?> aClass = (Class<?>) type;
-      if (cacheSet.contains(aClass)) return null;
+      if (cacheSet.contains(aClass)) { return null; }
       cacheSet.add(aClass);
 
       for (Type interfaceType : aClass.getGenericInterfaces()) {
         Class<?> ret = getPreparingClass(interfaceType, cacheSet);
-        if (ret != null) return ret;
+        if (ret != null) { return ret; }
       }
 
       return getPreparingClass(aClass.getSuperclass(), cacheSet);
@@ -244,7 +249,7 @@ public abstract class BeanCreation {
   }
 
   protected String preparationInfo() {
-    if (preparingClass == null) return "";
+    if (preparingClass == null) { return ""; }
     return ", preparation for " + Utils.asStr(preparingClass) + ' ' + beanPreparationPriority.toString();
   }
 
@@ -260,7 +265,7 @@ public abstract class BeanCreation {
 
   public void calculateReplaceChecker() {
     replaceChecker = null;
-    if (!BeanReplacer.class.isAssignableFrom(beanClass)) return;
+    if (!BeanReplacer.class.isAssignableFrom(beanClass)) { return; }
     replaceChecker = ReplaceCheckerExtractor.fromBeanClass(beanClass);
   }
 
@@ -273,7 +278,7 @@ public abstract class BeanCreation {
     public int compareTo(ReplacerPriorityDot o) {
       {
         int cmp = Double.compare(priority, o.priority);
-        if (cmp != 0) return cmp;
+        if (cmp != 0) { return cmp; }
       }
       {
         return className.compareTo(o.className);

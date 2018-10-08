@@ -21,6 +21,7 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
 
   @Override
   public String toString() {
+    //noinspection SpellCheckingInspection
     return (use ? '{' : '(')
       + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT") + " created by def constructor"
       + preparationInfo()
@@ -45,20 +46,20 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
 
     while (true) {
       Class<?> parent = me.getSuperclass();
-      if (Object.class.equals(parent)) return;
+      if (Object.class.equals(parent)) { return; }
       checkBeanGetterNotPublicFor(parent, beanClass);
       me = parent;
     }
   }
 
   private static void checkBeanGetterNotPublicFor(Class<?> aClass, Class<?> beanClass) {
-    if (aClass.getAnnotation(LetBeNonePublic.class) != null) return;
+    if (aClass.getAnnotation(LetBeNonePublic.class) != null) { return; }
 
     for (Field field : aClass.getDeclaredFields()) {
-      if (Modifier.isPublic(field.getModifiers())) continue;
+      if (Modifier.isPublic(field.getModifiers())) { continue; }
 
-      if (!BeanGetter.class.equals(field.getType())) continue;
-      if (field.getAnnotation(LetBeNonePublic.class) != null) continue;
+      if (!BeanGetter.class.equals(field.getType())) { continue; }
+      if (field.getAnnotation(LetBeNonePublic.class) != null) { continue; }
       throw new BeanGetterIsNotPublic(aClass, field, beanClass);
     }
   }

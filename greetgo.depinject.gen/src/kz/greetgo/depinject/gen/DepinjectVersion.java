@@ -27,11 +27,15 @@ public class DepinjectVersion implements Comparable<DepinjectVersion> {
   public int compareTo(DepinjectVersion o) {
     {
       int cmp = version1 - o.version1;
-      if (cmp != 0) return cmp;
+      if (cmp != 0) {
+        return cmp;
+      }
     }
     {
       int cmp = version2 - o.version2;
-      if (cmp != 0) return cmp;
+      if (cmp != 0) {
+        return cmp;
+      }
     }
     {
       return version3 - o.version3;
@@ -40,8 +44,8 @@ public class DepinjectVersion implements Comparable<DepinjectVersion> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) { return true; }
+    if (o == null || getClass() != o.getClass()) { return false; }
     DepinjectVersion that = (DepinjectVersion) o;
     return compareTo(that) == 0;
   }

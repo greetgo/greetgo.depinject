@@ -11,8 +11,8 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   public BeanCreationWithFactoryMethod(Context context, Class<?> beanClass, boolean singleton,
                                        BeanCreation factorySource, Method factoryMethod) {
     super(context, beanClass, singleton);
-    if (factorySource == null) throw new NullPointerException("factorySource == null");
-    if (factoryMethod == null) throw new NullPointerException("factoryMethod == null");
+    if (factorySource == null) { throw new NullPointerException("factorySource == null"); }
+    if (factoryMethod == null) { throw new NullPointerException("factoryMethod == null"); }
     this.factorySource = factorySource;
     this.factoryMethod = factoryMethod;
   }
@@ -20,6 +20,7 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
 
   @Override
   public String toString() {
+    //noinspection SpellCheckingInspection
     return (use ? '{' : '(')
       + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT")
       + " created by method " + factoryMethod.getName() + "() of " + factorySource
@@ -43,16 +44,30 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
       + " = " + factorySource.getterVarName() + ".get()." + factoryMethod.getName() + "();");
   }
 
+  @SuppressWarnings("RedundantIfStatement")
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    if (!super.equals(o)) {
+      return false;
+    }
 
     BeanCreationWithFactoryMethod that = (BeanCreationWithFactoryMethod) o;
 
-    if (!factorySource.equals(that.factorySource)) return false;
-    if (!factoryMethod.equals(that.factoryMethod)) return false;
+    if (!factorySource.equals(that.factorySource)) {
+      return false;
+    }
+
+    if (!factoryMethod.equals(that.factoryMethod)) {
+      return false;
+    }
 
     return true;
   }

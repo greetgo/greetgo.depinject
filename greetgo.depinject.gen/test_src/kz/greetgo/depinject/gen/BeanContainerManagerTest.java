@@ -359,8 +359,8 @@ public class BeanContainerManagerTest {
     int factoryCount = 0, someBean016_count = 0;
 
     for (BeanCreation bc : bcm.usingBeanCreationList) {
-      if (SomeBean016.class.isAssignableFrom(bc.beanClass)) someBean016_count++;
-      if (SomeBeanFactory016.class.isAssignableFrom(bc.beanClass)) factoryCount++;
+      if (SomeBean016.class.isAssignableFrom(bc.beanClass)) { someBean016_count++; }
+      if (SomeBeanFactory016.class.isAssignableFrom(bc.beanClass)) { factoryCount++; }
     }
 
     assertThat(factoryCount).isEqualTo(1);

@@ -7,11 +7,9 @@ import static kz.greetgo.depinject.gen.DepinjectUtil.toCode;
 public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
 
   public final BeanReference beanReference;
-  private final Context context;
   public final Method method;
 
   public BeanContainerMethod(Context context, Method method) {
-    this.context = context;
     this.method = method;
     beanReference = context.newBeanReference(method.getGenericReturnType(),
       "return type of method " + method.getName() + "() of " + Utils.asStr(method.getDeclaringClass()));

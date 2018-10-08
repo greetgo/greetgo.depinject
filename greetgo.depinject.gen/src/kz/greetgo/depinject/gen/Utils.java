@@ -19,13 +19,19 @@ public class Utils {
   public static <T extends Annotation> T getAnnotation(Method method, Class<T> annotation) {
     while (true) {
       T ann = method.getAnnotation(annotation);
-      if (ann != null) return ann;
+      if (ann != null) {
+        return ann;
+      }
 
       Class<?> aClass = method.getDeclaringClass();
-      if (aClass == Object.class) return null;
+      if (aClass == Object.class) {
+        return null;
+      }
 
       Class<?> superclass = aClass.getSuperclass();
-      if (superclass == null) return null;
+      if (superclass == null) {
+        return null;
+      }
 
       try {
         method = superclass.getMethod(method.getName(), method.getParameterTypes());
@@ -41,21 +47,29 @@ public class Utils {
 
   private static <T extends Annotation> T getAnnotationInner(Class<?> source, Class<T> annotation, Set<Class<?>> cache) {
 
-    if (source == null) return null;
-
-    {
-      T ann = source.getAnnotation(annotation);
-      if (ann != null) return ann;
+    if (source == null) {
+      return null;
     }
 
     {
-      if (cache.contains(source)) return null;
+      T ann = source.getAnnotation(annotation);
+      if (ann != null) {
+        return ann;
+      }
+    }
+
+    {
+      if (cache.contains(source)) {
+        return null;
+      }
       cache.add(source);
     }
 
     for (Class<?> aClass : source.getInterfaces()) {
       T ann = getAnnotationInner(aClass, annotation, cache);
-      if (ann != null) return ann;
+      if (ann != null) {
+        return ann;
+      }
     }
 
     return getAnnotationInner(source.getSuperclass(), annotation, cache);
@@ -74,7 +88,9 @@ public class Utils {
     Set<Class<?>> cache
   ) {
 
-    if (source == null) return;
+    if (source == null) {
+      return;
+    }
 
     {
       T ann = source.getAnnotation(annotation);
@@ -84,7 +100,9 @@ public class Utils {
     }
 
     {
-      if (cache.contains(source)) return;
+      if (cache.contains(source)) {
+        return;
+      }
       cache.add(source);
     }
 
@@ -103,14 +121,23 @@ public class Utils {
 
   public static String asStr(Class<?> aClass) {
     boolean isInterface = aClass.isInterface();
-    if (isInterface) return "iface " + aClass.getSimpleName();
+    if (isInterface) {
+      //noinspection SpellCheckingInspection
+      return "iface " + aClass.getSimpleName();
+    }
+
     boolean isAbstract = Modifier.isAbstract(aClass.getModifiers());
-    if (isAbstract) return "abstract " + aClass.getSimpleName();
+    if (isAbstract) {
+      return "abstract " + aClass.getSimpleName();
+    }
+
     return aClass.getSimpleName();
   }
 
   public static Class<?> extractRawClass(Type type) {
-    if (type instanceof Class) return (Class<?>) type;
+    if (type instanceof Class) {
+      return (Class<?>) type;
+    }
     if (type instanceof ParameterizedType) {
       return extractRawClass(((ParameterizedType) type).getRawType());
     }
@@ -141,13 +168,18 @@ public class Utils {
 
     try {
       try {
+
         while (true) {
 
           int readCount = inputStream.read(buffer);
-          if (readCount < 0) return;
+          if (readCount < 0) {
+            return;
+          }
+
           outputStream.write(buffer, 0, readCount);
 
         }
+
       } finally {
         inputStream.close();
       }

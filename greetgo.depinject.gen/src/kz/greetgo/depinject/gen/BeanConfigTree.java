@@ -13,7 +13,9 @@ public class BeanConfigTree {
 
     @Override
     public String toString() {
-      if (this == Bean) return "+ " + super.toString();
+      if (this == Bean) {
+        return "+ " + super.toString();
+      }
       return super.toString();
     }
   }
@@ -66,9 +68,11 @@ public class BeanConfigTree {
     if (showTitle) {
       sb.append("\nBean Config Tree (without unusable branches):");
     }
+
     tree.stream()
       .filter(a -> showBeans || a.type != TreeElementType.Bean)
       .forEachOrdered(s -> sb.append('\n').append(s));
+
     return sb.toString();
   }
 }

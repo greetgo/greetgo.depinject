@@ -6,9 +6,9 @@ import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.core.BeanScanner;
-import kz.greetgo.depinject.core.ScanPackage;
 import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.Include;
+import kz.greetgo.depinject.core.ScanPackage;
 import kz.greetgo.depinject.gen.errors.FactoryMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoInclude;
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class BeanCreationCollector {
@@ -42,7 +41,7 @@ public class BeanCreationCollector {
     context.configTree.ROOT(beanContainerInterface.getName());
 
     List<Include> includes = Utils.getAllAnnotations(beanContainerInterface, Include.class);
-    if (includes.isEmpty()) throw new NoInclude(beanContainerInterface);
+    if (includes.isEmpty()) { throw new NoInclude(beanContainerInterface); }
 
     includes.forEach(this::collectFromInclude);
 
@@ -65,7 +64,7 @@ public class BeanCreationCollector {
       context.configTree.tab++;
 
       BeanConfig beanConfigAnn = beanConfig.getAnnotation(BeanConfig.class);
-      if (beanConfigAnn == null) throw context.newNoBeanConfig(beanConfig);
+      if (beanConfigAnn == null) { throw context.newNoBeanConfig(beanConfig); }
 
       Class<? extends BeanFactory> defaultFactoryClass = beanConfigAnn.defaultFactoryClass();
 
@@ -80,18 +79,21 @@ public class BeanCreationCollector {
 
       {
         BeanScanner beanScanner = beanConfig.getAnnotation(BeanScanner.class);
-        if (beanScanner != null) collectFromPackage(beanConfig.getPackage().getName());
+        if (beanScanner != null) { collectFromPackage(beanConfig.getPackage().getName()); }
       }
 
       {
+        //noinspection deprecation
         ScanPackage scanPackage = beanConfig.getAnnotation(ScanPackage.class);
 
-        if (scanPackage != null) for (String subPackageName : scanPackage.value()) {
-          String packageName = calcFullName(beanConfig.getPackage().getName(), subPackageName);
-          context.configTree.scannerPackage(packageName);
-          context.configTree.tab++;
-          collectFromPackage(packageName);
-          context.configTree.tab--;
+        if (scanPackage != null) {
+          for (String subPackageName : scanPackage.value()) {
+            String packageName = calcFullName(beanConfig.getPackage().getName(), subPackageName);
+            context.configTree.scannerPackage(packageName);
+            context.configTree.tab++;
+            collectFromPackage(packageName);
+            context.configTree.tab--;
+          }
         }
       }
 
@@ -106,8 +108,8 @@ public class BeanCreationCollector {
 
 
   static String calcFullName(String current, String relative) {
-    if (relative.startsWith(".")) return current + relative;
-    if (!relative.startsWith("^")) return relative;
+    if (relative.startsWith(".")) { return current + relative; }
+    if (!relative.startsWith("^")) { return relative; }
 
     {
       List<String> currentList = new ArrayList<>();
@@ -121,18 +123,18 @@ public class BeanCreationCollector {
         }
       }
 
-      while (count < relative.length() && relative.charAt(count) == '.') count++;
+      while (count < relative.length() && relative.charAt(count) == '.') { count++; }
 
       Collections.addAll(currentList, relative.substring(count).split("\\."));
 
-      return currentList.stream().collect(Collectors.joining("."));
+      return String.join(".", currentList);
     }
   }
 
   private void collectFromPackage(String packageName) {
     new ClassScannerDef().scanPackage(packageName).forEach(someClass -> {
       Bean bean = someClass.getAnnotation(Bean.class);
-      if (bean != null) addClassAsBeanAndViewItForAnotherBeans(someClass, bean.singleton());
+      if (bean != null) { addClassAsBeanAndViewItForAnotherBeans(someClass, bean.singleton()); }
     });
   }
 
@@ -153,9 +155,9 @@ public class BeanCreationCollector {
     context.configTree.tab++;
     for (Method method : parentBeanClass.getMethods()) {
       Bean bean = Utils.getAnnotation(method, Bean.class);
-      if (bean == null) continue;
-      if (method.getParameterTypes().length > 0) throw new FactoryMethodCannotContainAnyArguments(method);
-      BeanCreationWithFactoryMethod subBean = context. newBeanCreationWithFactoryMethod(method.getReturnType(), bean.singleton(), parentBeanCreation, method);
+      if (bean == null) { continue; }
+      if (method.getParameterTypes().length > 0) { throw new FactoryMethodCannotContainAnyArguments(method); }
+      BeanCreationWithFactoryMethod subBean = context.newBeanCreationWithFactoryMethod(method.getReturnType(), bean.singleton(), parentBeanCreation, method);
       context.configTree.bean("" + subBean);
       beanCreationList.add(subBean);
     }
@@ -169,7 +171,7 @@ public class BeanCreationCollector {
         " in (or in any parents of) " + Utils.asStr(beanClass));
     }
 
-    if (factoryClassStack.size() == 0) throw context.newNoDefaultBeanFactory(beanClass);
+    if (factoryClassStack.size() == 0) { throw context.newNoDefaultBeanFactory(beanClass); }
 
     return factoryClassStack.getLast();
   }
