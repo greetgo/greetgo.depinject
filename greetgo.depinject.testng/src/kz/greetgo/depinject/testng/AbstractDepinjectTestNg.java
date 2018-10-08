@@ -19,25 +19,32 @@ public abstract class AbstractDepinjectTestNg {
     srcDir = DepinjectTestNg.prepareDepinjectTestNg(this, getSrcTempDir());
   }
 
-  protected void beforeGenerateTestSources() throws Exception {
+  protected void beforeGenerateTestSources() {
     //override it
   }
 
   @AfterClass
-  public void removeSrcDir() throws Exception {
-    if (!needToRemoveSrcDir()) return;
-    if (srcDir == null) return;
+  public void removeSrcDir() {
+    if (!needToRemoveSrcDir()) {
+      return;
+    }
+
+    if (srcDir == null) {
+      return;
+    }
 
     removeRecursively(new File(srcDir));
   }
 
   private static void removeRecursively(File file) {
-    if (!file.exists()) return;
+    if (!file.exists()) { return; }
 
     if (file.isDirectory()) {
       final File[] files = file.listFiles();
-      if (files != null) for (File subFile : files) {
-        removeRecursively(subFile);
+      if (files != null) {
+        for (File subFile : files) {
+          removeRecursively(subFile);
+        }
       }
     }
 
@@ -59,6 +66,7 @@ public abstract class AbstractDepinjectTestNg {
     }
 
     {
+      //noinspection SpellCheckingInspection
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
       return System.getProperty("java.io.tmpdir") + "/depinject_testNg_" + sdf.format(new Date());
     }

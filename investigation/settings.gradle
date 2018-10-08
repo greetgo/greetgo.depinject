@@ -1,3 +1,8 @@
 rootProject.name = 'depinject_investigation'
 include "malina"
 include "moon"
+
+include "kotlin_probe"
+include "kotlin_probe:main_module"
+include "kotlin_probe:module1"
+include "kotlin_probe:module2"

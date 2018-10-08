@@ -1,0 +1,15 @@
+dependencies {
+  compile project("main_module")
+}
+
+task launchMain(type: JavaExec) {
+  group "scripts"
+  main = "kz.greetgo.kotline_probe.main.launcher.MainLauncher"
+  classpath = sourceSets.main.runtimeClasspath
+}
+
+subprojects {
+  dependencies {
+    compile "kz.greetgo.depinject:greetgo.depinject:$greetgoDepinjectVersion"
+  }
+}

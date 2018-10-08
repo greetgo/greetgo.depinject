@@ -28,11 +28,12 @@ subprojects {
     ext.testNgVersion = '6.5.1'
     ext.classScannerVersion = '2.0.0'
     ext.greetgoJavaCompilerVersion = "2.0.0"
+    ext.greetgoDepinjectVersion = rootProject.file('../greetgo.depinject/src_resources/depinject_version.txt').text.trim()
 
     //compile 'com.google.code.findbugs:annotations:2.0.1'
 
-    testCompile "org.testng:testng:${testNgVersion}"
-//    testCompile 'org.easytesting:fest-assert-core:2.0M10'
+    testCompile "org.testng:testng:$testNgVersion"
+    testCompile 'org.easytesting:fest-assert-core:2.0M10'
   }
 
   tasks.withType(Javadoc) {

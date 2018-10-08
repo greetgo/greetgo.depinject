@@ -18,11 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static kz.greetgo.util.ServerUtil.addToClasspath;
-import static kz.greetgo.util.ServerUtil.dummyCheck;
-import static kz.greetgo.util.ServerUtil.extractName;
-import static kz.greetgo.util.ServerUtil.extractPackage;
-import static kz.greetgo.util.ServerUtil.resolveFile;
+import static kz.greetgo.util.ServerUtil.*;
 
 public class DepinjectTestNg {
 
@@ -38,7 +34,9 @@ public class DepinjectTestNg {
     final Class<?> testNgTestClass = testNgTest.getClass();
     appendAllIncludes(classList, testNgTestClass);
 
-    if (classList.isEmpty()) return srcDir;
+    if (classList.isEmpty()) {
+      return srcDir;
+    }
 
     String outerPackage = "a" + RND.intStr(10) + ".";
 
@@ -178,8 +176,8 @@ public class DepinjectTestNg {
 
 
   private static void appendAllIncludes(List<Class<?>> classList, Class<?> aClass) {
-    if (aClass == null) return;
-    if (aClass == Object.class) return;
+    if (aClass == null) { return; }
+    if (aClass == Object.class) { return; }
 
     final ContainerConfig a = aClass.getAnnotation(ContainerConfig.class);
 
@@ -190,6 +188,6 @@ public class DepinjectTestNg {
 
     Collections.addAll(classList, a.value());
 
-    if (a.inherit()) appendAllIncludes(classList, aClass.getSuperclass());
+    if (a.inherit()) { appendAllIncludes(classList, aClass.getSuperclass()); }
   }
 }
