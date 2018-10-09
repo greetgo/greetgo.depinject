@@ -16,9 +16,13 @@ public class Modules {
     for (int i = 1; i <= 10; i++) {
 
       StringBuilder sb = new StringBuilder();
-      for (int j = 0; j < i; j++) sb.append("../");
+      for (int j = 0; j < i; j++) {
+        sb.append("../");
+      }
 
-      if (new File(sb.toString() + ANCHOR_NAME).exists()) return Paths.get(sb.toString()).toAbsolutePath().normalize();
+      if (new File(sb.toString() + ANCHOR_NAME).exists()) {
+        return Paths.get(sb.toString()).toAbsolutePath().normalize();
+      }
 
     }
 
