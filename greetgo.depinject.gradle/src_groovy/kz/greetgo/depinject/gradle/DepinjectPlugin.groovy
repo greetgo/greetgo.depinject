@@ -29,9 +29,19 @@ class DepinjectPlugin implements Plugin<Project> {
 
     JavaCompile compileTask = getTask(project, "compileJava", JavaCompile)
 
-    def destinationDirCol = new DefaultFileCollectionFactory().fixed("additional", compileTask.destinationDir)
+    FileCollection destinationDirCol = new DefaultFileCollectionFactory().fixed("additional", compileTask.destinationDir)
 
-    return retClasspath + destinationDirCol
+    FileCollection ret = retClasspath + destinationDirCol
+
+    Task compileKotlin = findTask(project, "compileKotlin", Task)
+//    println "ye6s5edt1 compileKotlin = " + compileKotlin
+    if (compileKotlin != null) {
+      //noinspection GroovyAssignabilityCheck
+      FileCollection ddc = new DefaultFileCollectionFactory().fixed("additional", compileKotlin.destinationDir)
+      ret = ret + ddc
+    }
+
+    return ret
   }
 
   @Inject
@@ -57,10 +67,16 @@ class DepinjectPlugin implements Plugin<Project> {
     return project.buildDir.toPath().resolve(sub).toFile()
   }
 
-  @SuppressWarnings("GroovyUnusedDeclaration")
   private static <T extends Task> T getTask(Project project, String taskName, Class<T> ignore) {
+    T task = findTask(project, taskName, ignore);
+    if (task == null) throw new RuntimeException("No task " + taskName)
+    return task
+  }
+
+  @SuppressWarnings("GroovyUnusedDeclaration")
+  private static <T extends Task> T findTask(Project project, String taskName, Class<T> ignore) {
     Set<Task> jarTaskSet = project.getTasksByName(taskName, false)
-    if (jarTaskSet.isEmpty()) throw new RuntimeException("No task " + taskName)
+    if (jarTaskSet.isEmpty()) return null
     if (jarTaskSet.size() > 1) throw new RuntimeException("Too many " + taskName + " tasks")
     //noinspection ChangeToOperator
     return jarTaskSet.iterator().next() as T
