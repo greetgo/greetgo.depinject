@@ -80,7 +80,12 @@ public class ExampleFactory implements BeanFactory {
   public Object createBean(Class<?> beanClass) throws Exception {
     if (beanClass == Interface1.class) return () -> "Hello World!";
     if (beanClass == Interface2.class) return () -> 42;
-    if (beanClass == InterfaceAsd.class) throw new RuntimeException("This exception will never happened");
+    if (beanClass == InterfaceAsd.class) {
+      throw new RuntimeException(
+             "This exception will never happened," +
+             " because of using another factory for InterfaceAsd"
+      );
+    }
             
     throw new RuntimeException("I do not known how to create " + beanClass);
   }
