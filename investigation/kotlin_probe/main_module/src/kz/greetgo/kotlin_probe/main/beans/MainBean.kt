@@ -10,7 +10,7 @@ class MainBean {
   lateinit var bean1: BeanGetter<Bean1>
 
   fun printHelloWorld() {
-    println("Hello World from " + javaClass.simpleName)
+    println("Hello World from " + javaClass.simpleName + " (Under Kotlin!!!)")
     bean1.get().printHelloWorld()
   }
 }
