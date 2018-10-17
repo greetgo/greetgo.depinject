@@ -5,5 +5,5 @@ import kz.greetgo.depinject.core.BeanScanner;
 import kz.greetgo.depinject.gen.test_beans027.beans.groupB.DefaultInterfaceFactory;
 
 @BeanScanner
-@BeanConfig(defaultFactoryClass = DefaultInterfaceFactory.class)
+@BeanConfig(factory = DefaultInterfaceFactory.class)
 public class BeanConfigWithDefaultFactory {}

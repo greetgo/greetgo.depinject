@@ -70,13 +70,13 @@ public class BeanCreationCollector {
         throw context.newNoBeanConfig(beanConfig);
       }
 
-      Class<? extends BeanFactory> defaultFactoryClass = beanConfigAnn.defaultFactoryClass();
+      Class<? extends BeanFactory> factoryClass = beanConfigAnn.factory();
 
-      boolean addToFactoryClassStack = BeanFactory.class != defaultFactoryClass;
+      boolean addToFactoryClassStack = BeanFactory.class != factoryClass;
 
       if (addToFactoryClassStack) {
-        factoryClassStack.add(context.newBeanReference(defaultFactoryClass,
-            "default bean factory of " + Utils.asStr(beanConfig)));
+        factoryClassStack.add(context.newBeanReference(factoryClass,
+            "bean factory of " + Utils.asStr(beanConfig)));
       }
 
       Utils.getAllAnnotations(beanConfig, Include.class).forEach(this::collectFromInclude);

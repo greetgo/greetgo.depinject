@@ -3,7 +3,7 @@ package kz.greetgo.depinject.testng.complex_tests.BeanFactoryHierarchyParallel.b
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanScanner;
 
-@BeanConfig(defaultFactoryClass = BeanFactoryParallelForWindow2.class)
+@BeanConfig(factory = BeanFactoryParallelForWindow2.class)
 @BeanScanner
 public class BeanConfigBeanFactoryHierarchyParallel2 {
 }

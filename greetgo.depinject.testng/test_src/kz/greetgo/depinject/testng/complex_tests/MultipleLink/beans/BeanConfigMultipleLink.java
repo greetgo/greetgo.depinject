@@ -5,6 +5,6 @@ import kz.greetgo.depinject.core.BeanScanner;
 
 
 @BeanScanner
-@BeanConfig(defaultFactoryClass = MultipleLinkWindowFactory.class)
+@BeanConfig(factory = MultipleLinkWindowFactory.class)
 public class BeanConfigMultipleLink {
 }

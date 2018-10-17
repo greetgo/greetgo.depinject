@@ -5,5 +5,5 @@ import kz.greetgo.depinject.core.BeanScanner;
 
 
 @BeanScanner
-@BeanConfig(defaultFactoryClass = LocalBeanFactory.class)
+@BeanConfig(factory = LocalBeanFactory.class)
 public class BeanConfigUsingBeanFactory {}
