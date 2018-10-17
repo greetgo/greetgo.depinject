@@ -6,3 +6,8 @@ include "kotlin_probe"
 include "kotlin_probe:main_module"
 include "kotlin_probe:module1"
 include "kotlin_probe:module2"
+
+include "lombok"
+include "lombok:module1"
+include "lombok:module2"
+include "lombok:module3"
