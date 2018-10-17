@@ -41,7 +41,9 @@ public class BeanCreationCollector {
     context.configTree.ROOT(beanContainerInterface.getName());
 
     List<Include> includes = Utils.getAllAnnotations(beanContainerInterface, Include.class);
-    if (includes.isEmpty()) { throw new NoInclude(beanContainerInterface); }
+    if (includes.isEmpty()) {
+      throw new NoInclude(beanContainerInterface);
+    }
 
     includes.forEach(this::collectFromInclude);
 
@@ -72,14 +74,16 @@ public class BeanCreationCollector {
 
       if (addToFactoryClassStack) {
         factoryClassStack.add(context.newBeanReference(defaultFactoryClass,
-          "default bean factory of " + Utils.asStr(beanConfig)));
+            "default bean factory of " + Utils.asStr(beanConfig)));
       }
 
       Utils.getAllAnnotations(beanConfig, Include.class).forEach(this::collectFromInclude);
 
       {
         BeanScanner beanScanner = beanConfig.getAnnotation(BeanScanner.class);
-        if (beanScanner != null) { collectFromPackage(beanConfig.getPackage().getName()); }
+        if (beanScanner != null) {
+          collectFromPackage(beanConfig.getPackage().getName());
+        }
       }
 
       {
@@ -108,8 +112,12 @@ public class BeanCreationCollector {
 
 
   static String calcFullName(String current, String relative) {
-    if (relative.startsWith(".")) { return current + relative; }
-    if (!relative.startsWith("^")) { return relative; }
+    if (relative.startsWith(".")) {
+      return current + relative;
+    }
+    if (!relative.startsWith("^")) {
+      return relative;
+    }
 
     {
       List<String> currentList = new ArrayList<>();
@@ -123,7 +131,9 @@ public class BeanCreationCollector {
         }
       }
 
-      while (count < relative.length() && relative.charAt(count) == '.') { count++; }
+      while (count < relative.length() && relative.charAt(count) == '.') {
+        count++;
+      }
 
       Collections.addAll(currentList, relative.substring(count).split("\\."));
 
@@ -134,7 +144,9 @@ public class BeanCreationCollector {
   private void collectFromPackage(String packageName) {
     new ClassScannerDef().scanPackage(packageName).forEach(someClass -> {
       Bean bean = someClass.getAnnotation(Bean.class);
-      if (bean != null) { addClassAsBeanAndViewItForAnotherBeans(someClass, bean.singleton()); }
+      if (bean != null) {
+        addClassAsBeanAndViewItForAnotherBeans(someClass, bean.singleton());
+      }
     });
   }
 
@@ -145,10 +157,10 @@ public class BeanCreationCollector {
 
     if (Utils.isRealClass(parentBeanClass)) {
       beanCreationList.add(parentBeanCreation = context
-        .newBeanCreationWithDefaultConstructor(parentBeanClass, singleton));
+          .newBeanCreationWithDefaultConstructor(parentBeanClass, singleton));
     } else {
       beanCreationList.add(parentBeanCreation = context
-        .newBeanCreationWithBeanFactory(parentBeanClass, singleton, extractBeanFactoryReference(parentBeanClass)));
+          .newBeanCreationWithBeanFactory(parentBeanClass, singleton, extractBeanFactoryReference(parentBeanClass)));
     }
 
     context.configTree.bean("" + parentBeanCreation);
@@ -156,8 +168,11 @@ public class BeanCreationCollector {
     for (Method method : parentBeanClass.getMethods()) {
       Bean bean = Utils.getAnnotation(method, Bean.class);
       if (bean == null) { continue; }
-      if (method.getParameterTypes().length > 0) { throw new FactoryMethodCannotContainAnyArguments(method); }
-      BeanCreationWithFactoryMethod subBean = context.newBeanCreationWithFactoryMethod(method.getReturnType(), bean.singleton(), parentBeanCreation, method);
+      if (method.getParameterTypes().length > 0) {
+        throw new FactoryMethodCannotContainAnyArguments(method);
+      }
+      BeanCreationWithFactoryMethod subBean = context.newBeanCreationWithFactoryMethod(
+          method.getReturnType(), bean.singleton(), parentBeanCreation, method);
       context.configTree.bean("" + subBean);
       beanCreationList.add(subBean);
     }
@@ -168,10 +183,12 @@ public class BeanCreationCollector {
     List<FactoredBy> factoredByList = Utils.getAllAnnotations(beanClass, FactoredBy.class);
     if (factoredByList.size() > 0) {
       return context.newBeanReference(factoredByList.get(0).value(), FactoredBy.class.getSimpleName() +
-        " in (or in any parents of) " + Utils.asStr(beanClass));
+          " in (or in any parents of) " + Utils.asStr(beanClass));
     }
 
-    if (factoryClassStack.size() == 0) { throw context.newNoDefaultBeanFactory(beanClass); }
+    if (factoryClassStack.size() == 0) {
+      throw context.newNoDefaultBeanFactory(beanClass);
+    }
 
     return factoryClassStack.getLast();
   }

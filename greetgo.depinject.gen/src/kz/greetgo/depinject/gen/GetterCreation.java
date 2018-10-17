@@ -33,7 +33,9 @@ public class GetterCreation {
   public boolean use = false;
 
   public void markToUse() {
-    if (use) { return; }
+    if (use) {
+      return;
+    }
     use = true;
     beanCreation.markToUse();
     preparations.forEach(BeanCreation::markToUse);
@@ -44,8 +46,12 @@ public class GetterCreation {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) { return true; }
-    if (o == null || getClass() != o.getClass()) { return false; }
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     GetterCreation that = (GetterCreation) o;
 
@@ -72,7 +78,9 @@ public class GetterCreation {
     int result = beanCreation.hashCode();
     result = 31 * result + preparations.hashCode();
     result = 31 * result + replacers.hashCode();
-    if (replacers.size() > 0) { result = 31 * result + getterClass.hashCode(); }
+    if (replacers.size() > 0) {
+      result = 31 * result + getterClass.hashCode();
+    }
     return result;
   }
 
@@ -96,7 +104,9 @@ public class GetterCreation {
   private boolean wasUsePreparations = false;
 
   public void usePreparations(List<BeanCreation> allPreparations) {
-    if (wasUsePreparations) { return; }
+    if (wasUsePreparations) {
+      return;
+    }
     wasUsePreparations = true;
 
     Class<?> currentClass = beanCreation.beanClass;
@@ -140,7 +150,7 @@ public class GetterCreation {
       String newVar = inVarName + '_' + i++;
 
       outer.tab(tab).stn(Utils.codeName(p.preparingClass) + " " + newVar
-        + " = " + p.getterVarName() + ".get().prepareBean(" + current + ");");
+          + " = " + p.getterVarName() + ".get().prepareBean(" + current + ");");
 
       current = newVar;
     }
@@ -165,14 +175,14 @@ public class GetterCreation {
 
   private String replaceCode(BeanCreation replacer, String varName) {
     return "(" + Utils.codeName(getterClass) + ") " + replacer.getterVarName()
-      + ".get().replaceBean(" + varName + ", " + Utils.codeName(getterClass) + ".class)";
+        + ".get().replaceBean(" + varName + ", " + Utils.codeName(getterClass) + ".class)";
   }
 
 
   public String getterVarName() {
     return needGetter()
-      ? "getter_withPreparations_" + className() + '_' + varIndex()
-      : beanCreation.getterVarName();
+        ? "getter_withPreparations_" + className() + '_' + varIndex()
+        : beanCreation.getterVarName();
   }
 
   private String cachedValueVarName() {
@@ -195,9 +205,9 @@ public class GetterCreation {
 
     o.nl();
     o.tab(tab).stn("private final " + Utils.codeName(AtomicReference.class) + "<" + getterClassName
-      + "> " + cachedValueVarName() + " = new " + Utils.codeName(AtomicReference.class) + "<>();");
+        + "> " + cachedValueVarName() + " = new " + Utils.codeName(AtomicReference.class) + "<>();");
     o.tab(tab).stn("private final " + Utils.codeName(BeanGetter.class) + "<" + getterClassName
-      + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
+        + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
 
     o.tab(tab).stn("private " + getterClassName + ' ' + gettingMethodName() + " () {");
 
@@ -236,7 +246,7 @@ public class GetterCreation {
 
     o.nl();
     o.tab(tab).stn("private final " + Utils.codeName(BeanGetter.class) + "<" + getterClassName
-      + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
+        + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
 
     o.tab(tab).stn("private " + getterClassName + ' ' + gettingMethodName() + " () {");
 

@@ -43,11 +43,11 @@ public class BeanReference {
         }
 
         throw new IllegalBeanGetterArgumentType("Cannot extract bean class from List: "
-          + parameterizedType.toString() + "; " + place);
+            + parameterizedType.toString() + "; " + place);
       }
 
       throw new IllegalBeanGetterArgumentType("Cannot extract bean class from parameterized type: "
-        + parameterizedType.toString() + "; " + place);
+          + parameterizedType.toString() + "; " + place);
     }
 
     throw new IllegalBeanGetterArgumentType("Cannot extract bean class from type: " + target.toString() + "; " + place);
@@ -66,7 +66,9 @@ public class BeanReference {
   private String compareStr = null;
 
   public String compareStr() {
-    if (compareStr == null) { compareStr = (isList ? "A_" : "B_") + sourceClass.getName(); }
+    if (compareStr == null) {
+      compareStr = (isList ? "A_" : "B_") + sourceClass.getName();
+    }
     return compareStr;
   }
 
@@ -138,11 +140,11 @@ public class BeanReference {
   @Override
   public String toString() {
     return (isList ? "[" : "") + Utils.asStr(sourceClass) + (isList ? "]" : "")
-      + " -> " + getterCreations.size() + '['
-      + getterCreations.stream()
-      .map(GetterCreation::toString)
-      .collect(Collectors.joining(", "))
-      + ']';
+        + " -> " + getterCreations.size() + '['
+        + getterCreations.stream()
+        .map(GetterCreation::toString)
+        .collect(Collectors.joining(", "))
+        + ']';
   }
 
   public void checkConnectivity() {
@@ -181,7 +183,9 @@ public class BeanReference {
   private boolean wasUseReplacers = false;
 
   public void useReplacers(List<BeanCreation> allReplacers) {
-    if (wasUseReplacers) { return; }
+    if (wasUseReplacers) {
+      return;
+    }
     wasUseReplacers = true;
     getterCreations.forEach(tc -> tc.useReplacers(allReplacers));
   }
@@ -195,8 +199,8 @@ public class BeanReference {
 
   public String getterVarName() {
     return needGetter()
-      ? "getter_ref_" + (isList ? "list_" : "") + sourceClass.getSimpleName() + '_' + varIndex()
-      : getterCreations.get(0).getterVarName();
+        ? "getter_ref_" + (isList ? "list_" : "") + sourceClass.getSimpleName() + '_' + varIndex()
+        : getterCreations.get(0).getterVarName();
   }
 
   private String gettingMethodName() {
@@ -230,14 +234,14 @@ public class BeanReference {
 
   private void writeGetterAsList(int tab, Outer outer) {
     outer.tab(tab).stn("private final " + Utils.codeName(BeanGetter.class) + "<" + Utils.codeName(List.class)
-      + "<" + Utils.codeName(sourceClass) + ">> " + getterVarName() + " = this::" + gettingMethodName() + ";");
+        + "<" + Utils.codeName(sourceClass) + ">> " + getterVarName() + " = this::" + gettingMethodName() + ";");
     outer.tab(tab).stn("private " + Utils.codeName(List.class)
-      + "<" + Utils.codeName(sourceClass) + "> " + gettingMethodName() + "() {");
+        + "<" + Utils.codeName(sourceClass) + "> " + gettingMethodName() + "() {");
 
     final int tab1 = tab + 1;
 
     outer.tab(tab1).stn(Utils.codeName(List.class) + "<" + Utils.codeName(sourceClass)
-      + "> list = new " + Utils.codeName(ArrayList.class) + "<>();");
+        + "> list = new " + Utils.codeName(ArrayList.class) + "<>();");
 
     for (GetterCreation gc : getterCreations) {
       gc.getterVarName();

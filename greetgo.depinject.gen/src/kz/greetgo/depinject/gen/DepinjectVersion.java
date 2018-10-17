@@ -19,7 +19,7 @@ public class DepinjectVersion implements Comparable<DepinjectVersion> {
   @Override
   public String toString() {
     return "DepinjectVersion{" +
-      "version1=" + version1 + ", version2=" + version2 + ", version3=" + version3 + '}';
+        "version1=" + version1 + ", version2=" + version2 + ", version3=" + version3 + '}';
   }
 
   @Override
@@ -44,8 +44,12 @@ public class DepinjectVersion implements Comparable<DepinjectVersion> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) { return true; }
-    if (o == null || getClass() != o.getClass()) { return false; }
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     DepinjectVersion that = (DepinjectVersion) o;
     return compareTo(that) == 0;
   }

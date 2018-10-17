@@ -79,7 +79,6 @@ public class Utils {
     List<T> ret = new ArrayList<>();
     putAllAnnotations(source, annotation, ret, new HashSet<>());
     return ret;
-
   }
 
   private static <T extends Annotation> void putAllAnnotations(

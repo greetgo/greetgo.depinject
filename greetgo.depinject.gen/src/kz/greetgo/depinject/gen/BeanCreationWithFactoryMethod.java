@@ -11,8 +11,12 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   public BeanCreationWithFactoryMethod(Context context, Class<?> beanClass, boolean singleton,
                                        BeanCreation factorySource, Method factoryMethod) {
     super(context, beanClass, singleton);
-    if (factorySource == null) { throw new NullPointerException("factorySource == null"); }
-    if (factoryMethod == null) { throw new NullPointerException("factoryMethod == null"); }
+    if (factorySource == null) {
+      throw new NullPointerException("factorySource == null");
+    }
+    if (factoryMethod == null) {
+      throw new NullPointerException("factoryMethod == null");
+    }
     this.factorySource = factorySource;
     this.factoryMethod = factoryMethod;
   }
@@ -22,10 +26,10 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   public String toString() {
     //noinspection SpellCheckingInspection
     return (use ? '{' : '(')
-      + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT")
-      + " created by method " + factoryMethod.getName() + "() of " + factorySource
-      + preparationInfo()
-      + (use ? '}' : ')');
+        + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT")
+        + " created by method " + factoryMethod.getName() + "() of " + factorySource
+        + preparationInfo()
+        + (use ? '}' : ')');
   }
 
   @Override
@@ -41,7 +45,7 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   @Override
   protected void writeCreateBean(int tab, Outer out, String variableName) {
     out.tab(tab).stn(Utils.codeName(beanClass) + ' ' + variableName
-      + " = " + factorySource.getterVarName() + ".get()." + factoryMethod.getName() + "();");
+        + " = " + factorySource.getterVarName() + ".get()." + factoryMethod.getName() + "();");
   }
 
   @SuppressWarnings("RedundantIfStatement")
