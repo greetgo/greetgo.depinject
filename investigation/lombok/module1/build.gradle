@@ -1,3 +1,17 @@
+plugins {
+  id "kz.greetgo.depinject.plugin" version "2.1.5"
+}
+
 dependencies {
   
+}
+
+task runModule1(type: JavaExec) {
+  group = "scripts"
+  main = "kz.greetgo.lombok.module1.launcher.LaunchModule1"
+  classpath sourceSets.main.runtimeClasspath
+}
+
+depinject {
+  scanPackage 'kz.greetgo.lombok'
 }

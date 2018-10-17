@@ -1,3 +1,18 @@
-dependencies {
-  
+buildscript {
+  ext.greetgoDepinjectVersion = rootProject.file('../greetgo.depinject/src_resources/depinject_version.txt').text.trim()
+
+
+}
+
+plugins {
+  id 'net.ltgt.apt' version '0.10'
+}
+
+subprojects {
+  dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    compile "kz.greetgo.depinject:greetgo.depinject:$greetgoDepinjectVersion"
+
+    testCompile "kz.greetgo.depinject:greetgo.depinject.gen:$greetgoDepinjectVersion"
+  }
 }
