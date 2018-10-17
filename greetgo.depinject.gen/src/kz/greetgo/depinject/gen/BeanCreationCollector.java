@@ -159,7 +159,7 @@ public class BeanCreationCollector {
 
     if (Utils.isRealClass(parentBeanClass)) {
       beanCreationList.add(parentBeanCreation = context
-          .newBeanCreationWithDefaultConstructor(parentBeanClass, singleton));
+          .newBeanCreationWithConstructor(parentBeanClass, singleton));
     } else {
       beanCreationList.add(parentBeanCreation = context
           .newBeanCreationWithBeanFactory(parentBeanClass, singleton, extractBeanFactoryReference(parentBeanClass)));

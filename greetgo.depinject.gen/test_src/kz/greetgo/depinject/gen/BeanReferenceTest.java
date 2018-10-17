@@ -82,9 +82,9 @@ public class BeanReferenceTest {
     Context context = new Context();
     BeanReference beanReference = context.newBeanReference(A1_RefInterface.class, "");
 
-    BeanCreation refInterface = context.newBeanCreationWithDefaultConstructor(A1_RefInterface.class, true);
-    BeanCreation beanClass = context.newBeanCreationWithDefaultConstructor(A2_BeanClass.class, true);
-    BeanCreation leftClass = context.newBeanCreationWithDefaultConstructor(A3_LeftClass.class, true);
+    BeanCreation refInterface = context.newBeanCreationWithConstructor(A1_RefInterface.class, true);
+    BeanCreation beanClass = context.newBeanCreationWithConstructor(A2_BeanClass.class, true);
+    BeanCreation leftClass = context.newBeanCreationWithConstructor(A3_LeftClass.class, true);
 
     //
     //

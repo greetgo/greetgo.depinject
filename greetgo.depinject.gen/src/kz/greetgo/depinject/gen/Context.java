@@ -37,14 +37,14 @@ public class Context {
     return new BeanReference(this, target, place);
   }
 
-  public BeanCreationWithDefaultConstructor newBeanCreationWithDefaultConstructor(Class<?> parentBeanClass,
-                                                                                  boolean singleton) {
-    return new BeanCreationWithDefaultConstructor(this, parentBeanClass, singleton);
+  public BeanCreation newBeanCreationWithConstructor(Class<?> beanClass,
+                                                     boolean singleton) {
+    return new BeanCreationWithDefaultConstructor(this, beanClass, singleton);
   }
 
-  public BeanCreationWithBeanFactory newBeanCreationWithBeanFactory(Class<?> parentBeanClass,
-                                                                    boolean singleton,
-                                                                    BeanReference beanReference) {
+  public BeanCreation newBeanCreationWithBeanFactory(Class<?> parentBeanClass,
+                                                     boolean singleton,
+                                                     BeanReference beanReference) {
     return new BeanCreationWithBeanFactory(this, parentBeanClass, singleton, beanReference);
   }
 

@@ -21,9 +21,8 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
 
   @Override
   public String toString() {
-    //noinspection SpellCheckingInspection
     return (use ? '{' : '(')
-        + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT") + " created by def constructor"
+        + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MANY") + " created by def constructor"
         + preparationInfo()
         + (use ? '}' : ')');
   }
