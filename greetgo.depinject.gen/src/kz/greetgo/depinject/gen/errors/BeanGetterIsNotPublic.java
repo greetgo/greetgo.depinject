@@ -1,5 +1,8 @@
 package kz.greetgo.depinject.gen.errors;
 
+import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.core.SkipInject;
+
 import java.lang.reflect.Field;
 
 public class BeanGetterIsNotPublic extends RuntimeException {
@@ -9,8 +12,11 @@ public class BeanGetterIsNotPublic extends RuntimeException {
 
   public BeanGetterIsNotPublic(Class<?> containsFieldClass, Field beanGetterField, Class<?> beanClass) {
     super("Field " + beanGetterField.getName() + " is not public in "
-      + containsFieldClass + (beanClass == null ? "" : ": it is the parent of bean " + beanClass) + ".\n" +
-      "\tIf you want none public BeanGetter field you may add annotation @LetBeNonePublic to field or class");
+        + containsFieldClass + (beanClass == null ? "" : ": it is the parent of bean " + beanClass) + ".\n" +
+        "\tDepinject cannot inject into not public field.\n" +
+        "\tIf you still want to use not public " + BeanGetter.class.getSimpleName()
+        + " field you may add annotation @" + SkipInject.class.getSimpleName() + " to this field for success build.\n" +
+        "\tATTENTION: this field will be NULL.");
     this.containsFieldClass = containsFieldClass;
     this.beanGetterField = beanGetterField;
     this.beanClass = beanClass;

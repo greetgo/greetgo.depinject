@@ -48,13 +48,13 @@ public class BeanContainerManager {
       .stream().unordered().distinct().collect(Collectors.toList());
     beanCreationList.sort(Comparator.comparing(o -> o.beanClass.getName()));
 
-    beanCreationList.forEach(BeanCreation::fillBeanGetterDotList);
+    beanCreationList.forEach(BeanCreation::fillBeanGetterHolderList);
 
     allBeanReferences = new ArrayList<>();
     beanContainerMethodList.forEach(x -> allBeanReferences.add(x.beanReference));
 
     beanCreationList
-      .forEach(a -> a.beanGetterDotList
+      .forEach(a -> a.beanGetterHolderList
         .forEach(b -> allBeanReferences.add(b.beanReference)));
     beanCreationList.stream()
       .flatMap(a -> a.getAdditionalBeanReferences().stream())

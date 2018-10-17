@@ -172,10 +172,10 @@ public class BeanContainerManagerTest {
 
     System.out.println();
 
-    bcm.beanCreationList.get(0).beanGetterDotList.forEach(System.out::println);
+    bcm.beanCreationList.get(0).beanGetterHolderList.forEach(System.out::println);
 
 
-    BeanGetterDot bean1 = bcm.beanCreationList.get(0).beanGetterDotList.get(0);
+    BeanGetterHolder bean1 = bcm.beanCreationList.get(0).beanGetterHolderList.get(0);
 
     assertThat(bean1.beanReference.getterCreations).hasSize(2);
 
@@ -190,13 +190,13 @@ public class BeanContainerManagerTest {
         .isEqualTo(BeanPreparation008_1.class.getName());
 
 
-    BeanGetterDot bean1impl = bcm.beanCreationList.get(0).beanGetterDotList.get(1);
+    BeanGetterHolder bean1impl = bcm.beanCreationList.get(0).beanGetterHolderList.get(1);
 
     assertThat(bean1impl.beanReference.getterCreations).hasSize(1);
     assertThat(bean1impl.beanReference.getterCreations.get(0).preparations).isEmpty();
 
 
-    BeanGetterDot bean2 = bcm.beanCreationList.get(0).beanGetterDotList.get(2);
+    BeanGetterHolder bean2 = bcm.beanCreationList.get(0).beanGetterHolderList.get(2);
     assertThat(bean2.beanReference.getterCreations).hasSize(1);
 
     assertThat(bean2.beanReference.getterCreations.get(0).preparations).hasSize(1);
@@ -204,7 +204,7 @@ public class BeanContainerManagerTest {
         .isEqualTo(BeanPreparation008_2.class.getName());
 
 
-    BeanGetterDot bean2impl = bcm.beanCreationList.get(0).beanGetterDotList.get(3);
+    BeanGetterHolder bean2impl = bcm.beanCreationList.get(0).beanGetterHolderList.get(3);
 
     assertThat(bean2impl.beanReference.getterCreations).hasSize(1);
     assertThat(bean2impl.beanReference.getterCreations.get(0).preparations).isEmpty();
@@ -237,12 +237,12 @@ public class BeanContainerManagerTest {
 
     System.out.println();
 
-    List<BeanGetterDot> beanGetterDotList = bcm.beanCreationList.get(0).beanGetterDotList;
+    List<BeanGetterHolder> beanGetterHolderList = bcm.beanCreationList.get(0).beanGetterHolderList;
 
-    beanGetterDotList.forEach(System.out::println);
+    beanGetterHolderList.forEach(System.out::println);
 
 
-    BeanGetterDot bean1 = beanGetterDotList.get(0);
+    BeanGetterHolder bean1 = beanGetterHolderList.get(0);
 
     assertThat(bean1.beanReference.getterCreations).hasSize(3);
 
@@ -271,13 +271,13 @@ public class BeanContainerManagerTest {
     assertThat(bean1.beanReference.getterCreations.get(2).preparations).hasSize(4);
 
 
-    BeanGetterDot bean1impl = beanGetterDotList.get(1);
+    BeanGetterHolder bean1impl = beanGetterHolderList.get(1);
 
     assertThat(bean1impl.beanReference.getterCreations.get(0).preparations).isEmpty();
     assertThat(bean1impl.beanReference.getterCreations).hasSize(1);
 
 
-    BeanGetterDot bean2 = beanGetterDotList.get(2);
+    BeanGetterHolder bean2 = beanGetterHolderList.get(2);
 
     assertThat(bean2.beanReference.getterCreations).hasSize(2);
 

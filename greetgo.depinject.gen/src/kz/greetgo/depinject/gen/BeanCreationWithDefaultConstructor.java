@@ -1,7 +1,7 @@
 package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
-import kz.greetgo.depinject.core.LetBeNonePublic;
+import kz.greetgo.depinject.core.SkipInject;
 import kz.greetgo.depinject.gen.errors.BeanGetterIsNotPublic;
 
 import java.lang.reflect.Field;
@@ -23,9 +23,9 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
   public String toString() {
     //noinspection SpellCheckingInspection
     return (use ? '{' : '(')
-      + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT") + " created by def constructor"
-      + preparationInfo()
-      + (use ? '}' : ')');
+        + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT") + " created by def constructor"
+        + preparationInfo()
+        + (use ? '}' : ')');
   }
 
   @Override
@@ -46,20 +46,32 @@ public class BeanCreationWithDefaultConstructor extends BeanCreation {
 
     while (true) {
       Class<?> parent = me.getSuperclass();
-      if (Object.class.equals(parent)) { return; }
+      if (Object.class.equals(parent)) {
+        return;
+      }
       checkBeanGetterNotPublicFor(parent, beanClass);
       me = parent;
     }
   }
 
   private static void checkBeanGetterNotPublicFor(Class<?> aClass, Class<?> beanClass) {
-    if (aClass.getAnnotation(LetBeNonePublic.class) != null) { return; }
+    if (aClass.getAnnotation(SkipInject.class) != null) {
+      return;
+    }
 
     for (Field field : aClass.getDeclaredFields()) {
-      if (Modifier.isPublic(field.getModifiers())) { continue; }
+      if (Modifier.isPublic(field.getModifiers())) {
+        continue;
+      }
 
-      if (!BeanGetter.class.equals(field.getType())) { continue; }
-      if (field.getAnnotation(LetBeNonePublic.class) != null) { continue; }
+      if (!BeanGetter.class.equals(field.getType())) {
+        continue;
+      }
+
+      if (field.getAnnotation(SkipInject.class) != null) {
+        continue;
+      }
+
       throw new BeanGetterIsNotPublic(aClass, field, beanClass);
     }
   }

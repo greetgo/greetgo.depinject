@@ -80,10 +80,10 @@ public abstract class BeanCreation {
 
   public abstract List<BeanReference> getAdditionalBeanReferences();
 
-  public final List<BeanGetterDot> beanGetterDotList = new ArrayList<>();
+  public final List<BeanGetterHolder> beanGetterHolderList = new ArrayList<>();
 
-  public void fillBeanGetterDotList() {
-    context.fillBeanGetterDotListInner(beanGetterDotList, beanClass);
+  public void fillBeanGetterHolderList() {
+    context.fillBeanGetterHolderListInner(beanGetterHolderList, beanClass);
   }
 
   public boolean use = false;
@@ -91,7 +91,7 @@ public abstract class BeanCreation {
   public void markToUse() {
     if (use) { return; }
     use = true;
-    beanGetterDotList.forEach(a -> a.beanReference.markToUse());
+    beanGetterHolderList.forEach(a -> a.beanReference.markToUse());
     markToUseAdditions();
   }
 
@@ -136,8 +136,10 @@ public abstract class BeanCreation {
         out.tab(tab3).stn(cachedValueVarName() + ".set(localValue);");
         out.tab(tab3).stn("return localValue;");
 
+        out.tab(tab2).stn("} catch (java.lang.RuntimeException e) {");
+        out.tab(tab3).stn("throw e;");
         out.tab(tab2).stn("} catch (java.lang.Exception e) {");
-        out.tab(tab3).stn("if (e instanceof java.lang.RuntimeException) throw (java.lang.RuntimeException) e;");
+//        out.tab(tab3).stn("if (e instanceof java.lang.RuntimeException) throw (java.lang.RuntimeException) e;");
         out.tab(tab3).stn("throw new java.lang.RuntimeException(e);");
         out.tab(tab2).stn("}");
       }
@@ -150,8 +152,10 @@ public abstract class BeanCreation {
       writeCreateBean(tab2, out, "localValue");
       writeBeanGettersAndInit(tab2, out, "localValue");
       out.tab(tab2).stn("return localValue;");
+      out.tab(tab1).stn("} catch (java.lang.RuntimeException e) {");
+      out.tab(tab2).stn("throw e;");
       out.tab(tab1).stn("} catch (java.lang.Exception e) {");
-      out.tab(tab2).stn("if (e instanceof java.lang.RuntimeException) throw (java.lang.RuntimeException) e;");
+//      out.tab(tab2).stn("if (e instanceof java.lang.RuntimeException) throw (java.lang.RuntimeException) e;");
       out.tab(tab2).stn("throw new java.lang.RuntimeException(e);");
       out.tab(tab1).stn("}");
 
@@ -161,7 +165,7 @@ public abstract class BeanCreation {
   }
 
   public void writeBeanGettersAndInit(int tab, Outer out, @SuppressWarnings("SameParameterValue") String variableName) {
-    beanGetterDotList.forEach(bg -> bg.writeAssignment(tab, out, variableName));
+    beanGetterHolderList.forEach(bg -> bg.writeAssignment(tab, out, variableName));
     if (HasAfterInject.class.isAssignableFrom(beanClass)) {
       out.tab(tab).stn(variableName + ".afterInject();");
     }

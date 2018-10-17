@@ -35,13 +35,13 @@ public class ContextTest2 {
 
   @Test
   public void fillBeanGetterDotListInner() throws Exception {
-    List<BeanGetterDot> list = new ArrayList<>();
+    List<BeanGetterHolder> list = new ArrayList<>();
 
     Context context = new Context();
 
     //
     //
-    context.fillBeanGetterDotListInner(list, MainBean.class);
+    context.fillBeanGetterHolderListInner(list, MainBean.class);
     //
     //
 
@@ -72,7 +72,7 @@ public class ContextTest2 {
 
     //
     //
-    context.fillBeanGetterDotListInner(new ArrayList<>(), LeftBean.class);
+    context.fillBeanGetterHolderListInner(new ArrayList<>(), LeftBean.class);
     //
     //
   }

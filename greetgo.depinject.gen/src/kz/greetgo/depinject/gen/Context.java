@@ -64,7 +64,10 @@ public class Context {
     List<BeanContainerMethod> ret = new ArrayList<>();
 
     for (Method method : beanContainer.getMethods()) {
-      if (Modifier.isStatic(method.getModifiers())) { continue; }
+      if (Modifier.isStatic(method.getModifiers())) {
+        continue;
+      }
+
       if (method.getParameterTypes().length > 0) {
         throw new BeanContainerMethodCannotContainAnyArguments(beanContainer, method);
       }
@@ -84,24 +87,24 @@ public class Context {
     return new BeanCreationWithFactoryMethod(this, returnType, singleton, parentBeanCreation, method);
   }
 
-  void fillBeanGetterDotListInner(List<BeanGetterDot> beanGetterDotList, Class<?> beanClass) {
+  void fillBeanGetterHolderListInner(List<BeanGetterHolder> beanGetterHolderList, Class<?> beanClass) {
 
     for (Field field : beanClass.getFields()) {
       if (field.getType() == BeanGetter.class) {
-        addDot(beanGetterDotList, field.getName(), field.getGenericType(), beanClass);
+        addHolder(beanGetterHolderList, field.getName(), field.getGenericType(), beanClass);
       }
     }
 
-    Collections.sort(beanGetterDotList);
+    Collections.sort(beanGetterHolderList);
   }
 
-  private void addDot(List<BeanGetterDot> list, String fieldName, Type beanGetterType, Class<?> beanClass) {
+  private void addHolder(List<BeanGetterHolder> list, String fieldName, Type beanGetterType, Class<?> beanClass) {
     if (!(beanGetterType instanceof ParameterizedType)) {
       throw new IllegalBeanGetterDefinition(beanClass, fieldName);
     }
     ParameterizedType pt = (ParameterizedType) beanGetterType;
     BeanReference beanReference = newBeanReference(pt.getActualTypeArguments()[0],
-      "field " + fieldName + " of " + Utils.asStr(beanClass));
-    list.add(new BeanGetterDot(fieldName, beanReference));
+        "field " + fieldName + " of " + Utils.asStr(beanClass));
+    list.add(new BeanGetterHolder(fieldName, beanReference));
   }
 }
