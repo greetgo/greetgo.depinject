@@ -26,7 +26,9 @@ public abstract class BeanCreation {
 
   public BeanCreation(Context context, Class<?> beanClass, boolean singleton) {
     this.context = context;
-    if (beanClass == null) { throw new NullPointerException("beanClass == null"); }
+    if (beanClass == null) {
+      throw new NullPointerException("beanClass == null");
+    }
     this.beanClass = beanClass;
     this.singleton = singleton;
   }
@@ -56,17 +58,23 @@ public abstract class BeanCreation {
   }
 
   public String getterVarName() {
-    if (varIndex <= 0) { throw new LeftException("Left varIndex value = " + varIndex); }
+    if (varIndex <= 0) {
+      throw new LeftException("Left varIndex value = " + varIndex);
+    }
     return "getter_native_" + beanClass.getSimpleName() + '_' + varIndex;
   }
 
   private String gettingMethodName() {
-    if (varIndex <= 0) { throw new LeftException("Left varIndex value = " + varIndex); }
+    if (varIndex <= 0) {
+      throw new LeftException("Left varIndex value = " + varIndex);
+    }
     return "get_native_" + beanClass.getSimpleName() + '_' + varIndex;
   }
 
   public String cachedValueVarName() {
-    if (varIndex <= 0) { throw new LeftException("Left varIndex value = " + varIndex); }
+    if (varIndex <= 0) {
+      throw new LeftException("Left varIndex value = " + varIndex);
+    }
     return "cachedValue_native_" + beanClass.getSimpleName() + '_' + varIndex;
   }
 
@@ -98,11 +106,11 @@ public abstract class BeanCreation {
 
     if (singleton) {
       out.tab(tab).stn("private final " + Utils.codeName(AtomicReference.class) + "<" + Utils.codeName(beanClass) +
-        "> " + cachedValueVarName() + " = new " + Utils.codeName(AtomicReference.class) + "<>(null);");
+          "> " + cachedValueVarName() + " = new " + Utils.codeName(AtomicReference.class) + "<>(null);");
     }
 
     out.tab(tab).stn("private final " + Utils.codeName(BeanGetter.class)
-      + "<" + Utils.codeName(beanClass) + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
+        + "<" + Utils.codeName(beanClass) + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
     out.tab(tab).stn("private " + Utils.codeName(beanClass) + " " + gettingMethodName() + " () {");
 
     if (singleton) {
@@ -194,12 +202,12 @@ public abstract class BeanCreation {
     }
 
     preparations.stream()
-      .filter(bc -> bc.preparingClass != null)
-      .forEach(that -> {
-        if (that.preparingClass.isAssignableFrom(this.preparingClass)) {
-          that.beanPreparationPriority.parenting++;
-        }
-      });
+        .filter(bc -> bc.preparingClass != null)
+        .forEach(that -> {
+          if (that.preparingClass.isAssignableFrom(this.preparingClass)) {
+            that.beanPreparationPriority.parenting++;
+          }
+        });
   }
 
   public BeanPreparationPriorityDot beanPreparationPriority() {
@@ -249,7 +257,9 @@ public abstract class BeanCreation {
   }
 
   protected String preparationInfo() {
-    if (preparingClass == null) { return ""; }
+    if (preparingClass == null) {
+      return "";
+    }
     return ", preparation for " + Utils.asStr(preparingClass) + ' ' + beanPreparationPriority.toString();
   }
 
@@ -265,7 +275,9 @@ public abstract class BeanCreation {
 
   public void calculateReplaceChecker() {
     replaceChecker = null;
-    if (!BeanReplacer.class.isAssignableFrom(beanClass)) { return; }
+    if (!BeanReplacer.class.isAssignableFrom(beanClass)) {
+      return;
+    }
     replaceChecker = ReplaceCheckerExtractor.fromBeanClass(beanClass);
   }
 

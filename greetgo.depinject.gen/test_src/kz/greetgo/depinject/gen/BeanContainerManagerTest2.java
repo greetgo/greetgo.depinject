@@ -16,9 +16,12 @@ import kz.greetgo.depinject.gen.test_beans018.Bean018_empty;
 import kz.greetgo.depinject.gen.test_beans018.Bean018_iface;
 import kz.greetgo.depinject.gen.test_beans018.BeanConfig018;
 import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
+import kz.greetgo.depinject.gen.test_beans033.BeanConfig033;
+import kz.greetgo.depinject.gen.test_beans033.MainBean033;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 public class BeanContainerManagerTest2 {
@@ -27,7 +30,7 @@ public class BeanContainerManagerTest2 {
   interface NoMethodsInBeanContainerWOW extends BeanContainer {}
 
   @Test(expectedExceptions = NoMethodsInBeanContainer.class)
-  public void writeBeanContainerMethods_NoMethodsInBeanContainer() throws Exception {
+  public void writeBeanContainerMethods_NoMethodsInBeanContainer() {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(NoMethodsInBeanContainerWOW.class);
     bcm.prepareToWrite();
@@ -58,7 +61,7 @@ public class BeanContainerManagerTest2 {
   }
 
   @Test
-  public void writeBeanContainerMethods() throws Exception {
+  public void writeBeanContainerMethods() {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer010.class);
     bcm.prepareToWrite();
@@ -74,7 +77,7 @@ public class BeanContainerManagerTest2 {
   }
 
   @Test
-  public void writeBeanCreation() throws Exception {
+  public void writeBeanCreation() {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer010.class);
     bcm.prepareToWrite();
@@ -90,7 +93,7 @@ public class BeanContainerManagerTest2 {
   }
 
   @Test
-  public void writeBeanContainerImpl_010() throws Exception {
+  public void writeBeanContainerImpl_010() {
     generate(BeanContainer010.class);
   }
 
@@ -104,7 +107,7 @@ public class BeanContainerManagerTest2 {
     String classSimpleName = bci.getSimpleName() + "_IMPL";
 
     File javaFile = new File(TestUtil.buildDir() + "/gen_src/" + packageName.replaceAll("\\.", "/")
-      + '/' + classSimpleName + ".java");
+        + '/' + classSimpleName + ".java");
 
     javaFile.getParentFile().mkdirs();
 
@@ -120,7 +123,7 @@ public class BeanContainerManagerTest2 {
   }
 
   @Test
-  public void prepareToWrite_BeanContainerForTestingUtil() throws Exception {
+  public void prepareToWrite_BeanContainerForTestingUtil() {
     Class<?> bci = BeanContainerForTestingUtil.class;
 
     Context context = new Context();
@@ -142,7 +145,51 @@ public class BeanContainerManagerTest2 {
   }
 
   @Test
-  public void prepareToWrite_018_replacer() throws Exception {
+  public void prepareToWrite_018_replacer() {
     generate(BeanContainer018.class);
+  }
+
+  @Include(BeanConfig033.class)
+  interface BeanContainer033 extends BeanContainer {
+    @SuppressWarnings("unused")
+    MainBean033 mainBean();
+  }
+
+  @Test
+  public void prepareToWrite_033_constructorOfBeanWithArguments() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer033.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    System.out.println(" *** *** START TEST prepareToWrite_033_constructorOfBeanWithArguments");
+
+    System.out.println("---> BEGIN Preparations:");
+    bcm.preparations.forEach(System.out::println);
+    System.out.println("---> END   Preparations:\n");
+
+    Collections.reverse(bcm.beanCreationList);
+    System.out.println("---> BEGIN BeanCreationList");
+    bcm.beanCreationList.forEach(System.out::println);
+    System.out.println("---> END   BeanCreationList");
+
+    System.out.println();
+
+    for (BeanCreation beanCreation : bcm.beanCreationList) {
+      System.out.println("=== beanCreation = " + beanCreation);
+      System.out.println();
+      for (BeanGetterDot beanGetterDot : beanCreation.beanGetterDotList) {
+        System.out.println(beanGetterDot);
+      }
+      System.out.println();
+    }
+
+    System.out.println(" *** *** END TEST prepareToWrite_033_constructorOfBeanWithArguments");
+
+
   }
 }
