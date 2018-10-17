@@ -46,7 +46,7 @@ public class BeanConfigTree {
     tree.add(new TreeElement(tab, type, message));
   }
 
-  public void ROOT(String message) {
+  public void root(String message) {
     message(TreeElementType.ROOT, message);
   }
 

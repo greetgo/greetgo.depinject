@@ -38,7 +38,7 @@ public class BeanCreationCollector {
       throw new NoBeanContainer(beanContainerInterface);
     }
 
-    context.configTree.ROOT(beanContainerInterface.getName());
+    context.configTree.root(beanContainerInterface.getName());
 
     List<Include> includes = Utils.getAllAnnotations(beanContainerInterface, Include.class);
     if (includes.isEmpty()) {
@@ -66,7 +66,9 @@ public class BeanCreationCollector {
       context.configTree.tab++;
 
       BeanConfig beanConfigAnn = beanConfig.getAnnotation(BeanConfig.class);
-      if (beanConfigAnn == null) { throw context.newNoBeanConfig(beanConfig); }
+      if (beanConfigAnn == null) {
+        throw context.newNoBeanConfig(beanConfig);
+      }
 
       Class<? extends BeanFactory> defaultFactoryClass = beanConfigAnn.defaultFactoryClass();
 

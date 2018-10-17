@@ -189,7 +189,5 @@ public class BeanContainerManagerTest2 {
     }
 
     System.out.println(" *** *** END TEST prepareToWrite_033_constructorOfBeanWithArguments");
-
-
   }
 }
