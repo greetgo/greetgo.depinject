@@ -79,6 +79,8 @@ import kz.greetgo.depinject.gen.test_beans032.p09_private_bean_getters.Bean032_0
 import kz.greetgo.depinject.gen.test_beans032.p09_private_bean_getters.BeanConfig032_09;
 import kz.greetgo.depinject.gen.test_beans032.p10_prepare_bg_without_constructor.Bean032_10_main;
 import kz.greetgo.depinject.gen.test_beans032.p10_prepare_bg_without_constructor.BeanConfig032_10;
+import kz.greetgo.depinject.gen.test_beans032.p11_skipping_inject_constructor_args.Bean032_11_main;
+import kz.greetgo.depinject.gen.test_beans032.p11_skipping_inject_constructor_args.BeanConfig032_11;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
@@ -942,7 +944,6 @@ public class BeanContainerManagerTest {
     //
   }
 
-
   @Include(BeanConfig032_10.class)
   interface BeanContainer032_10 extends BeanContainer {
     @SuppressWarnings("unused")
@@ -971,5 +972,23 @@ public class BeanContainerManagerTest {
     assertThat(error.beanGetterField.getName()).isEqualTo("bean032_09_3");
     assertThat(error.containsFieldClass.getName()).isEqualTo(Bean032_10_main.class.getName());
     assertThat(error.beanClass).isNull();
+  }
+
+  @Include(BeanConfig032_11.class)
+  interface BeanContainer032_11 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_11_main bean();
+  }
+
+  @Test
+  public void prepareToWrite_skipping_inject_constructor_args() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_11.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
   }
 }
