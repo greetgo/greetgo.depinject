@@ -77,6 +77,8 @@ import kz.greetgo.depinject.gen.test_beans032.p08_in_the_bean_ignoreUnused.Bean0
 import kz.greetgo.depinject.gen.test_beans032.p08_in_the_bean_ignoreUnused.BeanConfig032_08;
 import kz.greetgo.depinject.gen.test_beans032.p09_private_bean_getters.Bean032_09_main;
 import kz.greetgo.depinject.gen.test_beans032.p09_private_bean_getters.BeanConfig032_09;
+import kz.greetgo.depinject.gen.test_beans032.p10_prepare_bg_without_constructor.Bean032_10_main;
+import kz.greetgo.depinject.gen.test_beans032.p10_prepare_bg_without_constructor.BeanConfig032_10;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
@@ -938,5 +940,36 @@ public class BeanContainerManagerTest {
     bcm.prepareToWrite();
     //
     //
+  }
+
+
+  @Include(BeanConfig032_10.class)
+  interface BeanContainer032_10 extends BeanContainer {
+    @SuppressWarnings("unused")
+    Bean032_10_main bean();
+  }
+
+  @Test
+  public void prepareToWrite_privateBeanGetter_NOT_UsedInConstructorArgs() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer032_10.class);
+
+    NotPublicBeanWithoutConstructor error = null;
+
+    try {
+      //
+      //
+      bcm.prepareToWrite();
+      //
+      //
+    } catch (NotPublicBeanWithoutConstructor e) {
+      error = e;
+    }
+
+    assertThat(error).isNotNull();
+    assert error != null;
+    assertThat(error.beanGetterField.getName()).isEqualTo("bean032_09_3");
+    assertThat(error.containsFieldClass.getName()).isEqualTo(Bean032_10_main.class.getName());
+    assertThat(error.beanClass).isNull();
   }
 }

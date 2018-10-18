@@ -12,6 +12,7 @@ public class ConstructorArg {
   }
 
   public String displayStr() {
+    // TODO: 18.10.18 realize it
     return "Left str hs765s6dys6";
   }
 
