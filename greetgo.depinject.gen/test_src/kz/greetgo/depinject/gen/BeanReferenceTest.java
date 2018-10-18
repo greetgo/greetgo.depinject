@@ -11,8 +11,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 public class BeanReferenceTest {
 
-  class SomeClass {
-  }
+  class SomeClass {}
 
   interface ForSimple {
     @SuppressWarnings("unused")
@@ -20,7 +19,7 @@ public class BeanReferenceTest {
   }
 
   @Test
-  public void constructor_simple() throws Exception {
+  public void constructor_simple() {
 
     Type type = TestUtil.getReturnType(ForSimple.class, "method");
 
@@ -33,14 +32,13 @@ public class BeanReferenceTest {
 
   }
 
-
   interface ForList {
     @SuppressWarnings("unused")
     List<SomeClass> method();
   }
 
   @Test
-  public void constructor_list() throws Exception {
+  public void constructor_list() {
 
     Type type = TestUtil.getReturnType(ForList.class, "method");
 
@@ -58,7 +56,7 @@ public class BeanReferenceTest {
   }
 
   @Test(expectedExceptions = IllegalBeanGetterArgumentType.class)
-  public void constructor_leftType() throws Exception {
+  public void constructor_leftType() {
 
     Type type = TestUtil.getReturnType(ForLeftType.class, "method");
 
@@ -67,37 +65,36 @@ public class BeanReferenceTest {
 
   }
 
-  interface A1_RefInterface {
-  }
+  interface A1_RefInterface {}
 
-  class A2_BeanClass implements A1_RefInterface {
-  }
+  public static class A2_BeanClass implements A1_RefInterface {}
 
-  class A3_LeftClass {
-  }
+  public static class A3_BeanClass extends A2_BeanClass {}
+
+  public static class A4_LeftClass {}
 
   @Test
-  public void fillTargetCreationsFrom() throws Exception {
+  public void fillTargetCreationsFrom() {
 
     Context context = new Context();
     BeanReference beanReference = context.newBeanReference(A1_RefInterface.class, "");
 
-    BeanCreation refInterface = context.newBeanCreationWithConstructor(A1_RefInterface.class, true);
     BeanCreation beanClass = context.newBeanCreationWithConstructor(A2_BeanClass.class, true);
-    BeanCreation leftClass = context.newBeanCreationWithConstructor(A3_LeftClass.class, true);
+    BeanCreation beanClass3 = context.newBeanCreationWithConstructor(A3_BeanClass.class, true);
+    BeanCreation leftClass = context.newBeanCreationWithConstructor(A4_LeftClass.class, true);
 
     //
     //
-    beanReference.fillTargetCreationsFrom(Arrays.asList(beanClass, refInterface, leftClass));
+    beanReference.fillTargetCreationsFrom(Arrays.asList(beanClass, beanClass3, leftClass));
     //
     //
 
     assertThat(beanReference.getterCreations).hasSize(2);
 
     assertThat(beanReference.getterCreations.get(0).beanCreation.beanClass.getName())
-      .isEqualTo(A1_RefInterface.class.getName());
+        .isEqualTo(A2_BeanClass.class.getName());
 
     assertThat(beanReference.getterCreations.get(1).beanCreation.beanClass.getName())
-      .isEqualTo(A2_BeanClass.class.getName());
+        .isEqualTo(A3_BeanClass.class.getName());
   }
 }
