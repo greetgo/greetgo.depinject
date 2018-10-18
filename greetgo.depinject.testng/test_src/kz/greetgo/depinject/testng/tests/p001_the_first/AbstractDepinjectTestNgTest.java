@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.testng.tests;
+package kz.greetgo.depinject.testng.tests.p001_the_first;
 
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.testng.AbstractDepinjectTestNg;

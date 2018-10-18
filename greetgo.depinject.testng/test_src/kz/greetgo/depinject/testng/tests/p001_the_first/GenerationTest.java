@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.testng.tests;
+package kz.greetgo.depinject.testng.tests.p001_the_first;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.PrintWriter;
+
+import static kz.greetgo.util.ServerUtil.dummyCheck;
 
 public class GenerationTest {
 
@@ -26,7 +28,7 @@ public class GenerationTest {
     bcg.beanContainerInterface = TestBeanContainer.class;
     bcg.implClassName = "Asd";
 
-    ServerUtil.dummyCheck(new File("build/asd").mkdirs());
+    dummyCheck(new File("build/asd").mkdirs());
     try (final PrintWriter writer = new PrintWriter("build/asd/Asd.java", "UTF-8")) {
       bcg.writeTo(writer);
     }

@@ -9,5 +9,4 @@ import kz.greetgo.depinject.testng.test_beans_package.beans002.Beans002config;
 @BeanConfig
 @Include({Beans001config.class, Beans002config.class})
 @ScanPackage("kz.greetgo.depinject.testng.test_beans_package.for_include_by_str")
-public class AbstractDepinjectTestNgTestBeans {
-}
+public class AbstractDepinjectTestNgTestBeans {}
