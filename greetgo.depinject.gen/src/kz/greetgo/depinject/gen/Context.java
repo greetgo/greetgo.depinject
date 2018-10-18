@@ -182,7 +182,7 @@ public class Context {
     argSetList.get(0).checkArgumentsOk();
 
     List<ConstructorArg> selectedArgList = argSetList.get(0).argList;
-    checkBeanGetterNotPublicFor(beanClass, selectedArgList);
+    //checkBeanGetterNotPublicFor(beanClass, selectedArgList);
 
     return new BeanCreationWithConstructor(this, beanClass, singleton, selectedArgList);
   }

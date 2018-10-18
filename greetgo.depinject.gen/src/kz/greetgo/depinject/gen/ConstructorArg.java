@@ -1,7 +1,5 @@
 package kz.greetgo.depinject.gen;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.lang.reflect.Type;
 
 public class ConstructorArg {
@@ -14,11 +12,11 @@ public class ConstructorArg {
   }
 
   public String displayStr() {
-    throw new NotImplementedException();
+    return "Left str hs765s6dys6";
   }
 
   public void markToUse() {
-    throw new NotImplementedException();
+    // TODO: 18.10.18 realize it
   }
 
   public BeanReference beanReference() {
