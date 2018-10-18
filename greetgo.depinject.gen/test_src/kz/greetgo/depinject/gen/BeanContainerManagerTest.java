@@ -172,10 +172,10 @@ public class BeanContainerManagerTest {
 
     System.out.println();
 
-    bcm.beanCreationList.get(0).beanGetterHolderList.forEach(System.out::println);
+    bcm.beanCreationList.get(0).beanGetterInPublicFieldList.forEach(System.out::println);
 
 
-    BeanGetterHolder bean1 = bcm.beanCreationList.get(0).beanGetterHolderList.get(0);
+    BeanGetterInPublicField bean1 = bcm.beanCreationList.get(0).beanGetterInPublicFieldList.get(0);
 
     assertThat(bean1.beanReference.getterCreations).hasSize(2);
 
@@ -190,13 +190,13 @@ public class BeanContainerManagerTest {
         .isEqualTo(BeanPreparation008_1.class.getName());
 
 
-    BeanGetterHolder bean1impl = bcm.beanCreationList.get(0).beanGetterHolderList.get(1);
+    BeanGetterInPublicField bean1impl = bcm.beanCreationList.get(0).beanGetterInPublicFieldList.get(1);
 
     assertThat(bean1impl.beanReference.getterCreations).hasSize(1);
     assertThat(bean1impl.beanReference.getterCreations.get(0).preparations).isEmpty();
 
 
-    BeanGetterHolder bean2 = bcm.beanCreationList.get(0).beanGetterHolderList.get(2);
+    BeanGetterInPublicField bean2 = bcm.beanCreationList.get(0).beanGetterInPublicFieldList.get(2);
     assertThat(bean2.beanReference.getterCreations).hasSize(1);
 
     assertThat(bean2.beanReference.getterCreations.get(0).preparations).hasSize(1);
@@ -204,7 +204,7 @@ public class BeanContainerManagerTest {
         .isEqualTo(BeanPreparation008_2.class.getName());
 
 
-    BeanGetterHolder bean2impl = bcm.beanCreationList.get(0).beanGetterHolderList.get(3);
+    BeanGetterInPublicField bean2impl = bcm.beanCreationList.get(0).beanGetterInPublicFieldList.get(3);
 
     assertThat(bean2impl.beanReference.getterCreations).hasSize(1);
     assertThat(bean2impl.beanReference.getterCreations.get(0).preparations).isEmpty();
@@ -237,12 +237,12 @@ public class BeanContainerManagerTest {
 
     System.out.println();
 
-    List<BeanGetterHolder> beanGetterHolderList = bcm.beanCreationList.get(0).beanGetterHolderList;
+    List<BeanGetterInPublicField> beanGetterInPublicFieldList = bcm.beanCreationList.get(0).beanGetterInPublicFieldList;
 
-    beanGetterHolderList.forEach(System.out::println);
+    beanGetterInPublicFieldList.forEach(System.out::println);
 
 
-    BeanGetterHolder bean1 = beanGetterHolderList.get(0);
+    BeanGetterInPublicField bean1 = beanGetterInPublicFieldList.get(0);
 
     assertThat(bean1.beanReference.getterCreations).hasSize(3);
 
@@ -271,13 +271,13 @@ public class BeanContainerManagerTest {
     assertThat(bean1.beanReference.getterCreations.get(2).preparations).hasSize(4);
 
 
-    BeanGetterHolder bean1impl = beanGetterHolderList.get(1);
+    BeanGetterInPublicField bean1impl = beanGetterInPublicFieldList.get(1);
 
     assertThat(bean1impl.beanReference.getterCreations.get(0).preparations).isEmpty();
     assertThat(bean1impl.beanReference.getterCreations).hasSize(1);
 
 
-    BeanGetterHolder bean2 = beanGetterHolderList.get(2);
+    BeanGetterInPublicField bean2 = beanGetterInPublicFieldList.get(2);
 
     assertThat(bean2.beanReference.getterCreations).hasSize(2);
 

@@ -2,18 +2,15 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
 
-public class BeanGetterHolder implements Comparable<BeanGetterHolder> {
+import java.util.Objects;
+
+public class BeanGetterInPublicField implements Comparable<BeanGetterInPublicField> {
   public final String fieldName;
   public final BeanReference beanReference;
 
-  public BeanGetterHolder(String fieldName, BeanReference beanReference) {
-    if (fieldName == null) {
-      throw new NullPointerException("fieldName == null");
-    }
-
-    if (beanReference == null) {
-      throw new NullPointerException("beanReference == null");
-    }
+  public BeanGetterInPublicField(String fieldName, BeanReference beanReference) {
+    Objects.requireNonNull(fieldName, "fieldName == null");
+    Objects.requireNonNull(beanReference, "beanReference == null");
 
     this.fieldName = fieldName;
     this.beanReference = beanReference;
@@ -21,7 +18,7 @@ public class BeanGetterHolder implements Comparable<BeanGetterHolder> {
 
   @Override
   @SuppressWarnings("NullableProblems")
-  public int compareTo(BeanGetterHolder o) {
+  public int compareTo(BeanGetterInPublicField o) {
     return fieldName.compareTo(o.fieldName);
   }
 
@@ -32,7 +29,7 @@ public class BeanGetterHolder implements Comparable<BeanGetterHolder> {
 
   public void writeAssignment(int tab, Outer out, String variableName) {
     out.tab(tab).stn(variableName + '.' + fieldName + " = (" + Utils.codeName(BeanGetter.class) + '<'
-      + beanReference.targetClassCode() + ">)(java.lang.Object)" + beanReference.getterVarName() + ";");
+        + beanReference.targetClassCode() + ">)(java.lang.Object)" + beanReference.getterVarName() + ";");
 
   }
 }

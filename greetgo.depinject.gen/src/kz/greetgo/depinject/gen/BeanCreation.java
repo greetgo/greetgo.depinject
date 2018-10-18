@@ -80,10 +80,10 @@ public abstract class BeanCreation {
 
   public abstract List<BeanReference> getAdditionalBeanReferences();
 
-  public final List<BeanGetterHolder> beanGetterHolderList = new ArrayList<>();
+  public final List<BeanGetterInPublicField> beanGetterInPublicFieldList = new ArrayList<>();
 
   public void fillBeanGetterHolderList() {
-    context.fillBeanGetterHolderListInner(beanGetterHolderList, beanClass);
+    context.fillBeanGetterHolderListInner(beanGetterInPublicFieldList, beanClass);
   }
 
   public boolean use = false;
@@ -91,7 +91,7 @@ public abstract class BeanCreation {
   public void markToUse() {
     if (use) { return; }
     use = true;
-    beanGetterHolderList.forEach(a -> a.beanReference.markToUse());
+    beanGetterInPublicFieldList.forEach(a -> a.beanReference.markToUse());
     markToUseAdditions();
   }
 
@@ -165,7 +165,7 @@ public abstract class BeanCreation {
   }
 
   public void writeBeanGettersAndInit(int tab, Outer out, @SuppressWarnings("SameParameterValue") String variableName) {
-    beanGetterHolderList.forEach(bg -> bg.writeAssignment(tab, out, variableName));
+    beanGetterInPublicFieldList.forEach(bg -> bg.writeAssignment(tab, out, variableName));
     if (HasAfterInject.class.isAssignableFrom(beanClass)) {
       out.tab(tab).stn(variableName + ".afterInject();");
     }

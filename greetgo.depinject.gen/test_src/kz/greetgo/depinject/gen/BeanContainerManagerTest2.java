@@ -182,8 +182,8 @@ public class BeanContainerManagerTest2 {
     for (BeanCreation beanCreation : bcm.beanCreationList) {
       System.out.println("=== beanCreation = " + beanCreation);
       System.out.println();
-      for (BeanGetterHolder beanGetterHolder : beanCreation.beanGetterHolderList) {
-        System.out.println(beanGetterHolder);
+      for (BeanGetterInPublicField beanGetterInPublicField : beanCreation.beanGetterInPublicFieldList) {
+        System.out.println(beanGetterInPublicField);
       }
       System.out.println();
     }

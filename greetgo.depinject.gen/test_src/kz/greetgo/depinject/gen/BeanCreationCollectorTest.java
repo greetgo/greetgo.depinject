@@ -38,11 +38,10 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 public class BeanCreationCollectorTest {
 
-  public interface BeanContainerWithoutNoBeanContainer {
-  }
+  public interface BeanContainerWithoutNoBeanContainer {}
 
   @Test(expectedExceptions = NoBeanContainer.class)
-  public void collectFrom_NoBeanContainer() throws Exception {
+  public void collectFrom_NoBeanContainer() {
     Context context = new Context();
 
     //
@@ -56,7 +55,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test(expectedExceptions = NoInclude.class)
-  public void collectFrom_NoInclude() throws Exception {
+  public void collectFrom_NoInclude() {
     Context context = new Context();
 
     //
@@ -74,7 +73,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test(expectedExceptions = NoBeanConfig.class)
-  public void collectFrom_NoBeanConfig() throws Exception {
+  public void collectFrom_NoBeanConfig() {
     Context context = new Context();
     //
     //
@@ -94,7 +93,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collectFrom_BeanWithDefaultConstructor() throws Exception {
+  public void collectFrom_BeanWithDefaultConstructor() {
     Context context = new Context();
     //
     //
@@ -106,8 +105,8 @@ public class BeanCreationCollectorTest {
 
     Map<String, BeanCreation> map = toMapSimple(list);
 
-    assertThat(map.get("BeanWithDefaultConstructor1")).isInstanceOf(BeanCreationWithDefaultConstructor.class);
-    assertThat(map.get("BeanWithDefaultConstructor2")).isInstanceOf(BeanCreationWithDefaultConstructor.class);
+    assertThat(map.get("BeanWithDefaultConstructor1")).isInstanceOf(BeanCreationWithConstructor.class);
+    assertThat(map.get("BeanWithDefaultConstructor2")).isInstanceOf(BeanCreationWithConstructor.class);
 
     assertThat(map.get("BeanWithDefaultConstructor1").singleton).isTrue();
     assertThat(map.get("BeanWithDefaultConstructor2").singleton).isFalse();
@@ -118,7 +117,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collectFrom_withoutBeanScanner() throws Exception {
+  public void collectFrom_withoutBeanScanner() {
     Context context = new Context();
     //
     //
@@ -146,7 +145,7 @@ public class BeanCreationCollectorTest {
 
     Map<String, BeanCreation> map = toMapSimple(list);
 
-    assertThat(map.get(BeanFactory.class.getSimpleName())).isInstanceOf(BeanCreationWithDefaultConstructor.class);
+    assertThat(map.get(BeanFactory.class.getSimpleName())).isInstanceOf(BeanCreationWithConstructor.class);
     assertThat(map.get(Bean1.class.getSimpleName())).isInstanceOf(BeanCreationWithFactoryMethod.class);
     assertThat(map.get(Bean2.class.getSimpleName())).isInstanceOf(BeanCreationWithFactoryMethod.class);
 
@@ -165,7 +164,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test(expectedExceptions = FactoryMethodCannotContainAnyArguments.class)
-  public void collectFrom_BeanFactoryMethodCannotHasAnyArguments() throws Exception {
+  public void collectFrom_BeanFactoryMethodCannotHasAnyArguments() {
     Context context = new Context();
     //
     //
@@ -179,7 +178,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collectFrom_BeanFactory() throws Exception {
+  public void collectFrom_BeanFactory() {
     Context context = new Context();
     //
     //
@@ -217,7 +216,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test(expectedExceptions = NoDefaultBeanFactory.class)
-  public void collectFrom_BeanFactory_NoDefaultBeanFactory() throws Exception {
+  public void collectFrom_BeanFactory_NoDefaultBeanFactory() {
     Context context = new Context();
     //
     //
@@ -231,7 +230,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collectFrom_InterfaceBeanFactoryReference() throws Exception {
+  public void collectFrom_InterfaceBeanFactoryReference() {
     Context context = new Context();
     //
     //
@@ -245,7 +244,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collectFrom_AbstractBeanFactoryReference() throws Exception {
+  public void collectFrom_AbstractBeanFactoryReference() {
     Context context = new Context();
     //
     //
@@ -259,12 +258,12 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collectFrom_BeanScannerPackage_withParentReference() throws Exception {
+  public void collectFrom_BeanScannerPackage_withParentReference() {
     Context context = new Context();
     //
     //
     List<BeanCreation> bcList = context.newBeanCreationCollector(
-      BeanContainer_BeanScannerPackage_withParentReference.class).collect();
+        BeanContainer_BeanScannerPackage_withParentReference.class).collect();
     //
     //
 
@@ -277,12 +276,12 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collectFrom_BeanScannerPackage_withRelativeReference() throws Exception {
+  public void collectFrom_BeanScannerPackage_withRelativeReference() {
     Context context = new Context();
     //
     //
     List<BeanCreation> bcList = context.newBeanCreationCollector(
-      BeanContainer_BeanScannerPackage_withRelativeReference.class).collect();
+        BeanContainer_BeanScannerPackage_withRelativeReference.class).collect();
     //
     //
 
@@ -295,12 +294,12 @@ public class BeanCreationCollectorTest {
   }
 
   @Test
-  public void collectFrom_BeanScannerPackage_withFullReference() throws Exception {
+  public void collectFrom_BeanScannerPackage_withFullReference() {
     Context context = new Context();
     //
     //
     List<BeanCreation> bcList = context.newBeanCreationCollector(
-      BeanContainer_BeanScannerPackage_withFullReference.class).collect();
+        BeanContainer_BeanScannerPackage_withFullReference.class).collect();
     //
     //
 
@@ -310,20 +309,21 @@ public class BeanCreationCollectorTest {
 
   @DataProvider
   public Object[][] calcFullName_DP() {
+    //noinspection SpellCheckingInspection
     return new Object[][]{
-      {"kz.greetgo.depinject.gen", "com.google.sap", "com.google.sap"},
-      {"kz.greetgo.depinject.gen", ".hello.world", "kz.greetgo.depinject.gen.hello.world"},
-      {"kz.greetgo.depinject.gen", "^.by.world", "kz.greetgo.depinject.by.world"},
-      {"kz.greetgo.depinject.gen", "^^.gcory.pink.world", "kz.greetgo.gcory.pink.world"},
-      {"kz.greetgo.depinject.gen", "^^^.greetCom.gcory.pink.world", "kz.greetCom.gcory.pink.world"},
-      {"kz.greetgo.depinject.gen", "^by.world", "kz.greetgo.depinject.by.world"},
-      {"kz.greetgo.depinject.gen", "^^gcory.pink.world", "kz.greetgo.gcory.pink.world"},
-      {"kz.greetgo.depinject.gen", "^^^greetCom.gcory.pink.world", "kz.greetCom.gcory.pink.world"},
+        {"kz.greetgo.depinject.gen", "com.google.sap", "com.google.sap"},
+        {"kz.greetgo.depinject.gen", ".hello.world", "kz.greetgo.depinject.gen.hello.world"},
+        {"kz.greetgo.depinject.gen", "^.by.world", "kz.greetgo.depinject.by.world"},
+        {"kz.greetgo.depinject.gen", "^^.gcory.pink.world", "kz.greetgo.gcory.pink.world"},
+        {"kz.greetgo.depinject.gen", "^^^.greetCom.gcory.pink.world", "kz.greetCom.gcory.pink.world"},
+        {"kz.greetgo.depinject.gen", "^by.world", "kz.greetgo.depinject.by.world"},
+        {"kz.greetgo.depinject.gen", "^^gcory.pink.world", "kz.greetgo.gcory.pink.world"},
+        {"kz.greetgo.depinject.gen", "^^^greetCom.gcory.pink.world", "kz.greetCom.gcory.pink.world"},
     };
   }
 
   @Test(dataProvider = "calcFullName_DP")
-  public void calcFullName(String current, String relative, String expected) throws Exception {
+  public void calcFullName(String current, String relative, String expected) {
 
     //
     //
@@ -336,11 +336,10 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig029.class)
-  interface BeanContainer029 extends BeanContainer {
-  }
+  interface BeanContainer029 extends BeanContainer {}
 
   @Test
-  public void collectAndViewBeanConfigTree() throws Exception {
+  public void collectAndViewBeanConfigTree() {
     Context context = new Context();
     BeanCreationCollector collector = context.newBeanCreationCollector(BeanContainer029.class);
     collector.collect();

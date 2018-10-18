@@ -54,7 +54,7 @@ public class BeanContainerManager {
     beanContainerMethodList.forEach(x -> allBeanReferences.add(x.beanReference));
 
     beanCreationList
-      .forEach(a -> a.beanGetterHolderList
+      .forEach(a -> a.beanGetterInPublicFieldList
         .forEach(b -> allBeanReferences.add(b.beanReference)));
     beanCreationList.stream()
       .flatMap(a -> a.getAdditionalBeanReferences().stream())

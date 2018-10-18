@@ -31,7 +31,7 @@ public class ContextTest3 {
     //
     //
 
-    assertThat(beanCreation).isInstanceOf(BeanCreationWithDefaultConstructor.class);
+    assertThat(beanCreation).isInstanceOf(BeanCreationWithConstructor.class);
 
     assertThat(beanCreation.beanClass.getName()).isEqualTo(beanClass.getName());
     assertThat(beanCreation.singleton).isEqualTo(singleton);
@@ -54,7 +54,7 @@ public class ContextTest3 {
   }
 
   @Test
-  public void newBeanCreationWithConstructor_constructorWithArguments() {
+  public void newBeanCreationWithConstructor_oneConstructorWithArguments() {
     Context context = new Context();
 
     Class<?> beanClass = OneConstructor.class;
@@ -67,9 +67,13 @@ public class ContextTest3 {
     //
     //
 
-    // TODO: 17.10.18 Доделать этот тест
-    assertThat(beanCreation).isInstanceOf(BeanCreationWithDefaultConstructor.class);
+    assertThat(beanCreation).isInstanceOf(BeanCreationWithConstructor.class);
 
+    BeanCreationWithConstructor bc = (BeanCreationWithConstructor) beanCreation;
+
+    assertThat(bc.argList).hasSize(2);
+    assertThat(bc.argList.get(0).beanReference().sourceClass.getName()).isEqualTo(Bean1.class.getName());
+    assertThat(bc.argList.get(1).beanReference().sourceClass.getName()).isEqualTo(Bean2.class.getName());
   }
 
   // TODO: 17.10.18 здесь нужны другие тесты, которые проверяют различные варианты конструкторов и бингеттеров

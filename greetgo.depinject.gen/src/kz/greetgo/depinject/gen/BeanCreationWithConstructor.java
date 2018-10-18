@@ -6,30 +6,44 @@ import kz.greetgo.depinject.gen.errors.BeanGetterIsNotPublic;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class BeanCreationWithDefaultConstructor extends BeanCreation {
-  public BeanCreationWithDefaultConstructor(Context context, Class<?> beanClass, boolean singleton) {
+public class BeanCreationWithConstructor extends BeanCreation {
+  final List<ConstructorArg> argList;
+
+  public BeanCreationWithConstructor(Context context,
+                                     Class<?> beanClass,
+                                     boolean singleton,
+                                     List<ConstructorArg> argList) {
     super(context, beanClass, singleton);
+    Objects.requireNonNull(argList, "argList == null");
+    this.argList = argList;
   }
 
   @Override
   public List<BeanReference> getAdditionalBeanReferences() {
-    return Collections.emptyList();
+    return argList.stream()
+        .map(ConstructorArg::beanReference)
+        .collect(Collectors.toList());
   }
 
   @Override
   public String toString() {
     return (use ? '{' : '(')
-        + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MANY") + " created by def constructor"
+        + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MANY") + " created by constructor("
+        + argList.stream()
+        .map(ConstructorArg::displayStr)
+        .collect(Collectors.joining(", "))
+        + ")"
         + preparationInfo()
         + (use ? '}' : ')');
   }
 
   @Override
   protected void markToUseAdditions() {
-    //Nothing to do
+    argList.forEach(ConstructorArg::markToUse);
   }
 
   @Override

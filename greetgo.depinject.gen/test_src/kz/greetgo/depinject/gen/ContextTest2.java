@@ -35,7 +35,7 @@ public class ContextTest2 {
 
   @Test
   public void fillBeanGetterDotListInner() throws Exception {
-    List<BeanGetterHolder> list = new ArrayList<>();
+    List<BeanGetterInPublicField> list = new ArrayList<>();
 
     Context context = new Context();
 

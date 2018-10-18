@@ -8,6 +8,7 @@ import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -35,11 +36,6 @@ public class Context {
 
   public BeanReference newBeanReference(Type target, String place) {
     return new BeanReference(this, target, place);
-  }
-
-  public BeanCreation newBeanCreationWithConstructor(Class<?> beanClass,
-                                                     boolean singleton) {
-    return new BeanCreationWithDefaultConstructor(this, beanClass, singleton);
   }
 
   public BeanCreation newBeanCreationWithBeanFactory(Class<?> parentBeanClass,
@@ -87,24 +83,56 @@ public class Context {
     return new BeanCreationWithFactoryMethod(this, returnType, singleton, parentBeanCreation, method);
   }
 
-  void fillBeanGetterHolderListInner(List<BeanGetterHolder> beanGetterHolderList, Class<?> beanClass) {
+  void fillBeanGetterHolderListInner(List<BeanGetterInPublicField> beanGetterInPublicFieldList, Class<?> beanClass) {
 
     for (Field field : beanClass.getFields()) {
       if (field.getType() == BeanGetter.class) {
-        addHolder(beanGetterHolderList, field.getName(), field.getGenericType(), beanClass);
+        addHolder(beanGetterInPublicFieldList, field.getName(), field.getGenericType(), beanClass);
       }
     }
 
-    Collections.sort(beanGetterHolderList);
+    Collections.sort(beanGetterInPublicFieldList);
   }
 
-  private void addHolder(List<BeanGetterHolder> list, String fieldName, Type beanGetterType, Class<?> beanClass) {
+  private void addHolder(List<BeanGetterInPublicField> list, String fieldName, Type beanGetterType, Class<?> beanClass) {
     if (!(beanGetterType instanceof ParameterizedType)) {
       throw new IllegalBeanGetterDefinition(beanClass, fieldName);
     }
     ParameterizedType pt = (ParameterizedType) beanGetterType;
     BeanReference beanReference = newBeanReference(pt.getActualTypeArguments()[0],
         "field " + fieldName + " of " + Utils.asStr(beanClass));
-    list.add(new BeanGetterHolder(fieldName, beanReference));
+    list.add(new BeanGetterInPublicField(fieldName, beanReference));
+  }
+
+  public BeanCreation newBeanCreationWithConstructor(Class<?> beanClass,
+                                                     boolean singleton) {
+
+    assert beanClass.getConstructors().length == 1;
+
+    CONSTRUCTOR:
+    for (Constructor<?> aConstructor : beanClass.getConstructors()) {
+
+      List<ConstructorArg> argList = new ArrayList<>();
+
+      int argIndex = 0;
+      for (Type argType : aConstructor.getGenericParameterTypes()) {
+        if (!(argType instanceof ParameterizedType)) {
+          continue CONSTRUCTOR;
+        }
+
+        ParameterizedType parameterizedType = (ParameterizedType) argType;
+        BeanReference beanReference = newBeanReference(parameterizedType.getActualTypeArguments()[0],
+            "argument № " + argIndex + " of constructor of " + Utils.asStr(beanClass));
+
+        argList.add(new ConstructorArg(beanReference));
+
+        argIndex++;
+      }
+
+      return new BeanCreationWithConstructor(this, beanClass, singleton, argList);
+    }
+
+    // TODO: 18.10.18 Сделать здесь правильное сообщение
+    throw new RuntimeException("No good constructor");
   }
 }
