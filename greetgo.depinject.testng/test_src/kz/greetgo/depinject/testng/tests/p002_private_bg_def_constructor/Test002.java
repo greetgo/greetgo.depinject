@@ -1,6 +1,5 @@
 package kz.greetgo.depinject.testng.tests.p002_private_bg_def_constructor;
 
-import kz.greetgo.depinject.Depinject;
 import kz.greetgo.depinject.gen.DepinjectUtil;
 import kz.greetgo.depinject.gen.errors.NotPublicBeanWithoutConstructor;
 import kz.greetgo.depinject.testng.AbstractDepinjectTestNg;
@@ -14,12 +13,12 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @ContainerConfig(BeanConfigTest002.class)
 public class Test002 extends AbstractDepinjectTestNg {
   @Test
-  public void private_bg_def_constructor() throws Exception {
+  public void private_bg_def_constructor() {
 
     NotPublicBeanWithoutConstructor error = null;
 
     try {
-      DepinjectUtil.implementAndUseBeanContainers(
+      DepinjectUtil.implementBeanContainers(
         BeanContainerTest002.class.getPackage().getName(),
         "build/tests_data/" + getClass().getName());
     } catch (NotPublicBeanWithoutConstructor e) {
