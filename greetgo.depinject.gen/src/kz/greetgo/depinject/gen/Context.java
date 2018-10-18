@@ -1,12 +1,17 @@
 package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.core.HideFromDepinject;
+import kz.greetgo.depinject.core.SkipInject;
 import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterDefinition;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
+import kz.greetgo.depinject.gen.errors.NoConstructorsToCreateBean;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
+import kz.greetgo.depinject.gen.errors.NotPublicBeanWithoutConstructor;
+import kz.greetgo.depinject.gen.errors.SuitableConstructorContainsIllegalArgument;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -16,7 +21,12 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.reverseOrder;
 
 public class Context {
 
@@ -107,32 +117,105 @@ public class Context {
   public BeanCreation newBeanCreationWithConstructor(Class<?> beanClass,
                                                      boolean singleton) {
 
-    assert beanClass.getConstructors().length == 1;
+    class ArgSet {
+      final List<ConstructorArg> argList;
+      final Constructor<?> constructor;
 
-    CONSTRUCTOR:
-    for (Constructor<?> aConstructor : beanClass.getConstructors()) {
+      public ArgSet(Constructor<?> constructor, List<ConstructorArg> argList) {
+        this.argList = argList;
+        this.constructor = constructor;
+      }
+
+      public void checkArgumentsOk() {
+        int argIndex = 0;
+        for (ConstructorArg constructorArg : argList) {
+          if (constructorArg.beanReference == null) {
+            throw new SuitableConstructorContainsIllegalArgument(argIndex, constructor, beanClass);
+          }
+          argIndex++;
+        }
+      }
+    }
+
+    List<ArgSet> argSetList = new ArrayList<>();
+
+    for (Constructor<?> constructor : beanClass.getConstructors()) {
+
+      if (constructor.getAnnotation(HideFromDepinject.class) != null) {
+        continue;
+      }
 
       List<ConstructorArg> argList = new ArrayList<>();
 
       int argIndex = 0;
-      for (Type argType : aConstructor.getGenericParameterTypes()) {
+      for (Type argType : constructor.getGenericParameterTypes()) {
         if (!(argType instanceof ParameterizedType)) {
-          continue CONSTRUCTOR;
+          argList.add(new ConstructorArg(argType, null));
+          argIndex++;
+          continue;
         }
 
         ParameterizedType parameterizedType = (ParameterizedType) argType;
+
+        if (parameterizedType.getRawType() != BeanGetter.class) {
+          argList.add(new ConstructorArg(argType, null));
+          argIndex++;
+          continue;
+        }
+
         BeanReference beanReference = newBeanReference(parameterizedType.getActualTypeArguments()[0],
             "argument № " + argIndex + " of constructor of " + Utils.asStr(beanClass));
 
-        argList.add(new ConstructorArg(beanReference));
-
+        argList.add(new ConstructorArg(argType, beanReference));
         argIndex++;
       }
 
-      return new BeanCreationWithConstructor(this, beanClass, singleton, argList);
+      argSetList.add(new ArgSet(constructor, argList));
     }
 
-    // TODO: 18.10.18 Сделать здесь правильное сообщение
-    throw new RuntimeException("No good constructor");
+    if (argSetList.isEmpty()) {
+      throw new NoConstructorsToCreateBean(beanClass);
+    }
+
+    argSetList.sort(reverseOrder(Comparator.comparing(a -> a.argList.size())));
+
+    argSetList.get(0).checkArgumentsOk();
+
+    List<ConstructorArg> selectedArgList = argSetList.get(0).argList;
+    checkBeanGetterNotPublicFor(beanClass, selectedArgList);
+
+    return new BeanCreationWithConstructor(this, beanClass, singleton, selectedArgList);
+  }
+
+
+  private static void checkBeanGetterNotPublicFor(Class<?> beanClass, List<ConstructorArg> selectedArgList) {
+
+    Set<String> argTypes = selectedArgList.stream()
+        .map(a -> a.argType.toString())
+        .collect(Collectors.toSet());
+
+    if (beanClass.getAnnotation(SkipInject.class) != null) {
+      return;
+    }
+
+    for (Field field : beanClass.getDeclaredFields()) {
+      if (Modifier.isPublic(field.getModifiers())) {
+        continue;
+      }
+
+      if (!BeanGetter.class.equals(field.getType())) {
+        continue;
+      }
+
+      if (field.getAnnotation(SkipInject.class) != null) {
+        continue;
+      }
+
+      if (argTypes.contains(field.getGenericType().toString())) {
+        continue;
+      }
+
+      throw new NotPublicBeanWithoutConstructor(null, field, beanClass);
+    }
   }
 }

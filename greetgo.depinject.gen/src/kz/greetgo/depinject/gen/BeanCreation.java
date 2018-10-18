@@ -53,10 +53,6 @@ public abstract class BeanCreation {
     return beanClass.hashCode();
   }
 
-  public void checkBeanGetterNotPublic() {
-    //noting to do in parent
-  }
-
   public String getterVarName() {
     if (varIndex <= 0) {
       throw new LeftException("Left varIndex value = " + varIndex);
@@ -173,6 +169,10 @@ public abstract class BeanCreation {
 
   @SuppressWarnings("SameParameterValue")
   protected abstract void writeCreateBean(int tab, Outer out, String variableName);
+
+  public void checkBeanGetterNotPublic() {
+    //parent do nothing
+  }
 
   public static class BeanPreparationPriorityDot implements Comparable<BeanPreparationPriorityDot> {
     int parenting = 0;

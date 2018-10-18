@@ -2,10 +2,10 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.errors.BeanGetterIsNotPublic;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
+import kz.greetgo.depinject.gen.errors.NotPublicBeanWithoutConstructor;
 import kz.greetgo.depinject.gen.test_beans007.BeanConfig007;
 import kz.greetgo.depinject.gen.test_beans007.SomeBeanClass;
 import kz.greetgo.depinject.gen.test_beans008.BeanConfig008;
@@ -754,7 +754,7 @@ public class BeanContainerManagerTest {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer032_01.class);
 
-    BeanGetterIsNotPublic error = null;
+    NotPublicBeanWithoutConstructor error = null;
 
     try {
       //
@@ -763,8 +763,8 @@ public class BeanContainerManagerTest {
       //
       //
 
-      Assertions.fail("Must be exception " + BeanGetterIsNotPublic.class.getSimpleName());
-    } catch (BeanGetterIsNotPublic e) {
+      Assertions.fail("Must be exception " + NotPublicBeanWithoutConstructor.class.getSimpleName());
+    } catch (NotPublicBeanWithoutConstructor e) {
       error = e;
     }
 
@@ -783,7 +783,7 @@ public class BeanContainerManagerTest {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer032_02.class);
 
-    BeanGetterIsNotPublic error = null;
+    NotPublicBeanWithoutConstructor error = null;
 
     try {
       //
@@ -792,8 +792,8 @@ public class BeanContainerManagerTest {
       //
       //
 
-      Assertions.fail("Must be exception " + BeanGetterIsNotPublic.class.getSimpleName());
-    } catch (BeanGetterIsNotPublic e) {
+      Assertions.fail("Must be exception " + NotPublicBeanWithoutConstructor.class.getSimpleName());
+    } catch (NotPublicBeanWithoutConstructor e) {
       error = e;
     }
 
@@ -812,7 +812,7 @@ public class BeanContainerManagerTest {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer032_03.class);
 
-    BeanGetterIsNotPublic error = null;
+    NotPublicBeanWithoutConstructor error = null;
 
     try {
       //
@@ -821,8 +821,8 @@ public class BeanContainerManagerTest {
       //
       //
 
-      Assertions.fail("Must be exception " + BeanGetterIsNotPublic.class.getSimpleName());
-    } catch (BeanGetterIsNotPublic e) {
+      Assertions.fail("Must be exception " + NotPublicBeanWithoutConstructor.class.getSimpleName());
+    } catch (NotPublicBeanWithoutConstructor e) {
       error = e;
     }
 

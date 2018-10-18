@@ -1,6 +1,9 @@
 package kz.greetgo.depinject.gen;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -23,5 +26,17 @@ public class TestUtil {
     }
 
     return "build";
+  }
+
+  public static String extractStackTraceToStr(Throwable error) {
+    try {
+      ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+      PrintStream outStream = new PrintStream(bOut, false, "UTF-8");
+      error.printStackTrace(outStream);
+      outStream.flush();
+      return bOut.toString("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

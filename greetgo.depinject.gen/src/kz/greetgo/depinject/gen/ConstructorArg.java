@@ -2,15 +2,15 @@ package kz.greetgo.depinject.gen;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.lang.reflect.Type;
+
 public class ConstructorArg {
-  private final BeanReference beanReference;
+  public final Type argType;
+  public final BeanReference beanReference;
 
-  public ConstructorArg(BeanReference beanReference) {
+  public ConstructorArg(Type argType, BeanReference beanReference) {
+    this.argType = argType;
     this.beanReference = beanReference;
-  }
-
-  public BeanReference beanReference() {
-    return beanReference;
   }
 
   public String displayStr() {
@@ -19,5 +19,9 @@ public class ConstructorArg {
 
   public void markToUse() {
     throw new NotImplementedException();
+  }
+
+  public BeanReference beanReference() {
+    return beanReference;
   }
 }
