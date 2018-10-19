@@ -7,5 +7,6 @@ import kz.greetgo.depinject.testng.tests.p002_private_bg_def_constructor.beans.B
 
 @Include(BeanConfigTest002.class)
 public interface BeanContainerTest002 extends BeanContainer {
+  @SuppressWarnings("unused")
   BeanTest002_main main();
 }
