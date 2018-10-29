@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.gen.test_beans033;
+package kz.greetgo.depinject.gen.test_beans033.beans;
 
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
@@ -17,10 +17,10 @@ public class MainBean033 {
     this.bean033_03 = bean033_03;
   }
 
-  public void hello() {
-    System.out.println("Hello from " + getClass().getSimpleName());
-    bean033_01.get().hello();
-    bean033_02.get().hello();
-    bean033_03.get().hello();
+  public void hello(StringBuilder out) {
+    out.append("Hello from ").append(getClass().getSimpleName()).append("\n");
+    bean033_01.get().hello(out);
+    bean033_02.get().hello(out);
+    bean033_03.get().hello(out);
   }
 }

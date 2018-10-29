@@ -16,15 +16,16 @@ public class BeanContainerGenerator {
 
     try (PrintWriter writer = new PrintWriter(file, "UTF-8")) {
       writeTo(writer);
+    } catch (RuntimeException e) {
+      throw e;
     } catch (Exception e) {
-      if (e instanceof RuntimeException) throw (RuntimeException) e;
       throw new RuntimeException(e);
     }
 
     return file;
   }
 
-  public void writeTo(PrintWriter writer) throws Exception {
+  public void writeTo(PrintWriter writer) {
     OuterToPrintWriter outer = new OuterToPrintWriter("  ", writer);
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(beanContainerInterface);

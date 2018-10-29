@@ -253,4 +253,8 @@ public class BeanReference {
     outer.tab(tab).stn("}");
   }
 
+  public String accessExpression() {
+    return "(" + Utils.codeName(BeanGetter.class) + '<' + targetClassCode() + ">)(java.lang.Object)" + getterVarName();
+  }
+
 }

@@ -17,10 +17,14 @@ public class ConstructorArg {
   }
 
   public void markToUse() {
-    // TODO: 18.10.18 realize it
+    beanReference.markToUse();
   }
 
   public BeanReference beanReference() {
     return beanReference;
+  }
+
+  public String referenceExpression() {
+    return beanReference.accessExpression();
   }
 }

@@ -16,8 +16,8 @@ import kz.greetgo.depinject.gen.test_beans018.Bean018_empty;
 import kz.greetgo.depinject.gen.test_beans018.Bean018_iface;
 import kz.greetgo.depinject.gen.test_beans018.BeanConfig018;
 import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
-import kz.greetgo.depinject.gen.test_beans033.BeanConfig033;
-import kz.greetgo.depinject.gen.test_beans033.MainBean033;
+import kz.greetgo.depinject.gen.test_beans033.beans.BeanConfig033;
+import kz.greetgo.depinject.gen.test_beans033.beans.MainBean033;
 import org.testng.annotations.Test;
 
 import java.io.File;

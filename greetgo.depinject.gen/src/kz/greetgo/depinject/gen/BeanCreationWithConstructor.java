@@ -49,7 +49,12 @@ public class BeanCreationWithConstructor extends BeanCreation {
 
   @Override
   protected void writeCreateBean(int tab, Outer out, String variableName) {
-    out.tab(tab).stn(Utils.codeName(beanClass) + ' ' + variableName + " = new " + Utils.codeName(beanClass) + "();");
+    out.tab(tab).stn(Utils.codeName(beanClass) + ' ' + variableName + " = new " + Utils.codeName(beanClass)
+        + "(" + (
+        argList.stream()
+            .map(ConstructorArg::referenceExpression)
+            .collect(Collectors.joining(", "))
+    ) + ");");
   }
 
   @Override

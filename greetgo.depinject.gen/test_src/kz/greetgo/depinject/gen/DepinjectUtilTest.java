@@ -4,11 +4,13 @@ import kz.greetgo.depinject.Depinject;
 import kz.greetgo.depinject.gen.test_beans027.beans.afterInject_sync.DependsOnAlone;
 import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
 import kz.greetgo.depinject.gen.test_beans028.NoIncludeBeanContainer;
-import kz.greetgo.util.ServerUtil;
+import kz.greetgo.depinject.gen.test_beans033.bean_container.BeanContainer033;
+import kz.greetgo.depinject.gen.test_beans033.beans.MainBean033;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -18,6 +20,10 @@ public class DepinjectUtilTest {
   private class A {
     @SuppressWarnings("unused")
     public List<String> x;
+  }
+
+  private String srcDir(String testName) {
+    return Paths.get("build", "test_generated_src", getClass().getSimpleName(), testName).toString();
   }
 
   @Test
@@ -77,14 +83,12 @@ public class DepinjectUtilTest {
 
   @Test
   public void implementAndUseBeanContainers() throws Exception {
-    final String srcDir = "build/implementAndUseBeanContainers";
-
     //
     //
     //
     DepinjectUtil.implementAndUseBeanContainers(
-      "kz.greetgo.depinject.gen.test_beans027.container",
-      srcDir
+        "kz.greetgo.depinject.gen.test_beans027.container",
+        srcDir("implementAndUseBeanContainers")
     );
     //
     //
@@ -106,9 +110,7 @@ public class DepinjectUtilTest {
 
     DependsOnAlone dependsOnAlone = impl.getDependsOnAlone();
     assertThat(dependsOnAlone.valueInitiatedWhileAfterInject)
-      .isEqualTo("DependsOnAlone value : Value while after inject");
-
-    ServerUtil.deleteRecursively(srcDir);
+        .isEqualTo("DependsOnAlone value : Value while after inject");
   }
 
   @Test(enabled = false)
@@ -121,19 +123,16 @@ public class DepinjectUtilTest {
 
   @Test
   public void implementAndUseBeanContainers_NoIncludeBeanContainer() throws Exception {
-    final String srcDir = "build/implementAndUseBeanContainers_NoIncludeBeanContainer";
-
     //
     //
     //
     DepinjectUtil.implementAndUseBeanContainers(
-      NoIncludeBeanContainer.class.getPackage().getName(),
-      srcDir
+        NoIncludeBeanContainer.class.getPackage().getName(),
+        srcDir("implementAndUseBeanContainers_NoIncludeBeanContainer")
     );
     //
     //
     //
-
   }
 
   @Test
@@ -146,5 +145,34 @@ public class DepinjectUtilTest {
 
     assertThat(version).isNotNull();
     assertThat(version.version1).isGreaterThan(0);
+  }
+
+  @Test
+  public void bean_getters_in_constructor() throws Exception {
+    //
+    //
+    //
+    DepinjectUtil.implementAndUseBeanContainers(
+        BeanContainer033.class.getPackage().getName(),
+        srcDir("bean_getters_in_constructor")
+    );
+    //
+    //
+    //
+
+    BeanContainer033 beanContainer033 = Depinject.newInstance(BeanContainer033.class);
+
+    MainBean033 mainBean033 = beanContainer033.mainBean();
+
+    StringBuilder out = new StringBuilder();
+
+    mainBean033.hello(out);
+
+//    System.out.println(out);
+
+    assertThat(out.toString()).contains("Hello from MainBean033");
+    assertThat(out.toString()).contains("Hello from Bean033_01");
+    assertThat(out.toString()).contains("Hello from Bean033_02");
+    assertThat(out.toString()).contains("Hello from Bean033_03");
   }
 }
