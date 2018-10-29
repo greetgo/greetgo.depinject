@@ -2,9 +2,7 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.HideFromDepinject;
-import kz.greetgo.depinject.core.SkipInject;
 import kz.greetgo.depinject.gen.errors.NoConstructorsToCreateBean;
-import kz.greetgo.depinject.gen.errors.NotPublicBeanWithoutConstructor;
 import kz.greetgo.depinject.gen.errors.SuitableConstructorContainsIllegalArgument;
 import kz.greetgo.util.RND;
 import org.testng.annotations.Test;

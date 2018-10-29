@@ -5,12 +5,12 @@ import kz.greetgo.depinject.core.SkipInject;
 
 import java.lang.reflect.Field;
 
-public class NotPublicBeanWithoutConstructor extends RuntimeException {
+public class NonPublicBeanWithoutConstructor extends RuntimeException {
   public final Class<?> containsFieldClass;
   public final Field beanGetterField;
   public final Class<?> beanClass;
 
-  public NotPublicBeanWithoutConstructor(Class<?> containsFieldClass, Field beanGetterField, Class<?> beanClass) {
+  public NonPublicBeanWithoutConstructor(Class<?> containsFieldClass, Field beanGetterField, Class<?> beanClass) {
     super(message(containsFieldClass, beanGetterField, beanClass));
     this.containsFieldClass = containsFieldClass;
     this.beanGetterField = beanGetterField;

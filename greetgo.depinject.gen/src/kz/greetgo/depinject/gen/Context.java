@@ -10,7 +10,7 @@ import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
 import kz.greetgo.depinject.gen.errors.NoConstructorsToCreateBean;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
-import kz.greetgo.depinject.gen.errors.NotPublicBeanWithoutConstructor;
+import kz.greetgo.depinject.gen.errors.NonPublicBeanWithoutConstructor;
 import kz.greetgo.depinject.gen.errors.SuitableConstructorContainsIllegalArgument;
 
 import java.lang.reflect.Constructor;
@@ -215,7 +215,7 @@ public class Context {
         continue;
       }
 
-      throw new NotPublicBeanWithoutConstructor(null, field, beanClass);
+      throw new NonPublicBeanWithoutConstructor(null, field, beanClass);
     }
   }
 }

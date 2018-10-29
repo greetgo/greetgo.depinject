@@ -31,3 +31,7 @@
    >   }
    > }
    > ```
+
+ - Renamed BeanGetterIsNotPublic ⟶ to NonPublicBeanWithoutConstructor
+   > Because added constructors with BeanGetter arguments, and now non-public BeanGetter is OK, if it is
+   > initialized through constructor.

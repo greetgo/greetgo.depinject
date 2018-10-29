@@ -5,7 +5,7 @@ import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
-import kz.greetgo.depinject.gen.errors.NotPublicBeanWithoutConstructor;
+import kz.greetgo.depinject.gen.errors.NonPublicBeanWithoutConstructor;
 import kz.greetgo.depinject.gen.test_beans007.BeanConfig007;
 import kz.greetgo.depinject.gen.test_beans007.SomeBeanClass;
 import kz.greetgo.depinject.gen.test_beans008.BeanConfig008;
@@ -760,7 +760,7 @@ public class BeanContainerManagerTest {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer032_01.class);
 
-    NotPublicBeanWithoutConstructor error = null;
+    NonPublicBeanWithoutConstructor error = null;
 
     try {
       //
@@ -769,8 +769,8 @@ public class BeanContainerManagerTest {
       //
       //
 
-      Assertions.fail("Must be exception " + NotPublicBeanWithoutConstructor.class.getSimpleName());
-    } catch (NotPublicBeanWithoutConstructor e) {
+      Assertions.fail("Must be exception " + NonPublicBeanWithoutConstructor.class.getSimpleName());
+    } catch (NonPublicBeanWithoutConstructor e) {
       error = e;
     }
 
@@ -789,7 +789,7 @@ public class BeanContainerManagerTest {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer032_02.class);
 
-    NotPublicBeanWithoutConstructor error = null;
+    NonPublicBeanWithoutConstructor error = null;
 
     try {
       //
@@ -798,8 +798,8 @@ public class BeanContainerManagerTest {
       //
       //
 
-      Assertions.fail("Must be exception " + NotPublicBeanWithoutConstructor.class.getSimpleName());
-    } catch (NotPublicBeanWithoutConstructor e) {
+      Assertions.fail("Must be exception " + NonPublicBeanWithoutConstructor.class.getSimpleName());
+    } catch (NonPublicBeanWithoutConstructor e) {
       error = e;
     }
 
@@ -818,7 +818,7 @@ public class BeanContainerManagerTest {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer032_03.class);
 
-    NotPublicBeanWithoutConstructor error = null;
+    NonPublicBeanWithoutConstructor error = null;
 
     try {
       //
@@ -827,8 +827,8 @@ public class BeanContainerManagerTest {
       //
       //
 
-      Assertions.fail("Must be exception " + NotPublicBeanWithoutConstructor.class.getSimpleName());
-    } catch (NotPublicBeanWithoutConstructor e) {
+      Assertions.fail("Must be exception " + NonPublicBeanWithoutConstructor.class.getSimpleName());
+    } catch (NonPublicBeanWithoutConstructor e) {
       error = e;
     }
 
@@ -955,7 +955,7 @@ public class BeanContainerManagerTest {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer032_10.class);
 
-    NotPublicBeanWithoutConstructor error = null;
+    NonPublicBeanWithoutConstructor error = null;
 
     try {
       //
@@ -963,7 +963,7 @@ public class BeanContainerManagerTest {
       bcm.prepareToWrite();
       //
       //
-    } catch (NotPublicBeanWithoutConstructor e) {
+    } catch (NonPublicBeanWithoutConstructor e) {
       error = e;
     }
 

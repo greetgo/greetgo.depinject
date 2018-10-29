@@ -2,7 +2,7 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.SkipInject;
-import kz.greetgo.depinject.gen.errors.NotPublicBeanWithoutConstructor;
+import kz.greetgo.depinject.gen.errors.NonPublicBeanWithoutConstructor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -99,7 +99,7 @@ public class BeanCreationWithConstructor extends BeanCreation {
         continue;
       }
 
-      throw new NotPublicBeanWithoutConstructor(aClass, field, beanClass);
+      throw new NonPublicBeanWithoutConstructor(aClass, field, beanClass);
     }
   }
 }
