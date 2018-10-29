@@ -4,14 +4,14 @@ import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
 
 @Bean
-public class MainBean033_01 {
-  private final BeanGetter<Bean033_01_1> bean033_01;
-  private final BeanGetter<Bean033_01_2> bean033_02;
-  private final BeanGetter<Bean033_01_3> bean033_03;
+public class MainBean03301 {
+  private final BeanGetter<Bean03301_1> bean033_01;
+  private final BeanGetter<Bean03301_2> bean033_02;
+  private final BeanGetter<Bean03301_3> bean033_03;
 
-  public MainBean033_01(BeanGetter<Bean033_01_1> bean033_01,
-                        BeanGetter<Bean033_01_2> bean033_02,
-                        BeanGetter<Bean033_01_3> bean033_03) {
+  public MainBean03301(BeanGetter<Bean03301_1> bean033_01,
+                       BeanGetter<Bean03301_2> bean033_02,
+                       BeanGetter<Bean03301_3> bean033_03) {
     this.bean033_01 = bean033_01;
     this.bean033_02 = bean033_02;
     this.bean033_03 = bean033_03;

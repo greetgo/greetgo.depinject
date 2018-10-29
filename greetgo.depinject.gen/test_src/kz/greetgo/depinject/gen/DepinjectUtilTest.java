@@ -5,7 +5,17 @@ import kz.greetgo.depinject.gen.test_beans027.beans.afterInject_sync.DependsOnAl
 import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
 import kz.greetgo.depinject.gen.test_beans028.NoIncludeBeanContainer;
 import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.bean_container.BeanContainer033_01;
-import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.beans.MainBean033_01;
+import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.beans.Bean03301_1;
+import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.beans.Bean03301_2;
+import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.beans.Bean03301_3;
+import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.beans.MainBean03301;
+import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.bean_container.BeanContainer03302;
+import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.Bean03302_11;
+import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.Bean03302_12;
+import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.Bean03302_21;
+import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.Bean03302_22;
+import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.MainBean03302;
+import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.MainBean03302Impl;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
@@ -151,18 +161,16 @@ public class DepinjectUtilTest {
   public void p01_bean_getters_in_constructor() throws Exception {
     //
     //
-    //
     DepinjectUtil.implementAndUseBeanContainers(
         BeanContainer033_01.class.getPackage().getName(),
-        srcDir("bean_getters_in_constructor")
+        srcDir("p01_bean_getters_in_constructor")
     );
-    //
     //
     //
 
     BeanContainer033_01 beanContainer = Depinject.newInstance(BeanContainer033_01.class);
 
-    MainBean033_01 mainBean033 = beanContainer.mainBean();
+    MainBean03301 mainBean033 = beanContainer.mainBean();
 
     StringBuilder out = new StringBuilder();
 
@@ -170,9 +178,37 @@ public class DepinjectUtilTest {
 
 //    System.out.println(out);
 
-    assertThat(out.toString()).contains("Hello from MainBean033");
-    assertThat(out.toString()).contains("Hello from Bean033_01");
-    assertThat(out.toString()).contains("Hello from Bean033_02");
-    assertThat(out.toString()).contains("Hello from Bean033_03");
+    assertThat(out.toString()).contains("Hello from " + MainBean03301.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello from " + Bean03301_1.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello from " + Bean03301_2.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello from " + Bean03301_3.class.getSimpleName());
+  }
+
+  @Test
+  public void p02_list_bean_getters_in_constructor() throws Exception {
+    //
+    //
+    DepinjectUtil.implementAndUseBeanContainers(
+        BeanContainer03302.class.getPackage().getName(),
+        srcDir("p02_list_bean_getters_in_constructor")
+    );
+    //
+    //
+
+    BeanContainer03302 beanContainer = Depinject.newInstance(BeanContainer03302.class);
+
+    MainBean03302 mainBean = beanContainer.mainBean();
+
+    StringBuilder out = new StringBuilder();
+
+    mainBean.hello(out);
+
+//    System.out.println(out);
+
+    assertThat(out.toString()).contains("Hello from " + MainBean03302Impl.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello1 from " + Bean03302_11.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello2 from " + Bean03302_12.class.getSimpleName());
+    assertThat(out.toString()).contains("Hi1 from " + Bean03302_21.class.getSimpleName());
+    assertThat(out.toString()).contains("Hi2 from " + Bean03302_22.class.getSimpleName());
   }
 }
