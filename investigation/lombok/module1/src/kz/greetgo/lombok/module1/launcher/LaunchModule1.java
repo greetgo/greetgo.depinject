@@ -9,6 +9,10 @@ public class LaunchModule1 {
 
     Module1 module1 = beanContainer.module1();
 
-    module1.print();
+    StringBuilder out = new StringBuilder();
+
+    module1.print(out);
+
+    System.out.println(out);
   }
 }

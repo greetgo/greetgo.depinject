@@ -3,7 +3,9 @@ plugins {
 }
 
 dependencies {
-  
+  compile project(":lombok:module2")
+
+  testCompile "kz.greetgo.depinject:greetgo.depinject.testng:$greetgoDepinjectVersion"
 }
 
 task runModule1(type: JavaExec) {
