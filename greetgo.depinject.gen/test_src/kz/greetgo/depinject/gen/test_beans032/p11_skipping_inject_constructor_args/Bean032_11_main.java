@@ -11,6 +11,9 @@ public class Bean032_11_main {
   @SuppressWarnings({"unused", "FieldCanBeLocal"})
   private BeanGetter<Bean032_11_2> bean032_09_2;
 
+  /**
+   * This field MUST be private.
+   */
   @SuppressWarnings("unused")
   @SkipInject
   private BeanGetter<Bean032_11_3> bean032_09_3;

@@ -16,7 +16,7 @@ public abstract class AbstractDepinjectTestNg {
   @BeforeClass
   public void prepareDepinject() throws Exception {
     beforeGenerateTestSources();
-    srcDir = DepinjectTestNg.prepareDepinjectTestNg(this, getSrcTempDir());
+    srcDir = DepinjectTestNg.prepareDepinjectTestNg(this, generateSrcTempDir());
   }
 
   protected void beforeGenerateTestSources() {
@@ -37,7 +37,9 @@ public abstract class AbstractDepinjectTestNg {
   }
 
   private static void removeRecursively(File file) {
-    if (!file.exists()) { return; }
+    if (!file.exists()) {
+      return;
+    }
 
     if (file.isDirectory()) {
       final File[] files = file.listFiles();
@@ -55,21 +57,23 @@ public abstract class AbstractDepinjectTestNg {
     return true;
   }
 
-  protected String getSrcTempDir() {
+  protected String generateSrcTempDir() {
 
+    //gradle infrastructure
     if (new File("build").isDirectory()) {
       return "build/depinject_testNg";
     }
 
+    //maven2 infrastructure
     if (new File("target").isDirectory()) {
       return "target/depinject_testNg";
     }
 
+    //unknown infrastructure
     {
       //noinspection SpellCheckingInspection
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
       return System.getProperty("java.io.tmpdir") + "/depinject_testNg_" + sdf.format(new Date());
     }
   }
-
 }

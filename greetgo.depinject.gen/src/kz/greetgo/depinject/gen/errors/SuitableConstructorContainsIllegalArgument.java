@@ -21,9 +21,11 @@ public class SuitableConstructorContainsIllegalArgument extends RuntimeException
         + "\n\tAll arguments of this constructor MUST have type " + bg + " (with generics in)"
         + "\n"
         + "\n\tNow depinject found constructor without this type in bean " + beanClass
-        + "\n\tPlease, wrap this argument in " + bg + " : the position of argument is " + (argIndex + 1) + " (the first is 1)"
-        + "\n\n\tIf you do not want depinject used this constructor, mark the constructor with annotation @" + hfd
-        + "\n\n\tThe constructor: " + asStr(constructor)
+        + "\n\tYou can do the following:"
+        + "\n\t\t- Wrap this argument in " + bg + " : the position of argument is " + (argIndex + 1) + " (the first is 1)"
+        + "\n\t\t- Mark the constructor with annotation @" + hfd
+        + ", if you do not want depinject to use this constructor."
+        + "\n\n\tDepinject uses constructor: " + asStr(constructor)
         + "\n"
         ;
   }
@@ -32,7 +34,7 @@ public class SuitableConstructorContainsIllegalArgument extends RuntimeException
     StringBuilder ret = new StringBuilder(constructor.getName() + "(...)");
     int index = 1;
     for (Type type : constructor.getGenericParameterTypes()) {
-      ret.append("\n\t\targument № ").append(index++).append(" type : ").append(type);
+      ret.append("\n\t\ttype of argument ").append(index++).append(" : ").append(type);
     }
     return ret.toString();
   }

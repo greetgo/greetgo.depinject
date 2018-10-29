@@ -8,7 +8,7 @@ import kz.greetgo.depinject.core.BeanScanner;
 public class BeanConfigTest006 {
   public static void sleepInThread() {
     try {
-      Thread.sleep(100);
+      Thread.sleep(20);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }

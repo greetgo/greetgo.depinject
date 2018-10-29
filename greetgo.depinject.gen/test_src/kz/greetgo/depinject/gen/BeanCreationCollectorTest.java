@@ -51,8 +51,7 @@ public class BeanCreationCollectorTest {
     //
   }
 
-  public interface BeanContainerWithoutInclude extends BeanContainer {
-  }
+  public interface BeanContainerWithoutInclude extends BeanContainer {}
 
   @Test(expectedExceptions = NoInclude.class)
   public void collectFrom_NoInclude() {
@@ -65,12 +64,10 @@ public class BeanCreationCollectorTest {
     //
   }
 
-  class BeanConfigWithoutBeanConfig {
-  }
+  class BeanConfigWithoutBeanConfig {}
 
   @Include(BeanConfigWithoutBeanConfig.class)
-  public interface ForNoBeanConfigError extends BeanContainer {
-  }
+  public interface ForNoBeanConfigError extends BeanContainer {}
 
   @Test(expectedExceptions = NoBeanConfig.class)
   public void collectFrom_NoBeanConfig() {
@@ -83,8 +80,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig001.class)
-  public interface HasBeanWithDefaultConstructor extends BeanContainer {
-  }
+  public interface HasBeanWithDefaultConstructor extends BeanContainer {}
 
   private static Map<String, BeanCreation> toMapSimple(List<BeanCreation> list) {
     Map<String, BeanCreation> ret = new HashMap<>();
@@ -113,8 +109,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig002.class)
-  interface WithoutBeanScanner extends BeanContainer {
-  }
+  interface WithoutBeanScanner extends BeanContainer {}
 
   @Test
   public void collectFrom_withoutBeanScanner() {
@@ -129,8 +124,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig003.class)
-  interface FactoryMethodBeanContainer extends BeanContainer {
-  }
+  interface FactoryMethodBeanContainer extends BeanContainer {}
 
   @Test
   public void collectFrom_factoryMethod() {
@@ -160,8 +154,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig004.class)
-  interface BeanFactoryMethodCannotHasAnyArgumentsBeanContainer extends BeanContainer {
-  }
+  interface BeanFactoryMethodCannotHasAnyArgumentsBeanContainer extends BeanContainer {}
 
   @Test(expectedExceptions = FactoryMethodCannotContainAnyArguments.class)
   public void collectFrom_BeanFactoryMethodCannotHasAnyArguments() {
@@ -174,8 +167,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig005.class)
-  interface BeanFactoryBeanContainer extends BeanContainer {
-  }
+  interface BeanFactoryBeanContainer extends BeanContainer {}
 
   @Test
   public void collectFrom_BeanFactory() {
@@ -212,8 +204,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig006.class)
-  interface BeanContainer_for_NoDefaultBeanFactory extends BeanContainer {
-  }
+  interface BeanContainer_for_NoDefaultBeanFactory extends BeanContainer {}
 
   @Test(expectedExceptions = NoDefaultBeanFactory.class)
   public void collectFrom_BeanFactory_NoDefaultBeanFactory() {
@@ -226,8 +217,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig012.class)
-  interface BeanContainer_WithInterfaceBeanFactoryReference extends BeanContainer {
-  }
+  interface BeanContainer_WithInterfaceBeanFactoryReference extends BeanContainer {}
 
   @Test
   public void collectFrom_InterfaceBeanFactoryReference() {
@@ -240,8 +230,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig013.class)
-  interface BeanContainer_WithAbstractBeanFactoryReference extends BeanContainer {
-  }
+  interface BeanContainer_WithAbstractBeanFactoryReference extends BeanContainer {}
 
   @Test
   public void collectFrom_AbstractBeanFactoryReference() {
@@ -254,8 +243,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig014_1.class)
-  interface BeanContainer_BeanScannerPackage_withParentReference extends BeanContainer {
-  }
+  interface BeanContainer_BeanScannerPackage_withParentReference extends BeanContainer {}
 
   @Test
   public void collectFrom_BeanScannerPackage_withParentReference() {
@@ -272,8 +260,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig014_2.class)
-  interface BeanContainer_BeanScannerPackage_withRelativeReference extends BeanContainer {
-  }
+  interface BeanContainer_BeanScannerPackage_withRelativeReference extends BeanContainer {}
 
   @Test
   public void collectFrom_BeanScannerPackage_withRelativeReference() {
@@ -290,8 +277,7 @@ public class BeanCreationCollectorTest {
   }
 
   @Include(BeanConfig014_3.class)
-  interface BeanContainer_BeanScannerPackage_withFullReference extends BeanContainer {
-  }
+  interface BeanContainer_BeanScannerPackage_withFullReference extends BeanContainer {}
 
   @Test
   public void collectFrom_BeanScannerPackage_withFullReference() {

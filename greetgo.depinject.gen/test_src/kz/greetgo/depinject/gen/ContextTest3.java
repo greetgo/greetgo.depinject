@@ -233,14 +233,15 @@ public class ContextTest3 {
 
     String st = TestUtil.extractStackTraceToStr(error);
 
-//    System.out.println(st);
+    System.out.println(st);
 
     assertThat(st).contains(SuitableConstructorContainsIllegalArgument.class.getSimpleName());
     assertThat(st).contains("for " + ManyConstructorsButSuitableIsLeft.class);
     assertThat(st).contains("Depinject finds constructor with maximum number of arguments and use it to create bean.");
     assertThat(st).contains("All arguments of this constructor MUST have type BeanGetter (with generics in)");
     assertThat(st).contains("Now depinject found constructor without this type in bean " + beanClass);
-    assertThat(st).contains("Please, wrap this argument in BeanGetter");
+    assertThat(st).contains("- Wrap this argument in BeanGetter");
+    assertThat(st).contains("- Mark the constructor with annotation @HideFromDepinject");
   }
 
   @SuppressWarnings("unused")
