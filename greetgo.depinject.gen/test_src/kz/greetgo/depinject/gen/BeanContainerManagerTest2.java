@@ -16,8 +16,8 @@ import kz.greetgo.depinject.gen.test_beans018.Bean018_empty;
 import kz.greetgo.depinject.gen.test_beans018.Bean018_iface;
 import kz.greetgo.depinject.gen.test_beans018.BeanConfig018;
 import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
-import kz.greetgo.depinject.gen.test_beans033.beans.BeanConfig033;
-import kz.greetgo.depinject.gen.test_beans033.beans.MainBean033;
+import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.beans.BeanConfig033_01;
+import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.beans.MainBean033_01;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -149,10 +149,10 @@ public class BeanContainerManagerTest2 {
     generate(BeanContainer018.class);
   }
 
-  @Include(BeanConfig033.class)
+  @Include(BeanConfig033_01.class)
   interface BeanContainer033 extends BeanContainer {
     @SuppressWarnings("unused")
-    MainBean033 mainBean();
+    MainBean033_01 mainBean();
   }
 
   @Test

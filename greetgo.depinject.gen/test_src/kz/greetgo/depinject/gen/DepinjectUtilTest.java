@@ -4,8 +4,8 @@ import kz.greetgo.depinject.Depinject;
 import kz.greetgo.depinject.gen.test_beans027.beans.afterInject_sync.DependsOnAlone;
 import kz.greetgo.depinject.gen.test_beans027.container.BeanContainerForTestingUtil;
 import kz.greetgo.depinject.gen.test_beans028.NoIncludeBeanContainer;
-import kz.greetgo.depinject.gen.test_beans033.bean_container.BeanContainer033;
-import kz.greetgo.depinject.gen.test_beans033.beans.MainBean033;
+import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.bean_container.BeanContainer033_01;
+import kz.greetgo.depinject.gen.test_beans033.p01_bean_getters_in_constructor.beans.MainBean033_01;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
@@ -148,21 +148,21 @@ public class DepinjectUtilTest {
   }
 
   @Test
-  public void bean_getters_in_constructor() throws Exception {
+  public void p01_bean_getters_in_constructor() throws Exception {
     //
     //
     //
     DepinjectUtil.implementAndUseBeanContainers(
-        BeanContainer033.class.getPackage().getName(),
+        BeanContainer033_01.class.getPackage().getName(),
         srcDir("bean_getters_in_constructor")
     );
     //
     //
     //
 
-    BeanContainer033 beanContainer033 = Depinject.newInstance(BeanContainer033.class);
+    BeanContainer033_01 beanContainer = Depinject.newInstance(BeanContainer033_01.class);
 
-    MainBean033 mainBean033 = beanContainer033.mainBean();
+    MainBean033_01 mainBean033 = beanContainer.mainBean();
 
     StringBuilder out = new StringBuilder();
 
