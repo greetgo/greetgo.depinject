@@ -15,7 +15,16 @@ import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_construct
 import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.Bean03302_21;
 import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.Bean03302_22;
 import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.MainBean03302;
-import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.MainBean03302Impl;
+import kz.greetgo.depinject.gen.test_beans033.p02_list_bean_getters_in_constructor.beans.MainBeanImpl03302;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.bean_container.BeanContainer03303;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.group1.Bean03303_11;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.group1.Bean03303_12;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.group2.Bean03303_21;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.group2.Bean03303_22;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.main.MainBean03303;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.main.MainBeanImpl03303;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.simple.SimpleBean03303_1;
+import kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.simple.SimpleBean03303_2;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
@@ -205,10 +214,40 @@ public class DepinjectUtilTest {
 
 //    System.out.println(out);
 
-    assertThat(out.toString()).contains("Hello from " + MainBean03302Impl.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello from " + MainBeanImpl03302.class.getSimpleName());
     assertThat(out.toString()).contains("Hello1 from " + Bean03302_11.class.getSimpleName());
     assertThat(out.toString()).contains("Hello2 from " + Bean03302_12.class.getSimpleName());
     assertThat(out.toString()).contains("Hi1 from " + Bean03302_21.class.getSimpleName());
     assertThat(out.toString()).contains("Hi2 from " + Bean03302_22.class.getSimpleName());
+  }
+
+  @Test
+  public void p03_bean_getters_all_combinations() throws Exception {
+    //
+    //
+    DepinjectUtil.implementAndUseBeanContainers(
+        BeanContainer03303.class.getPackage().getName(),
+        srcDir("p03_bean_getters_all_combinations")
+    );
+    //
+    //
+
+    BeanContainer03303 beanContainer = Depinject.newInstance(BeanContainer03303.class);
+
+    MainBean03303 mainBean = beanContainer.mainBean();
+
+    StringBuilder out = new StringBuilder();
+
+    mainBean.hello(out);
+
+//    System.out.println(out);
+
+    assertThat(out.toString()).contains("Hello from " + MainBeanImpl03303.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello1 from " + Bean03303_11.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello1 from " + Bean03303_12.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello2 from " + Bean03303_21.class.getSimpleName());
+    assertThat(out.toString()).contains("Hello2 from " + Bean03303_22.class.getSimpleName());
+    assertThat(out.toString()).contains("Hi from " + SimpleBean03303_1.class.getSimpleName());
+    assertThat(out.toString()).contains("Hi from " + SimpleBean03303_2.class.getSimpleName());
   }
 }

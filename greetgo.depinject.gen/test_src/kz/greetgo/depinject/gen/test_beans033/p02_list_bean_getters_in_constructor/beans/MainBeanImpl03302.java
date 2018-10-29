@@ -6,11 +6,11 @@ import kz.greetgo.depinject.core.BeanGetter;
 import java.util.List;
 
 @Bean
-public class MainBean03302Impl implements MainBean03302 {
+public class MainBeanImpl03302 implements MainBean03302 {
   private final BeanGetter<List<BeanGroup03302_1>> beans1;
   private final BeanGetter<List<BeanGroup03302_2>> beans2;
 
-  public MainBean03302Impl(BeanGetter<List<BeanGroup03302_1>> beans1,
+  public MainBeanImpl03302(BeanGetter<List<BeanGroup03302_1>> beans1,
                            BeanGetter<List<BeanGroup03302_2>> beans2) {
     this.beans1 = beans1;
     this.beans2 = beans2;

@@ -1,0 +1,10 @@
+package kz.greetgo.depinject.gen.test_beans033.p03_bean_getters_all_combinations.beans.simple;
+
+import kz.greetgo.depinject.core.Bean;
+
+@Bean
+public class SimpleBean03303_1 {
+  public void hi(StringBuilder out) {
+    out.append("Hi from ").append(getClass().getSimpleName()).append("\n");
+  }
+}
