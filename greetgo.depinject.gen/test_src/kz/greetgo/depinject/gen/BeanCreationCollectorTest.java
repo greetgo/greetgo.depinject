@@ -268,7 +268,8 @@ public class BeanCreationCollectorTest {
     //
     //
     List<BeanCreation> bcList = context.newBeanCreationCollector(
-        BeanContainer_BeanScannerPackage_withRelativeReference.class).collect();
+        BeanContainer_BeanScannerPackage_withRelativeReference.class
+    ).collect();
     //
     //
 
@@ -285,7 +286,8 @@ public class BeanCreationCollectorTest {
     //
     //
     List<BeanCreation> bcList = context.newBeanCreationCollector(
-        BeanContainer_BeanScannerPackage_withFullReference.class).collect();
+        BeanContainer_BeanScannerPackage_withFullReference.class
+    ).collect();
     //
     //
 
@@ -318,7 +320,6 @@ public class BeanCreationCollectorTest {
     //
 
     assertThat(actual).isEqualTo(expected);
-
   }
 
   @Include(BeanConfig029.class)

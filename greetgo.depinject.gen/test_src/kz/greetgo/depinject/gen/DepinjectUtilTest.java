@@ -106,7 +106,7 @@ public class DepinjectUtilTest {
     //
     //
     DepinjectUtil.implementAndUseBeanContainers(
-        "kz.greetgo.depinject.gen.test_beans027.container",
+        BeanContainerForTestingUtil.class.getPackage().getName(),
         srcDir("implementAndUseBeanContainers")
     );
     //
