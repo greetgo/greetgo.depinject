@@ -2,8 +2,8 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.test_beans027.beans.BeanConfig027;
-import kz.greetgo.depinject.gen.test_beans027.interfaces.IBeanB2;
+import kz.greetgo.depinject.gen.t02x.test_beans027.beans.BeanConfig027;
+import kz.greetgo.depinject.gen.t02x.test_beans027.interfaces.IBeanB2;
 
 import java.io.File;
 

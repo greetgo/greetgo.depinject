@@ -2,9 +2,9 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.test_beans034.BeanConfig034;
-import kz.greetgo.depinject.gen.test_beans034.MainBean034;
-import kz.greetgo.depinject.gen.test_beans034.TargetBean034_1;
+import kz.greetgo.depinject.gen.t03x.test_beans034.BeanConfig034;
+import kz.greetgo.depinject.gen.t03x.test_beans034.MainBean034;
+import kz.greetgo.depinject.gen.t03x.test_beans034.TargetBean034_1;
 import org.testng.annotations.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
