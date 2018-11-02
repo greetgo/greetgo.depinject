@@ -72,8 +72,8 @@ public class BeanReference {
     return compareStr;
   }
 
-  @SuppressWarnings("RedundantIfStatement")
   @Override
+  @SuppressWarnings("RedundantIfStatement")
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -113,6 +113,7 @@ public class BeanReference {
 
     for (BeanCreation candidate : candidates) {
       if (sourceClass.isAssignableFrom(candidate.beanClass)) {
+
         getterCreations.add(new GetterCreation(sourceClass, candidate));
       }
     }
@@ -159,7 +160,6 @@ public class BeanReference {
     if (getterCreations.size() > 1) {
       throw context.newManyCandidates(this);
     }
-
   }
 
   public String toFullString() {

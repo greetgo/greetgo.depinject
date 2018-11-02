@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Qualifier {
   /**
-   * Qualifies bean identifier to select bean from several beans.
+   * Regular expression qualifies bean identifier to select bean from several beans.
    *
    * @return selecting bean identifier
    */

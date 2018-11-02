@@ -62,6 +62,7 @@ public class BeanContainerManager {
 
     allBeanReferences.forEach(a -> a.fillTargetCreationsFrom(beanCreationList));
 
+    //noinspection deprecation
     preparations = beanCreationList.stream()
       .filter(bc -> BeanPreparation.class.isAssignableFrom(bc.beanClass))
       .peek(BeanCreation::calculatePreparingClass)
@@ -93,7 +94,7 @@ public class BeanContainerManager {
     //
 
     usingBeanCreationList = beanCreationList.stream().filter(a -> a.use).collect(Collectors.toList());
-    usingBeanReferences = allBeanReferences.stream().filter(a -> a.use).collect(Collectors.toList());
+    usingBeanReferences  = allBeanReferences.stream().filter(a -> a.use).collect(Collectors.toList());
 
     usingBeanReferences.forEach(BeanReference::checkConnectivity);
 
