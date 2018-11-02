@@ -2,6 +2,7 @@ package kz.greetgo.depinject.gen;
 
 import java.lang.reflect.Method;
 
+import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInBeanContainerMethod;
 import static kz.greetgo.depinject.gen.DepinjectUtil.toCode;
 
 public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
@@ -11,8 +12,10 @@ public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
 
   public BeanContainerMethod(Context context, Method method) {
     this.method = method;
-    beanReference = context.newBeanReference(method.getGenericReturnType(),
-      "return type of method " + method.getName() + "() of " + Utils.asStr(method.getDeclaringClass()));
+
+    BeanReference.Place place = placeInBeanContainerMethod(method);
+
+    beanReference = context.newBeanReference(method.getGenericReturnType(), place);
   }
 
   @Override

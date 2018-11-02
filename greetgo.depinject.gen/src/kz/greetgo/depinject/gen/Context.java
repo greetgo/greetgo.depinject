@@ -27,6 +27,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.reverseOrder;
+import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInConstructorArg;
+import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInPublicBeanGetter;
 
 public class Context {
 
@@ -44,7 +46,7 @@ public class Context {
     return new NoBeanConfig(beanConfig);
   }
 
-  public BeanReference newBeanReference(Type target, String place) {
+  public BeanReference newBeanReference(Type target, BeanReference.Place place) {
     return new BeanReference(this, target, place);
   }
 
@@ -97,21 +99,28 @@ public class Context {
 
     for (Field field : beanClass.getFields()) {
       if (field.getType() == BeanGetter.class) {
-        addHolder(beanGetterInPublicFieldList, field.getName(), field.getGenericType(), beanClass);
+        addHolder(beanGetterInPublicFieldList, field, beanClass);
       }
     }
 
     Collections.sort(beanGetterInPublicFieldList);
   }
 
-  private void addHolder(List<BeanGetterInPublicField> list, String fieldName, Type beanGetterType, Class<?> beanClass) {
-    if (!(beanGetterType instanceof ParameterizedType)) {
-      throw new IllegalBeanGetterDefinition(beanClass, fieldName);
+  private void addHolder(List<BeanGetterInPublicField> list, Field field, Class<?> beanClass) {
+
+    if (!(field.getGenericType() instanceof ParameterizedType)) {
+      throw new IllegalBeanGetterDefinition(beanClass, field.getName());
     }
-    ParameterizedType pt = (ParameterizedType) beanGetterType;
-    BeanReference beanReference = newBeanReference(pt.getActualTypeArguments()[0],
-        "field " + fieldName + " of " + Utils.asStr(beanClass));
-    list.add(new BeanGetterInPublicField(fieldName, beanReference));
+
+    ParameterizedType pt = (ParameterizedType) field.getGenericType();
+
+    Type referencingClass = pt.getActualTypeArguments()[0];
+
+    BeanReference.Place place = placeInPublicBeanGetter(referencingClass, beanClass, field);
+
+    BeanReference beanReference = newBeanReference(referencingClass, place);
+
+    list.add(new BeanGetterInPublicField(field.getName(), beanReference));
   }
 
   public BeanCreation newBeanCreationWithConstructor(Class<?> beanClass,
@@ -163,10 +172,14 @@ public class Context {
           continue;
         }
 
-        BeanReference beanReference = newBeanReference(parameterizedType.getActualTypeArguments()[0],
-            "argument № " + argIndex + " of constructor of " + Utils.asStr(beanClass));
+        Type referencingType = parameterizedType.getActualTypeArguments()[0];
+
+        BeanReference.Place place = placeInConstructorArg(referencingType, argType, argIndex, beanClass);
+
+        BeanReference beanReference = newBeanReference(referencingType, place);
 
         argList.add(new ConstructorArg(argType, beanReference));
+
         argIndex++;
       }
 

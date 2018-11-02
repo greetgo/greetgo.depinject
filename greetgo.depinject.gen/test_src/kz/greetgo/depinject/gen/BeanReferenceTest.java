@@ -18,17 +18,31 @@ public class BeanReferenceTest {
     SomeClass method();
   }
 
+  private static BeanReference.Place testPlace(String display) {
+    return new BeanReference.Place() {
+      @Override
+      public void asd() {
+
+      }
+
+      @Override
+      public String display() {
+        return display;
+      }
+    };
+  }
+
   @Test
   public void constructor_simple() {
 
     Type type = TestUtil.getReturnType(ForSimple.class, "method");
 
     Context context = new Context();
-    BeanReference beanReference = context.newBeanReference(type, "place 1");
+    BeanReference beanReference = context.newBeanReference(type, testPlace("place 1"));
 
     assertThat(beanReference.sourceClass.getName()).isEqualTo(SomeClass.class.getName());
     assertThat(beanReference.isList).isFalse();
-    assertThat(beanReference.place).isEqualTo("place 1");
+    assertThat(beanReference.place.display()).isEqualTo("place 1");
 
   }
 
@@ -43,11 +57,11 @@ public class BeanReferenceTest {
     Type type = TestUtil.getReturnType(ForList.class, "method");
 
     Context context = new Context();
-    BeanReference beanReference = context.newBeanReference(type, "place 2");
+    BeanReference beanReference = context.newBeanReference(type, testPlace("place 2"));
 
     assertThat(beanReference.sourceClass.getName()).isEqualTo(SomeClass.class.getName());
     assertThat(beanReference.isList).isTrue();
-    assertThat(beanReference.place).isEqualTo("place 2");
+    assertThat(beanReference.place.display()).isEqualTo("place 2");
   }
 
   interface ForLeftType {
@@ -61,7 +75,7 @@ public class BeanReferenceTest {
     Type type = TestUtil.getReturnType(ForLeftType.class, "method");
 
     Context context = new Context();
-    context.newBeanReference(type, "place 3");
+    context.newBeanReference(type, testPlace("place 3"));
 
   }
 
@@ -77,7 +91,7 @@ public class BeanReferenceTest {
   public void fillTargetCreationsFrom() {
 
     Context context = new Context();
-    BeanReference beanReference = context.newBeanReference(A1_RefInterface.class, "");
+    BeanReference beanReference = context.newBeanReference(A1_RefInterface.class, testPlace(""));
 
     BeanCreation beanClass = context.newBeanCreationWithConstructor(A2_BeanClass.class, true);
     BeanCreation beanClass3 = context.newBeanCreationWithConstructor(A3_BeanClass.class, true);

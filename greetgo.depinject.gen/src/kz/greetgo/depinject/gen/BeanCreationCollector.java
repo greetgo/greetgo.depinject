@@ -19,6 +19,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInAnnotationFactoredBy;
+import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInBeanFactoryOf;
+
 
 public class BeanCreationCollector {
 
@@ -75,8 +78,10 @@ public class BeanCreationCollector {
       boolean addToFactoryClassStack = BeanFactory.class != factoryClass;
 
       if (addToFactoryClassStack) {
-        factoryClassStack.add(context.newBeanReference(factoryClass,
-            "bean factory of " + Utils.asStr(beanConfig)));
+
+        BeanReference.Place place = placeInBeanFactoryOf(beanConfig);
+
+        factoryClassStack.add(context.newBeanReference(factoryClass, place));
       }
 
       Utils.getAllAnnotations(beanConfig, Include.class).forEach(this::collectFromInclude);
@@ -183,9 +188,12 @@ public class BeanCreationCollector {
 
   private BeanReference extractBeanFactoryReference(Class<?> beanClass) {
     List<FactoredBy> factoredByList = Utils.getAllAnnotations(beanClass, FactoredBy.class);
+
     if (factoredByList.size() > 0) {
-      return context.newBeanReference(factoredByList.get(0).value(), FactoredBy.class.getSimpleName() +
-          " in (or in any parents of) " + Utils.asStr(beanClass));
+
+      BeanReference.Place place = placeInAnnotationFactoredBy(beanClass);
+
+      return context.newBeanReference(factoredByList.get(0).value(), place);
     }
 
     if (factoryClassStack.size() == 0) {

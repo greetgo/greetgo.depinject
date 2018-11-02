@@ -9,17 +9,22 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BeanReference {
 
-  public final String place;
+  interface Place {
+    void asd();
+
+    String display();
+  }
+
+  public final Place place;
   private final Context context;
 
-  public BeanReference(Context context, Type target, String place) {
-    if (place == null) {
-      throw new NullPointerException("place == null");
-    }
+  public BeanReference(Context context, Type target, Place place) {
+    Objects.requireNonNull(place);
 
     this.context = context;
     this.place = place;
@@ -113,7 +118,6 @@ public class BeanReference {
 
     for (BeanCreation candidate : candidates) {
       if (sourceClass.isAssignableFrom(candidate.beanClass)) {
-
         getterCreations.add(new GetterCreation(sourceClass, candidate));
       }
     }
@@ -258,5 +262,4 @@ public class BeanReference {
   public String accessExpression() {
     return "(" + Utils.codeName(BeanGetter.class) + '<' + targetClassCode() + ">)(java.lang.Object)" + getterVarName();
   }
-
 }
