@@ -148,7 +148,9 @@ public class BeanReference {
   }
 
   public void checkConnectivity() {
-    if (isList) { return; }
+    if (isList) {
+      return;
+    }
 
     if (getterCreations.size() == 0) {
       throw context.newNoCandidates(this);
