@@ -19,4 +19,11 @@ public @interface Bean {
    * @return <code>true</code> - singleton (default), <code>false</code> - not singleton
    */
   boolean singleton() default true;
+
+  /**
+   * Defines bean identifier for qualification in BeanGetter by annotation
+   *
+   * @return bean identifier
+   */
+  String id() default "";
 }
