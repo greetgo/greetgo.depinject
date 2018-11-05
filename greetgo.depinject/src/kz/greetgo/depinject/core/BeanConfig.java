@@ -11,4 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BeanConfig {
   Class<? extends BeanFactory> factory() default BeanFactory.class;
+
+  String qualifier() default "";
 }

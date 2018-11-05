@@ -2,13 +2,15 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.gen.t03x.test_beans036.BeanConfig036;
-import kz.greetgo.depinject.gen.t03x.test_beans036.BeanRef036_1;
-import kz.greetgo.depinject.gen.t03x.test_beans036.BeanRef036_2;
-import kz.greetgo.depinject.gen.t03x.test_beans036.BeanRef036_3;
-import kz.greetgo.depinject.gen.t03x.test_beans036.BeanTarget036_1;
-import kz.greetgo.depinject.gen.t03x.test_beans036.BeanTarget036_2;
-import kz.greetgo.depinject.gen.t03x.test_beans036.BeanTarget036_3;
+import kz.greetgo.depinject.gen.t03x.test_beans036.beans4.BeanFactory036;
+import kz.greetgo.depinject.gen.t03x.test_beans036.beans4.BeanRef036_4;
+import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanConfig036;
+import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanRef036_1;
+import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanRef036_2;
+import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanRef036_3;
+import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_1;
+import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_2;
+import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_3;
 import org.testng.annotations.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -25,6 +27,9 @@ public class BeanContainerManagerReadQualifierTest {
 
     @SuppressWarnings("unused")
     BeanRef036_3 ref3();
+
+    @SuppressWarnings("unused")
+    BeanRef036_4 ref4();
   }
 
   @Test
@@ -104,5 +109,39 @@ public class BeanContainerManagerReadQualifierTest {
     assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InConstructorArg);
 
     assertThat(target.place.qualifier()).isEqualTo("in_constructor_arg_73746t356");
+  }
+
+  @Include(BeanConfig036.class)
+  interface BeanContainer036_2 extends BeanContainer {
+    @SuppressWarnings("unused")
+    BeanRef036_4 ref4();
+  }
+
+  @Test
+  public void read_qualifier_InBeanFactory() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer036_2.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    bcm.usingBeanReferences.forEach(ref -> {
+      System.out.println("ref     = " + ref);
+      System.out.println("  sc    = " + ref.sourceClass);
+      System.out.println("  place = " + ref.place.type() + " : " + ref.place.display());
+    });
+    System.out.println();
+
+    BeanReference target = bcm.usingBeanReferences.stream()
+        .filter(ref -> ref.sourceClass == BeanFactory036.class)
+        .findAny()
+        .orElseThrow(TestUtil.ElementNotFound::new);
+
+    assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InBeanFactory);
+
+    assertThat(target.place.qualifier()).isEqualTo("read_qualifier_InBeanFactory_928375");
   }
 }
