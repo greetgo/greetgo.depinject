@@ -11,6 +11,8 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static kz.greetgo.depinject.gen.Utils.typeAsStr;
+
 public class BeanReferencePlace {
   public static BeanReference.Place placeInPublicBeanGetter(Type referencingClass, Class<?> beanClass, Field field) {
     return new BeanReference.Place() {
@@ -21,7 +23,8 @@ public class BeanReferencePlace {
 
       @Override
       public String display() {
-        return "public field " + Utils.asStr(beanClass) + "." + field.getName() + " -> " + referencingClass;
+        return "public field " + Utils.asStr(beanClass) + "." + field.getName()
+            + " -> " + typeAsStr(referencingClass);
       }
 
       @Override
@@ -44,7 +47,8 @@ public class BeanReferencePlace {
 
       @Override
       public String display() {
-        return "argument " + argIndex + " of constructor in " + Utils.asStr(beanClass) + " -> " + referencingType;
+        return "argument " + argIndex + " of constructor in " + Utils.asStr(beanClass)
+            + " -> " + typeAsStr(referencingType);
       }
 
       @Override

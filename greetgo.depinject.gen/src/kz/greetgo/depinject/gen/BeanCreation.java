@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.BeanPreparation;
 import kz.greetgo.depinject.core.BeanPreparationPriority;
@@ -18,19 +19,20 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class BeanCreation {
   public final Class<?> beanClass;
-  public final boolean singleton;
+  protected final Bean bean;
 
   public int varIndex;
 
   protected final Context context;
 
-  public BeanCreation(Context context, Class<?> beanClass, boolean singleton) {
+
+  public BeanCreation(Context context, Class<?> beanClass, Bean bean) {
     this.context = context;
+    this.bean = bean;
     if (beanClass == null) {
       throw new NullPointerException("beanClass == null");
     }
     this.beanClass = beanClass;
-    this.singleton = singleton;
   }
 
   @Override
@@ -85,7 +87,9 @@ public abstract class BeanCreation {
   public boolean use = false;
 
   public void markToUse() {
-    if (use) { return; }
+    if (use) {
+      return;
+    }
     use = true;
     beanGetterInPublicFieldList.forEach(a -> a.beanReference.markToUse());
     markToUseAdditions();
@@ -100,7 +104,7 @@ public abstract class BeanCreation {
     final int tab2 = tab + 2;
     final int tab3 = tab + 3;
 
-    if (singleton) {
+    if (bean.singleton()) {
       out.tab(tab).stn("private final " + Utils.codeName(AtomicReference.class) + "<" + Utils.codeName(beanClass) +
           "> " + cachedValueVarName() + " = new " + Utils.codeName(AtomicReference.class) + "<>(null);");
     }
@@ -109,7 +113,7 @@ public abstract class BeanCreation {
         + "<" + Utils.codeName(beanClass) + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
     out.tab(tab).stn("private " + Utils.codeName(beanClass) + " " + gettingMethodName() + " () {");
 
-    if (singleton) {
+    if (bean.singleton()) {
 
       out.tab(tab1).stn("{");
       out.tab(tab2).stn(Utils.codeName(beanClass) + " x = " + cachedValueVarName() + ".get();");
@@ -160,7 +164,7 @@ public abstract class BeanCreation {
     out.tab(tab).stn("}");
   }
 
-  public void writeBeanGettersAndInit(int tab, Outer out, @SuppressWarnings("SameParameterValue") String variableName) {
+  public void writeBeanGettersAndInit(int tab, Outer out, String variableName) {
     beanGetterInPublicFieldList.forEach(bg -> bg.writeAssignment(tab, out, variableName));
     if (HasAfterInject.class.isAssignableFrom(beanClass)) {
       out.tab(tab).stn(variableName + ".afterInject();");
@@ -172,6 +176,14 @@ public abstract class BeanCreation {
 
   public void checkBeanGetterNotPublic() {
     //parent do nothing
+  }
+
+  public boolean isSingleton() {
+    return bean.singleton();
+  }
+
+  public String beanId() {
+    return bean.id();
   }
 
   public static class BeanPreparationPriorityDot implements Comparable<BeanPreparationPriorityDot> {
@@ -226,7 +238,9 @@ public abstract class BeanCreation {
 
   static Class<?> getPreparingClass(Type type, Set<Class<?>> cacheSet) {
 
-    if (type == null) { return null; }
+    if (type == null) {
+      return null;
+    }
 
     if (type instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) type;
@@ -246,12 +260,16 @@ public abstract class BeanCreation {
 
     if (type instanceof Class) {
       Class<?> aClass = (Class<?>) type;
-      if (cacheSet.contains(aClass)) { return null; }
+      if (cacheSet.contains(aClass)) {
+        return null;
+      }
       cacheSet.add(aClass);
 
       for (Type interfaceType : aClass.getGenericInterfaces()) {
         Class<?> ret = getPreparingClass(interfaceType, cacheSet);
-        if (ret != null) { return ret; }
+        if (ret != null) {
+          return ret;
+        }
       }
 
       return getPreparingClass(aClass.getSuperclass(), cacheSet);

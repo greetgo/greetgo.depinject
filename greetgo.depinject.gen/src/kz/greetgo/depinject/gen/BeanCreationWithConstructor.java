@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.SkipInject;
 import kz.greetgo.depinject.gen.errors.NonPublicBeanWithoutConstructor;
@@ -16,9 +17,9 @@ public class BeanCreationWithConstructor extends BeanCreation {
 
   public BeanCreationWithConstructor(Context context,
                                      Class<?> beanClass,
-                                     boolean singleton,
+                                     Bean bean,
                                      List<ConstructorArg> argList) {
-    super(context, beanClass, singleton);
+    super(context, beanClass, bean);
     Objects.requireNonNull(argList, "argList == null");
     this.argList = argList;
   }
@@ -33,7 +34,7 @@ public class BeanCreationWithConstructor extends BeanCreation {
   @Override
   public String toString() {
     return (use ? '{' : '(')
-        + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MANY") + " created by constructor("
+        + Utils.asStr(beanClass) + (bean.singleton() ? ":SINGLE" : "MANY") + " created by constructor("
         + argList.stream()
         .map(ConstructorArg::displayStr)
         .collect(Collectors.joining(", "))

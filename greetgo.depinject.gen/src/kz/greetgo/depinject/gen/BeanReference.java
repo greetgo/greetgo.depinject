@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class BeanReference {
@@ -22,7 +23,7 @@ public class BeanReference {
     InBeanContainerMethod
   }
 
-  interface Place {
+  public interface Place {
     PlaceType type();
 
     String display();
@@ -108,6 +109,10 @@ public class BeanReference {
       return false;
     }
 
+    if (!place.qualifier().equals(place.qualifier())) {
+      return false;
+    }
+
     return true;
   }
 
@@ -115,10 +120,13 @@ public class BeanReference {
   public int hashCode() {
     int result = (isList ? 1 : 0);
     result = 31 * result + getterCreations.hashCode();
+    result = 31 * result + place.qualifier().hashCode();
     return result;
   }
 
   private boolean wasFillTargetCreations = false;
+
+  public final List<BeanCreation> assignableCandidates = new ArrayList<>();
 
   public void fillTargetCreationsFrom(List<BeanCreation> candidates) {
     if (wasFillTargetCreations) {
@@ -127,12 +135,33 @@ public class BeanReference {
     wasFillTargetCreations = true;
 
     for (BeanCreation candidate : candidates) {
-      if (sourceClass.isAssignableFrom(candidate.beanClass)) {
+      if (isReferencingTo(candidate)) {
         getterCreations.add(new GetterCreation(sourceClass, candidate));
+      }
+
+      if (sourceClass.isAssignableFrom(candidate.beanClass)) {
+        assignableCandidates.add(candidate);
       }
     }
 
     getterCreations.sort(Comparator.comparing(o -> o.beanCreation.beanClass.getName()));
+  }
+
+  private boolean isReferencingTo(BeanCreation candidate) {
+
+    if (!sourceClass.isAssignableFrom(candidate.beanClass)) {
+      return false;
+    }
+
+    if (place.qualifier().isEmpty()) {
+      return true;
+    }
+
+    return Pattern
+        .compile(place.qualifier())
+        .matcher(candidate.bean.id())
+        .matches();
+
   }
 
   public boolean use = false;
@@ -168,7 +197,11 @@ public class BeanReference {
     }
 
     if (getterCreations.size() == 0) {
-      throw context.newNoCandidates(this);
+      if (assignableCandidates.isEmpty()) {
+        throw context.newNoCandidates(this);
+      } else {
+        throw context.newQualifierNotMatched(this);
+      }
     }
 
     if (getterCreations.size() > 1) {

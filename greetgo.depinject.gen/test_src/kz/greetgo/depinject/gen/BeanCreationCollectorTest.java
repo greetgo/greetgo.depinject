@@ -104,8 +104,8 @@ public class BeanCreationCollectorTest {
     assertThat(map.get("BeanWithDefaultConstructor1")).isInstanceOf(BeanCreationWithConstructor.class);
     assertThat(map.get("BeanWithDefaultConstructor2")).isInstanceOf(BeanCreationWithConstructor.class);
 
-    assertThat(map.get("BeanWithDefaultConstructor1").singleton).isTrue();
-    assertThat(map.get("BeanWithDefaultConstructor2").singleton).isFalse();
+    assertThat(map.get("BeanWithDefaultConstructor1").isSingleton()).isTrue();
+    assertThat(map.get("BeanWithDefaultConstructor2").isSingleton()).isFalse();
   }
 
   @Include(BeanConfig002.class)
@@ -148,9 +148,9 @@ public class BeanCreationCollectorTest {
     assertThat(bc.factorySource.beanClass.getName()).isEqualTo(BeanFactory.class.getName());
     assertThat(bc.factoryMethod.getName()).isEqualTo("createBean1");
 
-    assertThat(map.get(BeanFactory.class.getSimpleName()).singleton).isTrue();
-    assertThat(map.get(Bean1.class.getSimpleName()).singleton).isTrue();
-    assertThat(map.get(Bean2.class.getSimpleName()).singleton).isFalse();
+    assertThat(map.get(BeanFactory.class.getSimpleName()).isSingleton()).isTrue();
+    assertThat(map.get(Bean1.class.getSimpleName()).isSingleton()).isTrue();
+    assertThat(map.get(Bean2.class.getSimpleName()).isSingleton()).isFalse();
   }
 
   @Include(BeanConfig004.class)

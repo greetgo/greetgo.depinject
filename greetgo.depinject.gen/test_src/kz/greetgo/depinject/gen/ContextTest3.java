@@ -7,6 +7,7 @@ import kz.greetgo.depinject.gen.errors.SuitableConstructorContainsIllegalArgumen
 import kz.greetgo.util.RND;
 import org.testng.annotations.Test;
 
+import static kz.greetgo.depinject.gen.TestUtil.beanAnn;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
 
@@ -33,14 +34,14 @@ public class ContextTest3 {
 
     //
     //
-    BeanCreation beanCreation = context.newBeanCreationWithConstructor(beanClass, singleton);
+    BeanCreation beanCreation = context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
     //
     //
 
     assertThat(beanCreation).isInstanceOf(BeanCreationWithConstructor.class);
 
     assertThat(beanCreation.beanClass.getName()).isEqualTo(beanClass.getName());
-    assertThat(beanCreation.singleton).isEqualTo(singleton);
+    assertThat(beanCreation.isSingleton()).isEqualTo(singleton);
 
     BeanCreationWithConstructor bc = (BeanCreationWithConstructor) beanCreation;
     assertThat(bc.argList).isEmpty();
@@ -72,7 +73,7 @@ public class ContextTest3 {
 
     //
     //
-    BeanCreation beanCreation = context.newBeanCreationWithConstructor(beanClass, singleton);
+    BeanCreation beanCreation = context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
     //
     //
 
@@ -120,7 +121,7 @@ public class ContextTest3 {
 
     //
     //
-    BeanCreation beanCreation = context.newBeanCreationWithConstructor(beanClass, singleton);
+    BeanCreation beanCreation = context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
     //
     //
 
@@ -152,7 +153,7 @@ public class ContextTest3 {
     try {
       //
       //
-      context.newBeanCreationWithConstructor(beanClass, singleton);
+      context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
       //
       //
 
@@ -217,7 +218,7 @@ public class ContextTest3 {
     try {
       //
       //
-      context.newBeanCreationWithConstructor(beanClass, singleton);
+      context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
       //
       //
 
@@ -278,7 +279,7 @@ public class ContextTest3 {
 
     //
     //
-    context.newBeanCreationWithConstructor(beanClass, singleton);
+    context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
     //
     //
 

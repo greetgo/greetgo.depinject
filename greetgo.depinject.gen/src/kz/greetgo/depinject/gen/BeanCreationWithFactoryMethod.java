@@ -1,5 +1,7 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.Bean;
+
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
@@ -8,9 +10,9 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   public final BeanCreation factorySource;
   public final Method factoryMethod;
 
-  public BeanCreationWithFactoryMethod(Context context, Class<?> beanClass, boolean singleton,
+  public BeanCreationWithFactoryMethod(Context context, Class<?> beanClass, Bean bean,
                                        BeanCreation factorySource, Method factoryMethod) {
-    super(context, beanClass, singleton);
+    super(context, beanClass, bean);
     if (factorySource == null) {
       throw new NullPointerException("factorySource == null");
     }
@@ -26,7 +28,7 @@ public class BeanCreationWithFactoryMethod extends BeanCreation {
   public String toString() {
     //noinspection SpellCheckingInspection
     return (use ? '{' : '(')
-        + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT")
+        + Utils.asStr(beanClass) + (bean.singleton() ? ":SINGLE" : "MULT")
         + " created by method " + factoryMethod.getName() + "() of " + factorySource
         + preparationInfo()
         + (use ? '}' : ')');

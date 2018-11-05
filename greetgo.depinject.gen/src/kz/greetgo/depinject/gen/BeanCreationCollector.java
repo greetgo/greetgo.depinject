@@ -152,37 +152,44 @@ public class BeanCreationCollector {
     new ClassScannerDef().scanPackage(packageName).forEach(someClass -> {
       Bean bean = someClass.getAnnotation(Bean.class);
       if (bean != null) {
-        addClassAsBeanAndViewItForAnotherBeans(someClass, bean.singleton());
+        addClassAsBeanAndViewItForAnotherBeans(someClass, bean);
       }
     });
   }
 
-  private void addClassAsBeanAndViewItForAnotherBeans(Class<?> parentBeanClass,
-                                                      boolean singleton
+  private void addClassAsBeanAndViewItForAnotherBeans(Class<?> parentBeanClass, Bean bean
   ) {
     final BeanCreation parentBeanCreation;
 
     if (Utils.isRealClass(parentBeanClass)) {
-      beanCreationList.add(parentBeanCreation = context
-          .newBeanCreationWithConstructor(parentBeanClass, singleton));
+      beanCreationList.add(parentBeanCreation =
+          context.newBeanCreationWithConstructor(parentBeanClass, bean));
     } else {
-      beanCreationList.add(parentBeanCreation = context
-          .newBeanCreationWithBeanFactory(parentBeanClass, singleton, extractBeanFactoryReference(parentBeanClass)));
+      beanCreationList.add(parentBeanCreation =
+          context.newBeanCreationWithBeanFactory(parentBeanClass, bean, extractBeanFactoryReference(parentBeanClass)));
     }
 
     context.configTree.bean("" + parentBeanCreation);
     context.configTree.tab++;
+
     for (Method method : parentBeanClass.getMethods()) {
-      Bean bean = Utils.getAnnotation(method, Bean.class);
-      if (bean == null) { continue; }
+
+      Bean methodBean = Utils.getAnnotation(method, Bean.class);
+      if (methodBean == null) {
+        continue;
+      }
+
       if (method.getParameterTypes().length > 0) {
         throw new FactoryMethodCannotContainAnyArguments(method);
       }
+
       BeanCreationWithFactoryMethod subBean = context.newBeanCreationWithFactoryMethod(
-          method.getReturnType(), bean.singleton(), parentBeanCreation, method);
+          method.getReturnType(), methodBean, parentBeanCreation, method);
+
       context.configTree.bean("" + subBean);
       beanCreationList.add(subBean);
     }
+
     context.configTree.tab--;
   }
 

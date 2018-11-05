@@ -9,8 +9,8 @@ public class NoCandidates extends RuntimeException {
   public final BeanConfigTree configTree;
 
   public NoCandidates(BeanReference beanReference, BeanConfigTree configTree) {
-    super(Utils.asStr(beanReference.sourceClass) + " in " + beanReference.place
-      + configTree.asStr(false, true));
+    super(Utils.asStr(beanReference.sourceClass) + " in " + beanReference.place.display()
+        + configTree.asStr(false, true));
     this.beanReference = beanReference;
     this.configTree = configTree;
   }

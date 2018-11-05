@@ -82,9 +82,9 @@ public class Utils {
   }
 
   private static <T extends Annotation> void putAllAnnotations(
-    Class<?> source, Class<T> annotation,
-    List<T> accumulator,
-    Set<Class<?>> cache
+      Class<?> source, Class<T> annotation,
+      List<T> accumulator,
+      Set<Class<?>> cache
   ) {
 
     if (source == null) {
@@ -185,5 +185,12 @@ public class Utils {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static String typeAsStr(Type type) {
+    if (type instanceof Class) {
+      return asStr((Class) type);
+    }
+    return type.toString();
   }
 }

@@ -99,9 +99,9 @@ public class BeanReferenceTest {
     Context context = new Context();
     BeanReference beanReference = context.newBeanReference(A1_RefInterface.class, testPlace(""));
 
-    BeanCreation beanClass = context.newBeanCreationWithConstructor(A2_BeanClass.class, true);
-    BeanCreation beanClass3 = context.newBeanCreationWithConstructor(A3_BeanClass.class, true);
-    BeanCreation leftClass = context.newBeanCreationWithConstructor(A4_LeftClass.class, true);
+    BeanCreation beanClass = context.newBeanCreationWithConstructor(A2_BeanClass.class, TestUtil.beanAnn(true));
+    BeanCreation beanClass3 = context.newBeanCreationWithConstructor(A3_BeanClass.class, TestUtil.beanAnn(true));
+    BeanCreation leftClass = context.newBeanCreationWithConstructor(A4_LeftClass.class, TestUtil.beanAnn(true));
 
     //
     //
@@ -117,4 +117,5 @@ public class BeanReferenceTest {
     assertThat(beanReference.getterCreations.get(1).beanCreation.beanClass.getName())
         .isEqualTo(A3_BeanClass.class.getName());
   }
+
 }

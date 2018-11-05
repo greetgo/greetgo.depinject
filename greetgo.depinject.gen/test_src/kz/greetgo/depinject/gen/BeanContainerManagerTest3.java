@@ -2,6 +2,7 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
+import kz.greetgo.depinject.gen.errors.QualifierNotMatched;
 import kz.greetgo.depinject.gen.t03x.test_beans034.BeanConfig034;
 import kz.greetgo.depinject.gen.t03x.test_beans034.MainBean034;
 import kz.greetgo.depinject.gen.t03x.test_beans034.TargetBean034_1;
@@ -48,7 +49,9 @@ public class BeanContainerManagerTest3 {
     MainBean035 mainBean();
   }
 
-  @Test
+  // FIXME: 05.11.18 check method factory bean id
+
+  @Test(expectedExceptions = QualifierNotMatched.class)
   public void not_found_bean_by_qualifier() {
 
     Context context = new Context();

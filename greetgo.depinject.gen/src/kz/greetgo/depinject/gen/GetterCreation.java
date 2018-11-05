@@ -133,7 +133,7 @@ public class GetterCreation {
 
   public void writeGetter(int tab, Outer outer) {
     if (!needGetter()) { return; }
-    if (beanCreation.singleton) {
+    if (beanCreation.isSingleton()) {
       writeGetterSingleton(tab, outer);
     } else {
       writeGetterMulti(tab, outer);

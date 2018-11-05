@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanFactory;
 
 import java.util.Collections;
@@ -10,9 +11,9 @@ public class BeanCreationWithBeanFactory extends BeanCreation {
 
   public BeanCreationWithBeanFactory(Context context,
                                      Class<?> beanClass,
-                                     boolean singleton,
+                                     Bean bean,
                                      BeanReference beanFactorySource) {
-    super(context, beanClass, singleton);
+    super(context, beanClass, bean);
     if (!BeanFactory.class.isAssignableFrom(beanFactorySource.sourceClass)) {
       throw new RuntimeException(beanFactorySource.sourceClass + " is not bean factory; " + beanFactorySource.place);
     }
@@ -23,10 +24,10 @@ public class BeanCreationWithBeanFactory extends BeanCreation {
   public String toString() {
     //noinspection SpellCheckingInspection
     return (use ? '{' : '(')
-      + Utils.asStr(beanClass) + (singleton ? ":SINGLE" : "MULT")
-      + " created by " + beanFactorySource.firstBeanToString()
-      + preparationInfo()
-      + (use ? '}' : ')');
+        + Utils.asStr(beanClass) + (bean.singleton() ? ":SINGLE" : "MULT")
+        + " created by " + beanFactorySource.firstBeanToString()
+        + preparationInfo()
+        + (use ? '}' : ')');
   }
 
   @Override
@@ -42,7 +43,7 @@ public class BeanCreationWithBeanFactory extends BeanCreation {
   @Override
   protected void writeCreateBean(int tab, Outer out, String variableName) {
     out.tab(tab).stn(Utils.codeName(beanClass) + ' ' + variableName
-      + " = (" + Utils.codeName(beanClass) + ") " + beanFactorySource.getterVarName()
-      + ".get().createBean(" + Utils.codeName(beanClass) + ".class);");
+        + " = (" + Utils.codeName(beanClass) + ") " + beanFactorySource.getterVarName()
+        + ".get().createBean(" + Utils.codeName(beanClass) + ".class);");
   }
 }

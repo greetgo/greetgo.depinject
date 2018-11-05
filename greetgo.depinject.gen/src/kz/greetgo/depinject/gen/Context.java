@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.HideFromDepinject;
 import kz.greetgo.depinject.core.SkipInject;
@@ -11,6 +12,7 @@ import kz.greetgo.depinject.gen.errors.NoCandidates;
 import kz.greetgo.depinject.gen.errors.NoConstructorsToCreateBean;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
 import kz.greetgo.depinject.gen.errors.NonPublicBeanWithoutConstructor;
+import kz.greetgo.depinject.gen.errors.QualifierNotMatched;
 import kz.greetgo.depinject.gen.errors.SuitableConstructorContainsIllegalArgument;
 
 import java.lang.reflect.Constructor;
@@ -51,9 +53,9 @@ public class Context {
   }
 
   public BeanCreation newBeanCreationWithBeanFactory(Class<?> parentBeanClass,
-                                                     boolean singleton,
+                                                     Bean bean,
                                                      BeanReference beanReference) {
-    return new BeanCreationWithBeanFactory(this, parentBeanClass, singleton, beanReference);
+    return new BeanCreationWithBeanFactory(this, parentBeanClass, bean, beanReference);
   }
 
   public NoDefaultBeanFactory newNoDefaultBeanFactory(Class<?> beanClass) {
@@ -62,6 +64,10 @@ public class Context {
 
   public NoCandidates newNoCandidates(BeanReference beanReference) {
     return new NoCandidates(beanReference, configTree);
+  }
+
+  public RuntimeException newQualifierNotMatched(BeanReference beanReference) {
+    return new QualifierNotMatched(beanReference, configTree);
   }
 
   public ManyCandidates newManyCandidates(BeanReference beanReference) {
@@ -89,10 +95,10 @@ public class Context {
   }
 
   public BeanCreationWithFactoryMethod newBeanCreationWithFactoryMethod(Class<?> returnType,
-                                                                        boolean singleton,
+                                                                        Bean bean,
                                                                         BeanCreation parentBeanCreation,
                                                                         Method method) {
-    return new BeanCreationWithFactoryMethod(this, returnType, singleton, parentBeanCreation, method);
+    return new BeanCreationWithFactoryMethod(this, returnType, bean, parentBeanCreation, method);
   }
 
   void fillBeanGetterHolderListInner(List<BeanGetterInPublicField> beanGetterInPublicFieldList, Class<?> beanClass) {
@@ -123,8 +129,7 @@ public class Context {
     list.add(new BeanGetterInPublicField(field.getName(), beanReference));
   }
 
-  public BeanCreation newBeanCreationWithConstructor(Class<?> beanClass,
-                                                     boolean singleton) {
+  public BeanCreation newBeanCreationWithConstructor(Class<?> beanClass, Bean bean) {
 
     class ArgSet {
       final List<ConstructorArg> argList;
@@ -197,7 +202,7 @@ public class Context {
     List<ConstructorArg> selectedArgList = argSetList.get(0).argList;
     //checkBeanGetterNotPublicFor(beanClass, selectedArgList);
 
-    return new BeanCreationWithConstructor(this, beanClass, singleton, selectedArgList);
+    return new BeanCreationWithConstructor(this, beanClass, bean, selectedArgList);
   }
 
 
@@ -231,4 +236,5 @@ public class Context {
       throw new NonPublicBeanWithoutConstructor(null, field, beanClass);
     }
   }
+
 }

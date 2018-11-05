@@ -202,12 +202,12 @@ public class BeanContainerManagerReadQualifierTest {
     //
     //
 
-    bcm.usingBeanReferences.forEach(ref -> {
-      System.out.println("ref     = " + ref);
-      System.out.println("  sc    = " + ref.sourceClass);
-      System.out.println("  place = " + ref.place.type() + " : " + ref.place.display());
-    });
-    System.out.println();
+//    bcm.usingBeanReferences.forEach(ref -> {
+//      System.out.println("ref     = " + ref);
+//      System.out.println("  sc    = " + ref.sourceClass);
+//      System.out.println("  place = " + ref.place.type() + " : " + ref.place.display());
+//    });
+//    System.out.println();
 
     BeanReference target = bcm.usingBeanReferences.stream()
         .filter(ref -> ref.sourceClass == BeanTarget036_6.class)
@@ -218,6 +218,4 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(target.place.qualifier()).isEqualTo("read_qualifier_InBeanContainerMethod_326453");
   }
-
-
 }

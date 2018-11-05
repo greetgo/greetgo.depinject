@@ -1,13 +1,36 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.Bean;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 public class TestUtil {
+
+  public static Bean beanAnn(boolean singleton) {
+    return new Bean() {
+
+      @Override
+      public Class<? extends Annotation> annotationType() {
+        return this.getClass();
+      }
+
+      @Override
+      public boolean singleton() {
+        return singleton;
+      }
+
+      @Override
+      public String id() {
+        return "";
+      }
+    };
+  }
 
   public static class ElementNotFound extends RuntimeException {}
 
