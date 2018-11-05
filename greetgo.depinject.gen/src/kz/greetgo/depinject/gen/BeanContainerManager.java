@@ -45,7 +45,7 @@ public class BeanContainerManager {
     collector.collect();
 
     beanCreationList = collector.beanCreationList
-      .stream().unordered().distinct().collect(Collectors.toList());
+        .stream().unordered().distinct().collect(Collectors.toList());
     beanCreationList.sort(Comparator.comparing(o -> o.beanClass.getName()));
 
     beanCreationList.forEach(BeanCreation::fillBeanGetterHolderList);
@@ -54,19 +54,19 @@ public class BeanContainerManager {
     beanContainerMethodList.forEach(x -> allBeanReferences.add(x.beanReference));
 
     beanCreationList
-      .forEach(a -> a.beanGetterInPublicFieldList
-        .forEach(b -> allBeanReferences.add(b.beanReference)));
+        .forEach(a -> a.beanGetterInPublicFieldList
+            .forEach(b -> allBeanReferences.add(b.beanReference)));
     beanCreationList.stream()
-      .flatMap(a -> a.getAdditionalBeanReferences().stream())
-      .forEachOrdered(a -> allBeanReferences.add(a));
+        .flatMap(a -> a.getAdditionalBeanReferences().stream())
+        .forEachOrdered(a -> allBeanReferences.add(a));
 
     allBeanReferences.forEach(a -> a.fillTargetCreationsFrom(beanCreationList));
 
     //noinspection deprecation
     preparations = beanCreationList.stream()
-      .filter(bc -> BeanPreparation.class.isAssignableFrom(bc.beanClass))
-      .peek(BeanCreation::calculatePreparingClass)
-      .collect(Collectors.toList());
+        .filter(bc -> BeanPreparation.class.isAssignableFrom(bc.beanClass))
+        .peek(BeanCreation::calculatePreparingClass)
+        .collect(Collectors.toList());
 
     preparations.forEach(p -> p.calculatesBeanPreparationPriority(preparations));
 
@@ -75,11 +75,11 @@ public class BeanContainerManager {
     allBeanReferences.forEach(r -> r.usePreparations(preparations));
 
     replacers = beanCreationList.stream()
-      .peek(BeanCreation::calculateReplaceChecker)
-      .filter(BeanCreation::hasReplaceChecker)
-      .peek(BeanCreation::calculateReplacerPriority)
-      .sorted(Comparator.comparing(BeanCreation::replacerPriority))
-      .collect(Collectors.toList());
+        .peek(BeanCreation::calculateReplaceChecker)
+        .filter(BeanCreation::hasReplaceChecker)
+        .peek(BeanCreation::calculateReplacerPriority)
+        .sorted(Comparator.comparing(BeanCreation::replacerPriority))
+        .collect(Collectors.toList());
 
     allBeanReferences.forEach(r -> r.useReplacers(replacers));
 
@@ -94,15 +94,15 @@ public class BeanContainerManager {
     //
 
     usingBeanCreationList = beanCreationList.stream().filter(a -> a.use).collect(Collectors.toList());
-    usingBeanReferences  = allBeanReferences.stream().filter(a -> a.use).collect(Collectors.toList());
+    usingBeanReferences = allBeanReferences.stream().filter(a -> a.use).collect(Collectors.toList());
 
     usingBeanReferences.forEach(BeanReference::checkConnectivity);
 
     Map<GetterCreation, List<GetterCreation>> getterCreationMap = new HashMap<>();
     usingBeanReferences.stream()
-      .flatMap(a -> a.getterCreations.stream())
-      .filter(GetterCreation::needGetter)
-      .forEachOrdered(a -> getterCreationMap.computeIfAbsent(a, k -> new ArrayList<>()).add(a));
+        .flatMap(a -> a.getterCreations.stream())
+        .filter(GetterCreation::needGetter)
+        .forEachOrdered(a -> getterCreationMap.computeIfAbsent(a, k -> new ArrayList<>()).add(a));
 
     writingGetterCreations = new ArrayList<>();
     writingGetterCreations.addAll(getterCreationMap.keySet());
@@ -110,8 +110,8 @@ public class BeanContainerManager {
 
     Map<BeanReference, List<BeanReference>> beanReferenceMap = new HashMap<>();
     usingBeanReferences.stream()
-      .filter(BeanReference::needGetter)
-      .forEachOrdered(br -> beanReferenceMap.computeIfAbsent(br, k -> new ArrayList<>()).add(br));
+        .filter(BeanReference::needGetter)
+        .forEachOrdered(br -> beanReferenceMap.computeIfAbsent(br, k -> new ArrayList<>()).add(br));
 
     writingBeanReferences = new ArrayList<>(beanReferenceMap.keySet());
     writingBeanReferences.sort(Comparator.comparing(BeanReference::compareStr));
@@ -147,7 +147,9 @@ public class BeanContainerManager {
   }
 
   void writeBeanContainerMethods(int tab, Outer out) {
-    if (beanContainerMethodList.isEmpty()) throw new NoMethodsInBeanContainer(beanContainerInterface);
+    if (beanContainerMethodList.isEmpty()) {
+      throw new NoMethodsInBeanContainer(beanContainerInterface);
+    }
     beanContainerMethodList.forEach(bcm -> bcm.writeBeanContainerMethod(tab, out));
   }
 
@@ -163,7 +165,7 @@ public class BeanContainerManager {
     }
 
     outer.stn("public final class " + classSimpleName
-      + " implements " + beanContainerInterface.getName().replaceAll("\\$", ".") + '{');
+        + " implements " + beanContainerInterface.getName().replaceAll("\\$", ".") + '{');
 
     outer.nl().tab(1).stn("private final java.lang.Object " + Const.SYNC_FIELD + " = new java.lang.Object();");
 
