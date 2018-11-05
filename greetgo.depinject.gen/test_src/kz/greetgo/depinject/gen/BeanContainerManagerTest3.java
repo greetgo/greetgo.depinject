@@ -2,6 +2,7 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
+import kz.greetgo.depinject.core.Qualifier;
 import kz.greetgo.depinject.gen.errors.QualifierNotMatched;
 import kz.greetgo.depinject.gen.t03x.test_beans034.BeanConfig034;
 import kz.greetgo.depinject.gen.t03x.test_beans034.MainBean034;
@@ -11,8 +12,12 @@ import kz.greetgo.depinject.gen.t03x.test_beans035.MainBean035;
 import kz.greetgo.depinject.gen.t03x.test_beans037.BeanConfig037;
 import kz.greetgo.depinject.gen.t03x.test_beans037.BeanTarget037;
 import kz.greetgo.depinject.gen.t03x.test_beans037.MainBean037;
+import kz.greetgo.depinject.gen.t03x.test_beans038.Bean038;
+import kz.greetgo.depinject.gen.t03x.test_beans038.BeanConfig038;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -98,5 +103,39 @@ public class BeanContainerManagerTest3 {
     assertThat(target.getterCreations).hasSize(1);
 
     assertThat(target.getterCreations.get(0).beanCreation.beanId()).isEqualTo("bean2");
+  }
+
+  @Include(BeanConfig038.class)
+  interface BeanContainer038 extends BeanContainer {
+    @SuppressWarnings("unused")
+    @Qualifier("bean_hello_.*")
+    List<Bean038> qualifier_str_exactly();
+  }
+
+  @Test
+  public void qualifier_str_exactly() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer038.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    bcm.usingBeanReferences.forEach(ref -> {
+      System.out.println("sc = " + ref.sourceClass);
+      System.out.println("place = " + ref.place.display());
+      System.out.println();
+    });
+
+    BeanReference target = bcm.usingBeanReferences.stream()
+        .filter(ref -> ref.sourceClass == Bean038.class)
+        .findAny()
+        .orElseThrow(TestUtil.ElementNotFound::new);
+
+    assertThat(target.getterCreations).hasSize(1);
+
+    assertThat(target.getterCreations.get(0).beanCreation.beanId()).isEqualTo("bean_hello_.*");
   }
 }
