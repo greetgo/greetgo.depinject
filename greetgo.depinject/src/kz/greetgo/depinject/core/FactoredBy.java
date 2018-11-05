@@ -16,4 +16,6 @@ public @interface FactoredBy {
   Class<? extends BeanFactory> value();
 
   String qualifier() default "";
+
+  boolean qualifierRegexp() default false;
 }

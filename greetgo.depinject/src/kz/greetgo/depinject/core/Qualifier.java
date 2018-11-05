@@ -14,9 +14,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Qualifier {
   /**
-   * Regular expression qualifies bean identifier to select bean from several beans.
+   * Regular expression or string qualifies bean identifier to select bean from several beans.
    *
    * @return selecting bean identifier
    */
   String value();
+
+  /**
+   * If true then value is regexp, otherwise - value is string
+   *
+   * @return sign of using value as regular expression
+   */
+  boolean regexp() default false;
 }

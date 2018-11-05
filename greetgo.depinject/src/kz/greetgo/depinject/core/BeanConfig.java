@@ -13,4 +13,6 @@ public @interface BeanConfig {
   Class<? extends BeanFactory> factory() default BeanFactory.class;
 
   String qualifier() default "";
+
+  boolean qualifierRegexp() default false;
 }

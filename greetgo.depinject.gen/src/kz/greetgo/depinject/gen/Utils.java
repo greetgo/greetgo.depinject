@@ -1,5 +1,8 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.BeanConfig;
+import kz.greetgo.depinject.core.Qualifier;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -192,5 +195,39 @@ public class Utils {
       return asStr((Class) type);
     }
     return type.toString();
+  }
+
+  public static Qualifier newQualifier(String value, boolean regexp) {
+    return new Qualifier() {
+      @Override
+      public Class<? extends Annotation> annotationType() {
+        return getClass();
+      }
+
+      @Override
+      public String value() {
+        return value;
+      }
+
+      @Override
+      public boolean regexp() {
+        return regexp;
+      }
+    };
+  }
+
+  public static Qualifier noneNull(Qualifier qualifier) {
+    if (qualifier != null) {
+      return qualifier;
+    }
+
+    return newQualifier("", false);
+  }
+
+  public static Qualifier beanConfigToQualifier(BeanConfig beanConfig) {
+    if (beanConfig == null) {
+      return noneNull(null);
+    }
+    return newQualifier(beanConfig.qualifier(), beanConfig.qualifierRegexp());
   }
 }
