@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Selects bean by id
  */
 @Documented
-@Target({ElementType.FIELD, ElementType.PARAMETER,})
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Qualifier {
   /**

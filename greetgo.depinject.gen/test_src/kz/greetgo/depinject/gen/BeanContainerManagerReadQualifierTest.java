@@ -2,6 +2,7 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
+import kz.greetgo.depinject.core.Qualifier;
 import kz.greetgo.depinject.gen.t03x.test_beans036.beans4.BeanFactory036_4;
 import kz.greetgo.depinject.gen.t03x.test_beans036.beans4.BeanRef036_4;
 import kz.greetgo.depinject.gen.t03x.test_beans036.beans5.BeanFactory036_5;
@@ -13,6 +14,7 @@ import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanRef036_3;
 import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_1;
 import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_2;
 import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_3;
+import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_6;
 import org.testng.annotations.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -181,4 +183,41 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(target.place.qualifier()).isEqualTo("read_qualifier_InAnnotationFactoredBy_3245354");
   }
+
+  @Include(BeanConfig036.class)
+  interface BeanContainer036_6 extends BeanContainer {
+    @SuppressWarnings("unused")
+    @Qualifier("read_qualifier_InBeanContainerMethod_326453")
+    BeanTarget036_6 ref6();
+  }
+
+  @Test
+  public void read_qualifier_InBeanContainerMethod() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer036_6.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    bcm.usingBeanReferences.forEach(ref -> {
+      System.out.println("ref     = " + ref);
+      System.out.println("  sc    = " + ref.sourceClass);
+      System.out.println("  place = " + ref.place.type() + " : " + ref.place.display());
+    });
+    System.out.println();
+
+    BeanReference target = bcm.usingBeanReferences.stream()
+        .filter(ref -> ref.sourceClass == BeanTarget036_6.class)
+        .findAny()
+        .orElseThrow(TestUtil.ElementNotFound::new);
+
+    assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InBeanContainerMethod);
+
+    assertThat(target.place.qualifier()).isEqualTo("read_qualifier_InBeanContainerMethod_326453");
+  }
+
+
 }
