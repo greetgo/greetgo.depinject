@@ -4,9 +4,12 @@ import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.Qualifier;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class BeanReferencePlace {
   public static BeanReference.Place placeInPublicBeanGetter(Type referencingClass, Class<?> beanClass, Field field) {
@@ -31,7 +34,8 @@ public class BeanReferencePlace {
 
   public static BeanReference.Place placeInConstructorArg(Type referencingType,
                                                           Type argType, int argIndex,
-                                                          Class<?> beanClass) {
+                                                          Class<?> beanClass,
+                                                          Constructor<?> constructor) {
     return new BeanReference.Place() {
       @Override
       public BeanReference.PlaceType type() {
@@ -45,7 +49,24 @@ public class BeanReferencePlace {
 
       @Override
       public String qualifier() {
-        throw new NotImplementedException();
+        String fieldQualifier = Arrays.stream(beanClass.getDeclaredFields())
+            .filter(f -> argType.equals(f.getGenericType()))
+            .map(f -> f.getAnnotation(Qualifier.class))
+            .filter(Objects::nonNull)
+            .map(Qualifier::value)
+            .findAny()
+            .orElse("");
+
+        if (fieldQualifier.length() > 0) {
+          return fieldQualifier;
+        }
+
+        return Arrays.stream(constructor.getParameterAnnotations()[argIndex])
+            .filter(a -> a instanceof Qualifier)
+            .map(a -> (Qualifier) a)
+            .map(Qualifier::value)
+            .findAny()
+            .orElse("");
       }
     };
   }

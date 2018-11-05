@@ -174,7 +174,7 @@ public class Context {
 
         Type referencingType = parameterizedType.getActualTypeArguments()[0];
 
-        BeanReference.Place place = placeInConstructorArg(referencingType, argType, argIndex, beanClass);
+        BeanReference.Place place = placeInConstructorArg(referencingType, argType, argIndex, beanClass, constructor);
 
         BeanReference beanReference = newBeanReference(referencingType, place);
 
