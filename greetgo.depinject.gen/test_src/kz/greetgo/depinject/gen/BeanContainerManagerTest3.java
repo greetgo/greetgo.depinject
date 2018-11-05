@@ -8,6 +8,9 @@ import kz.greetgo.depinject.gen.t03x.test_beans034.MainBean034;
 import kz.greetgo.depinject.gen.t03x.test_beans034.TargetBean034_1;
 import kz.greetgo.depinject.gen.t03x.test_beans035.BeanConfig035;
 import kz.greetgo.depinject.gen.t03x.test_beans035.MainBean035;
+import kz.greetgo.depinject.gen.t03x.test_beans037.BeanConfig037;
+import kz.greetgo.depinject.gen.t03x.test_beans037.BeanTarget037;
+import kz.greetgo.depinject.gen.t03x.test_beans037.MainBean037;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
@@ -49,8 +52,6 @@ public class BeanContainerManagerTest3 {
     MainBean035 mainBean();
   }
 
-  // FIXME: 05.11.18 check method factory bean id
-
   @Test(expectedExceptions = QualifierNotMatched.class)
   public void not_found_bean_by_qualifier() {
 
@@ -66,4 +67,36 @@ public class BeanContainerManagerTest3 {
     Assertions.fail("Need throws QualifierNotFound");
   }
 
+  @Include(BeanConfig037.class)
+  interface BeanContainer037 extends BeanContainer {
+    @SuppressWarnings("unused")
+    MainBean037 mainBean();
+  }
+
+  @Test
+  public void using_qualifier_for_method_factored_beans() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer037.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+//    bcm.usingBeanReferences.forEach(ref -> {
+//      System.out.println("sc = " + ref.sourceClass);
+//      System.out.println("place = " + ref.place.display());
+//      System.out.println();
+//    });
+
+    BeanReference target = bcm.usingBeanReferences.stream()
+        .filter(ref -> ref.sourceClass == BeanTarget037.class)
+        .findAny()
+        .orElseThrow(TestUtil.ElementNotFound::new);
+
+    assertThat(target.getterCreations).hasSize(1);
+
+    assertThat(target.getterCreations.get(0).beanCreation.beanId()).isEqualTo("bean2");
+  }
 }
