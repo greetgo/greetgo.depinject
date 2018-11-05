@@ -79,7 +79,7 @@ public class BeanCreationCollector {
 
       if (addToFactoryClassStack) {
 
-        BeanReference.Place place = placeInBeanFactory(beanConfig);
+        BeanReference.Place place = placeInBeanFactory(beanConfig, beanConfigAnn);
 
         factoryClassStack.add(context.newBeanReference(factoryClass, place));
       }

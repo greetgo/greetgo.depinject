@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.Qualifier;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -71,7 +72,7 @@ public class BeanReferencePlace {
     };
   }
 
-  public static BeanReference.Place placeInBeanFactory(Class<?> beanConfig) {
+  public static BeanReference.Place placeInBeanFactory(Class<?> beanConfig, BeanConfig beanConfigAnn) {
     return new BeanReference.Place() {
       @Override
       public BeanReference.PlaceType type() {
@@ -85,7 +86,7 @@ public class BeanReferencePlace {
 
       @Override
       public String qualifier() {
-        throw new NotImplementedException();
+        return beanConfigAnn == null ? "" : beanConfigAnn.qualifier();
       }
     };
   }
