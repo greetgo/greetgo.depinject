@@ -14,4 +14,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FactoredBy {
   Class<? extends BeanFactory> value();
+
+  String qualifier() default "";
 }

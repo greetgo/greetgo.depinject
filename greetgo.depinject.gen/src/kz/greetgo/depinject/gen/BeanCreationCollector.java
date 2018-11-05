@@ -191,9 +191,12 @@ public class BeanCreationCollector {
 
     if (factoredByList.size() > 0) {
 
-      BeanReference.Place place = placeInAnnotationFactoredBy(beanClass);
+      FactoredBy factoredBy = factoredByList.get(0);
 
-      return context.newBeanReference(factoredByList.get(0).value(), place);
+      BeanReference.Place place = placeInAnnotationFactoredBy(beanClass, factoredBy);
+
+
+      return context.newBeanReference(factoredBy.value(), place);
     }
 
     if (factoryClassStack.size() == 0) {

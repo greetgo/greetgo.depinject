@@ -5,5 +5,5 @@ import kz.greetgo.depinject.core.BeanScanner;
 
 
 @BeanScanner
-@BeanConfig(factory = BeanFactory036.class, qualifier = "read_qualifier_InBeanFactory_928375")
+@BeanConfig(factory = BeanFactory036_4.class, qualifier = "read_qualifier_InBeanFactory_928375")
 public class BeanConfig036_4 {}

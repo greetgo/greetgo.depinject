@@ -45,7 +45,7 @@ public class BeanReferencePlace {
 
       @Override
       public String display() {
-        return "argument " + argIndex + " of constructor in " + Utils.asStr(beanClass);
+        return "argument " + argIndex + " of constructor in " + Utils.asStr(beanClass) + " -> " + referencingType;
       }
 
       @Override
@@ -91,7 +91,7 @@ public class BeanReferencePlace {
     };
   }
 
-  public static BeanReference.Place placeInAnnotationFactoredBy(Class<?> beanClass) {
+  public static BeanReference.Place placeInAnnotationFactoredBy(Class<?> beanClass, FactoredBy factoredBy) {
     return new BeanReference.Place() {
       @Override
       public BeanReference.PlaceType type() {
@@ -100,12 +100,12 @@ public class BeanReferencePlace {
 
       @Override
       public String display() {
-        return FactoredBy.class.getSimpleName() + " in (or in any parents of) " + Utils.asStr(beanClass);
+        return factoredBy.getClass().getSimpleName() + " in (or in any parents of) " + Utils.asStr(beanClass);
       }
 
       @Override
       public String qualifier() {
-        throw new NotImplementedException();
+        return factoredBy.qualifier();
       }
     };
   }

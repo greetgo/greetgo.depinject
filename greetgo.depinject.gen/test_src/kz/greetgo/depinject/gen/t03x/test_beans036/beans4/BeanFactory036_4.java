@@ -4,7 +4,7 @@ import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanFactory;
 
 @Bean
-public class BeanFactory036 implements BeanFactory {
+public class BeanFactory036_4 implements BeanFactory {
   @Override
   public Object createBean(Class<?> beanClass) {
     return null;
