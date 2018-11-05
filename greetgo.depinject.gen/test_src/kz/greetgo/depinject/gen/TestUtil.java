@@ -8,6 +8,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 public class TestUtil {
+
+  public static class ElementNotFound extends RuntimeException {}
+
   public static Type getReturnType(Class<?> aClass, String methodName) {
 
     for (Method method : aClass.getMethods()) {

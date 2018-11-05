@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInAnnotationFactoredBy;
-import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInBeanFactoryOf;
+import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInBeanFactory;
 
 
 public class BeanCreationCollector {
@@ -79,7 +79,7 @@ public class BeanCreationCollector {
 
       if (addToFactoryClassStack) {
 
-        BeanReference.Place place = placeInBeanFactoryOf(beanConfig);
+        BeanReference.Place place = placeInBeanFactory(beanConfig);
 
         factoryClassStack.add(context.newBeanReference(factoryClass, place));
       }

@@ -2,6 +2,7 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterArgumentType;
 import org.testng.annotations.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -21,13 +22,18 @@ public class BeanReferenceTest {
   private static BeanReference.Place testPlace(String display) {
     return new BeanReference.Place() {
       @Override
-      public void asd() {
-
+      public BeanReference.PlaceType type() {
+        return null;
       }
 
       @Override
       public String display() {
         return display;
+      }
+
+      @Override
+      public String qualifier() {
+        throw new NotImplementedException();
       }
     };
   }

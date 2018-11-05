@@ -14,10 +14,20 @@ import java.util.stream.Collectors;
 
 public class BeanReference {
 
+  enum PlaceType {
+    InPublicBeanGetter,
+    InConstructorArg,
+    InBeanFactory,
+    InAnnotationFactoredBy,
+    InBeanContainerMethod
+  }
+
   interface Place {
-    void asd();
+    PlaceType type();
 
     String display();
+
+    String qualifier();
   }
 
   public final Place place;
