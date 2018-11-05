@@ -149,7 +149,6 @@ public class BeanContainerManagerReadQualifierTest {
     assertThat(target.place.qualifier()).isEqualTo("read_qualifier_InBeanFactory_928375");
   }
 
-
   @Include(BeanConfig036.class)
   interface BeanContainer036_5 extends BeanContainer {
     @SuppressWarnings("unused")

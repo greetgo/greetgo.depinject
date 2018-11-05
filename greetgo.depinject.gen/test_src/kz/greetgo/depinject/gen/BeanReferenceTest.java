@@ -2,7 +2,6 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterArgumentType;
 import org.testng.annotations.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ public class BeanReferenceTest {
 
       @Override
       public String qualifier() {
-        throw new NotImplementedException();
+        return "";
       }
     };
   }
