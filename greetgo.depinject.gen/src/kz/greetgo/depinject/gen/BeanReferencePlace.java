@@ -3,7 +3,6 @@ package kz.greetgo.depinject.gen;
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.Qualifier;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -124,7 +123,8 @@ public class BeanReferencePlace {
 
       @Override
       public String qualifier() {
-        throw new NotImplementedException();
+        Qualifier qualifier = method.getAnnotation(Qualifier.class);
+        return qualifier == null ? "" : qualifier.value();
       }
     };
   }
