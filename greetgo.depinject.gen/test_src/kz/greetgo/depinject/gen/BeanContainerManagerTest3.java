@@ -17,6 +17,7 @@ import kz.greetgo.depinject.gen.t03x.test_beans038.Bean038_1;
 import kz.greetgo.depinject.gen.t03x.test_beans038.Bean038_2;
 import kz.greetgo.depinject.gen.t03x.test_beans038.Bean038_3;
 import kz.greetgo.depinject.gen.t03x.test_beans038.BeanConfig038;
+import kz.greetgo.depinject.gen.t03x.test_beans038.BeanRef038_privateBeanGetter_strExactly;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
@@ -186,5 +187,38 @@ public class BeanContainerManagerTest3 {
     assertThat(grouped.get("bean_hello_.*").get(0).beanCreation.beanClass.getName()).isEqualTo(Bean038_1.class.getName());
     assertThat(grouped.get("bean_hello_2").get(0).beanCreation.beanClass.getName()).isEqualTo(Bean038_2.class.getName());
     assertThat(grouped.get("bean_hello_3").get(0).beanCreation.beanClass.getName()).isEqualTo(Bean038_3.class.getName());
+  }
+
+  @Include(BeanConfig038.class)
+  interface BeanContainer038_privateBeanGetter_strExactly extends BeanContainer {
+    @SuppressWarnings("unused")
+    BeanRef038_privateBeanGetter_strExactly ref();
+  }
+
+  @Test
+  public void privateBeanGetter_strExactly() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer038_privateBeanGetter_strExactly.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    bcm.usingBeanReferences.forEach(ref -> {
+      System.out.println("sc = " + ref.sourceClass);
+      System.out.println("place = " + ref.place.display());
+      System.out.println();
+    });
+
+    BeanReference target = bcm.usingBeanReferences.stream()
+        .filter(ref -> ref.sourceClass == Bean038.class)
+        .findAny()
+        .orElseThrow(TestUtil.ElementNotFound::new);
+
+    assertThat(target.getterCreations).hasSize(1);
+
+    assertThat(target.getterCreations.get(0).beanCreation.beanId()).isEqualTo("bean_hello_.*");
   }
 }
