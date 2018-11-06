@@ -13,11 +13,16 @@ import kz.greetgo.depinject.gen.t03x.test_beans037.BeanConfig037;
 import kz.greetgo.depinject.gen.t03x.test_beans037.BeanTarget037;
 import kz.greetgo.depinject.gen.t03x.test_beans037.MainBean037;
 import kz.greetgo.depinject.gen.t03x.test_beans038.Bean038;
+import kz.greetgo.depinject.gen.t03x.test_beans038.Bean038_1;
+import kz.greetgo.depinject.gen.t03x.test_beans038.Bean038_2;
+import kz.greetgo.depinject.gen.t03x.test_beans038.Bean038_3;
 import kz.greetgo.depinject.gen.t03x.test_beans038.BeanConfig038;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -106,17 +111,16 @@ public class BeanContainerManagerTest3 {
   }
 
   @Include(BeanConfig038.class)
-  interface BeanContainer038 extends BeanContainer {
+  interface BeanContainer038_1 extends BeanContainer {
     @SuppressWarnings("unused")
     @Qualifier("bean_hello_.*")
     List<Bean038> qualifier_str_exactly();
   }
 
-  // FIXME: 05.11.18 enable the test
-  @Test(enabled = false)
+  @Test
   public void qualifier_str_exactly() {
     Context context = new Context();
-    BeanContainerManager bcm = context.createManager(BeanContainer038.class);
+    BeanContainerManager bcm = context.createManager(BeanContainer038_1.class);
 
     //
     //
@@ -124,11 +128,11 @@ public class BeanContainerManagerTest3 {
     //
     //
 
-    bcm.usingBeanReferences.forEach(ref -> {
-      System.out.println("sc = " + ref.sourceClass);
-      System.out.println("place = " + ref.place.display());
-      System.out.println();
-    });
+//    bcm.usingBeanReferences.forEach(ref -> {
+//      System.out.println("sc = " + ref.sourceClass);
+//      System.out.println("place = " + ref.place.display());
+//      System.out.println();
+//    });
 
     BeanReference target = bcm.usingBeanReferences.stream()
         .filter(ref -> ref.sourceClass == Bean038.class)
@@ -138,5 +142,49 @@ public class BeanContainerManagerTest3 {
     assertThat(target.getterCreations).hasSize(1);
 
     assertThat(target.getterCreations.get(0).beanCreation.beanId()).isEqualTo("bean_hello_.*");
+  }
+
+  @Include(BeanConfig038.class)
+  interface BeanContainer038_2 extends BeanContainer {
+    @SuppressWarnings("unused")
+    @Qualifier(value = "bean_hello_.*", regexp = true)
+    List<Bean038> qualifier_regexp();
+  }
+
+  @Test
+  public void qualifier_regexp() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer038_2.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+//    bcm.usingBeanReferences.forEach(ref -> {
+//      System.out.println("sc = " + ref.sourceClass);
+//      System.out.println("place = " + ref.place.display());
+//      System.out.println();
+//    });
+
+    BeanReference target = bcm.usingBeanReferences.stream()
+        .filter(ref -> ref.sourceClass == Bean038.class)
+        .findAny()
+        .orElseThrow(TestUtil.ElementNotFound::new);
+
+    assertThat(target.getterCreations).hasSize(3);
+
+    Map<String, List<GetterCreation>> grouped = target.getterCreations
+        .stream()
+        .collect(Collectors.groupingBy(a -> a.beanCreation.beanId()));
+
+    assertThat(grouped.get("bean_hello_.*")).hasSize(1);
+    assertThat(grouped.get("bean_hello_2")).hasSize(1);
+    assertThat(grouped.get("bean_hello_3")).hasSize(1);
+
+    assertThat(grouped.get("bean_hello_.*").get(0).beanCreation.beanClass.getName()).isEqualTo(Bean038_1.class.getName());
+    assertThat(grouped.get("bean_hello_2").get(0).beanCreation.beanClass.getName()).isEqualTo(Bean038_2.class.getName());
+    assertThat(grouped.get("bean_hello_3").get(0).beanCreation.beanClass.getName()).isEqualTo(Bean038_3.class.getName());
   }
 }
