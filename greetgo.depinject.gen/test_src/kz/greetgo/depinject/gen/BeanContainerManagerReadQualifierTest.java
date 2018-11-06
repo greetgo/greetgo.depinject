@@ -54,7 +54,7 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InPublicBeanGetter);
 
-    assertThat(target.place.qualifier()).isEqualTo("public_bean_getter_qualifier_0187");
+    assertThat(target.place.qualifier().value()).isEqualTo("public_bean_getter_qualifier_0187");
 
 //    bcm.usingBeanReferences.forEach(ref -> {
 //      System.out.println("sc = " + ref.sourceClass);
@@ -86,7 +86,7 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InConstructorArg);
 
-    assertThat(target.place.qualifier()).isEqualTo("in_constructor_arg_1672748");
+    assertThat(target.place.qualifier().value()).isEqualTo("in_constructor_arg_1672748");
   }
 
   @Test
@@ -112,7 +112,7 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InConstructorArg);
 
-    assertThat(target.place.qualifier()).isEqualTo("in_constructor_arg_73746t356");
+    assertThat(target.place.qualifier().value()).isEqualTo("in_constructor_arg_73746t356");
   }
 
   @Include(BeanConfig036.class)
@@ -146,7 +146,7 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InBeanFactory);
 
-    assertThat(target.place.qualifier()).isEqualTo("read_qualifier_InBeanFactory_928375");
+    assertThat(target.place.qualifier().value()).isEqualTo("read_qualifier_InBeanFactory_928375");
   }
 
   @Include(BeanConfig036.class)
@@ -180,7 +180,7 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InAnnotationFactoredBy);
 
-    assertThat(target.place.qualifier()).isEqualTo("read_qualifier_InAnnotationFactoredBy_3245354");
+    assertThat(target.place.qualifier().value()).isEqualTo("read_qualifier_InAnnotationFactoredBy_3245354");
   }
 
   @Include(BeanConfig036.class)
@@ -215,6 +215,6 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(target.place.type()).isEqualTo(BeanReference.PlaceType.InBeanContainerMethod);
 
-    assertThat(target.place.qualifier()).isEqualTo("read_qualifier_InBeanContainerMethod_326453");
+    assertThat(target.place.qualifier().value()).isEqualTo("read_qualifier_InBeanContainerMethod_326453");
   }
 }

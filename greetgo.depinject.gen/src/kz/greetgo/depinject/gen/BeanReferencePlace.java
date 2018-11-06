@@ -11,6 +11,9 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static kz.greetgo.depinject.gen.Utils.beanConfigToQualifier;
+import static kz.greetgo.depinject.gen.Utils.factoredByToQualifier;
+import static kz.greetgo.depinject.gen.Utils.noneNull;
 import static kz.greetgo.depinject.gen.Utils.typeAsStr;
 
 public class BeanReferencePlace {
@@ -28,9 +31,8 @@ public class BeanReferencePlace {
       }
 
       @Override
-      public String qualifier() {
-        Qualifier qualifier = field.getAnnotation(Qualifier.class);
-        return qualifier == null ? "" : qualifier.value();
+      public Qualifier qualifier() {
+        return noneNull(field.getAnnotation(Qualifier.class));
       }
     };
   }
@@ -52,25 +54,23 @@ public class BeanReferencePlace {
       }
 
       @Override
-      public String qualifier() {
-        String fieldQualifier = Arrays.stream(beanClass.getDeclaredFields())
+      public Qualifier qualifier() {
+        Qualifier fieldQualifier = Arrays.stream(beanClass.getDeclaredFields())
             .filter(f -> argType.equals(f.getGenericType()))
             .map(f -> f.getAnnotation(Qualifier.class))
             .filter(Objects::nonNull)
-            .map(Qualifier::value)
             .findAny()
-            .orElse("");
+            .orElse(noneNull(null));
 
-        if (fieldQualifier.length() > 0) {
+        if (fieldQualifier.value().length() > 0) {
           return fieldQualifier;
         }
 
         return Arrays.stream(constructor.getParameterAnnotations()[argIndex])
             .filter(a -> a instanceof Qualifier)
             .map(a -> (Qualifier) a)
-            .map(Qualifier::value)
             .findAny()
-            .orElse("");
+            .orElse(noneNull(null));
       }
     };
   }
@@ -88,8 +88,8 @@ public class BeanReferencePlace {
       }
 
       @Override
-      public String qualifier() {
-        return beanConfigAnn == null ? "" : beanConfigAnn.qualifier();
+      public Qualifier qualifier() {
+        return beanConfigToQualifier(beanConfigAnn);
       }
     };
   }
@@ -107,8 +107,8 @@ public class BeanReferencePlace {
       }
 
       @Override
-      public String qualifier() {
-        return factoredBy.qualifier();
+      public Qualifier qualifier() {
+        return factoredByToQualifier(factoredBy);
       }
     };
   }
@@ -126,9 +126,8 @@ public class BeanReferencePlace {
       }
 
       @Override
-      public String qualifier() {
-        Qualifier qualifier = method.getAnnotation(Qualifier.class);
-        return qualifier == null ? "" : qualifier.value();
+      public Qualifier qualifier() {
+        return noneNull(method.getAnnotation(Qualifier.class));
       }
     };
   }

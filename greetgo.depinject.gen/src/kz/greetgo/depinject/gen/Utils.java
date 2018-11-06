@@ -1,6 +1,7 @@
 package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanConfig;
+import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.Qualifier;
 
 import java.io.ByteArrayOutputStream;
@@ -229,5 +230,12 @@ public class Utils {
       return noneNull(null);
     }
     return newQualifier(beanConfig.qualifier(), beanConfig.qualifierRegexp());
+  }
+
+  public static Qualifier factoredByToQualifier(FactoredBy factoredBy) {
+    if (factoredBy == null) {
+      return noneNull(null);
+    }
+    return newQualifier(factoredBy.qualifier(), factoredBy.qualifierRegexp());
   }
 }

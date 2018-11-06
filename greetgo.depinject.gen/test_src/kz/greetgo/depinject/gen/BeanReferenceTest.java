@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.depinject.core.Qualifier;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterArgumentType;
 import org.testng.annotations.Test;
 
@@ -7,6 +8,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
+import static kz.greetgo.depinject.gen.Utils.noneNull;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class BeanReferenceTest {
@@ -31,8 +33,8 @@ public class BeanReferenceTest {
       }
 
       @Override
-      public String qualifier() {
-        return "";
+      public Qualifier qualifier() {
+        return noneNull(null);
       }
     };
   }

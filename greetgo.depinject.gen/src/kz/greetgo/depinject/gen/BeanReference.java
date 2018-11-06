@@ -1,6 +1,7 @@
 package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.core.Qualifier;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterArgumentType;
 import kz.greetgo.depinject.gen.errors.LeftException;
 
@@ -28,7 +29,7 @@ public class BeanReference {
 
     String display();
 
-    String qualifier();
+    Qualifier qualifier();
   }
 
   public final Place place;
@@ -109,7 +110,11 @@ public class BeanReference {
       return false;
     }
 
-    if (!place.qualifier().equals(place.qualifier())) {
+    if (!place.qualifier().value().equals(place.qualifier().value())) {
+      return false;
+    }
+
+    if (place.qualifier().regexp() != place.qualifier().regexp()) {
       return false;
     }
 
@@ -120,7 +125,8 @@ public class BeanReference {
   public int hashCode() {
     int result = (isList ? 1 : 0);
     result = 31 * result + getterCreations.hashCode();
-    result = 31 * result + place.qualifier().hashCode();
+    result = 31 * result + place.qualifier().value().hashCode();
+    result = 31 * result + (place.qualifier().regexp() ? 1 : 0);
     return result;
   }
 
@@ -153,15 +159,18 @@ public class BeanReference {
       return false;
     }
 
-    if (place.qualifier().isEmpty()) {
+    if (place.qualifier().value().isEmpty()) {
       return true;
     }
 
+    if (place.qualifier().regexp()) {
     return Pattern
-        .compile(place.qualifier())
+        .compile(place.qualifier().value())
         .matcher(candidate.bean.id())
         .matches();
+    }
 
+    return place.qualifier().value().equals(candidate.bean.id());
   }
 
   public boolean use = false;
