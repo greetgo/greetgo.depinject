@@ -55,6 +55,7 @@ public class Context_newBeanCreationWithConstructor_Test {
     private final BeanGetter<Bean1> bean1;
     private final BeanGetter<Bean2> bean2;
 
+    @ConstructorProperties({"bean1", "bean2"})
     public OneConstructor(BeanGetter<Bean1> bean1, BeanGetter<Bean2> bean2) {
       this.bean1 = bean1;
       this.bean2 = bean2;

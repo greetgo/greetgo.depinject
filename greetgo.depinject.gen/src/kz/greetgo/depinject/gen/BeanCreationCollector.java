@@ -157,22 +157,21 @@ public class BeanCreationCollector {
     });
   }
 
-  private void addClassAsBeanAndViewItForAnotherBeans(Class<?> parentBeanClass, Bean bean
-  ) {
-    final BeanCreation parentBeanCreation;
+  private void addClassAsBeanAndViewItForAnotherBeans(Class<?> beanClass, Bean bean) {
+    final BeanCreation beanCreation;
 
-    if (Utils.isRealClass(parentBeanClass)) {
-      beanCreationList.add(parentBeanCreation =
-          context.newBeanCreationWithConstructor(parentBeanClass, bean));
+    if (Utils.isRealClass(beanClass)) {
+      beanCreationList.add(beanCreation =
+          context.newBeanCreationWithConstructor(beanClass, bean));
     } else {
-      beanCreationList.add(parentBeanCreation =
-          context.newBeanCreationWithBeanFactory(parentBeanClass, bean, extractBeanFactoryReference(parentBeanClass)));
+      beanCreationList.add(beanCreation =
+          context.newBeanCreationWithBeanFactory(beanClass, bean, extractBeanFactoryReference(beanClass)));
     }
 
-    context.configTree.bean("" + parentBeanCreation);
+    context.configTree.bean("" + beanCreation);
     context.configTree.tab++;
 
-    for (Method method : parentBeanClass.getMethods()) {
+    for (Method method : beanClass.getMethods()) {
 
       Bean methodBean = Utils.getAnnotation(method, Bean.class);
       if (methodBean == null) {
@@ -184,7 +183,7 @@ public class BeanCreationCollector {
       }
 
       BeanCreationWithFactoryMethod subBean = context.newBeanCreationWithFactoryMethod(
-          method.getReturnType(), methodBean, parentBeanCreation, method);
+          method.getReturnType(), methodBean, beanCreation, method);
 
       context.configTree.bean("" + subBean);
       beanCreationList.add(subBean);

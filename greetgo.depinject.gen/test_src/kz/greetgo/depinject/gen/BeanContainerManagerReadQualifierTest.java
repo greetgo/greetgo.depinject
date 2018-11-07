@@ -242,9 +242,9 @@ public class BeanContainerManagerReadQualifierTest {
     //
     //
 
-    bcm.usingBeanReferences.forEach(ref ->
-        System.out.println("place = " + ref.place.type() + " : " + ref.place.display()));
-    System.out.println();
+//    bcm.usingBeanReferences.forEach(ref ->
+//        System.out.println("place = " + ref.place.type() + " : " + ref.place.display()));
+//    System.out.println();
 
     Set<String> qualifierSet = bcm.usingBeanReferences
         .stream()
@@ -256,13 +256,6 @@ public class BeanContainerManagerReadQualifierTest {
 
     assertThat(qualifierSet).containsOnly("bean1", "bean2", "bean3");
   }
-
-
-
-
-
-
-
 
   @Include(BeanConfig040.class)
   interface BeanContainer040 extends BeanContainer {
@@ -281,9 +274,9 @@ public class BeanContainerManagerReadQualifierTest {
     //
     //
 
-    bcm.usingBeanReferences.forEach(ref ->
-        System.out.println("place = " + ref.place.type() + " : " + ref.place.display()));
-    System.out.println();
+//    bcm.usingBeanReferences.forEach(ref ->
+//        System.out.println("place = " + ref.place.type() + " : " + ref.place.display()));
+//    System.out.println();
 
     Set<String> qualifierSet = bcm.usingBeanReferences
         .stream()

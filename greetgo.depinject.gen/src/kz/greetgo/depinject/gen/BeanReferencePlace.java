@@ -3,7 +3,9 @@ package kz.greetgo.depinject.gen;
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.Qualifier;
+import kz.greetgo.depinject.gen.errors.NoFieldSpecifiedInAnnotationConstructorProperties;
 
+import java.beans.ConstructorProperties;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,10 +13,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static kz.greetgo.depinject.gen.Utils.beanConfigToQualifier;
-import static kz.greetgo.depinject.gen.Utils.factoredByToQualifier;
-import static kz.greetgo.depinject.gen.Utils.noneNull;
-import static kz.greetgo.depinject.gen.Utils.typeAsStr;
+import static kz.greetgo.depinject.gen.Utils.*;
 
 public class BeanReferencePlace {
   public static BeanReference.Place placeInPublicBeanGetter(Type referencingClass, Class<?> beanClass, Field field) {
@@ -63,14 +62,20 @@ public class BeanReferencePlace {
 
       @Override
       public Qualifier qualifier() {
-        Qualifier fieldQualifier = Arrays.stream(beanClass.getDeclaredFields())
-            .filter(f -> argType.equals(f.getGenericType()))
-            .map(f -> f.getAnnotation(Qualifier.class))
-            .filter(Objects::nonNull)
-            .findAny()
-            .orElse(noneNull(null));
 
-        if (fieldQualifier.value().length() > 0) {
+        ConstructorProperties cp = constructor.getAnnotation(ConstructorProperties.class);
+        assert cp != null;
+        //always not null because it validated:
+        //   in method ArgSet.validateArguments()
+        //   in method Context.newBeanCreationWithConstructor(...)
+
+        Field field = findDeclaredField(beanClass, cp.value()[argIndex])
+            .orElseThrow(() -> new NoFieldSpecifiedInAnnotationConstructorProperties(
+                beanClass, cp.value()[argIndex], constructor));
+
+        Qualifier fieldQualifier = field.getAnnotation(Qualifier.class);
+
+        if (fieldQualifier != null) {
           return fieldQualifier;
         }
 

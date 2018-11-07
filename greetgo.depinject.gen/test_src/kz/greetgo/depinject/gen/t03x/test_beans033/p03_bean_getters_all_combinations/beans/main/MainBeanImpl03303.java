@@ -7,6 +7,7 @@ import kz.greetgo.depinject.gen.t03x.test_beans033.p03_bean_getters_all_combinat
 import kz.greetgo.depinject.gen.t03x.test_beans033.p03_bean_getters_all_combinations.beans.simple.SimpleBean03303_1;
 import kz.greetgo.depinject.gen.t03x.test_beans033.p03_bean_getters_all_combinations.beans.simple.SimpleBean03303_2;
 
+import java.beans.ConstructorProperties;
 import java.util.List;
 
 @Bean
@@ -18,6 +19,7 @@ public class MainBeanImpl03303 implements MainBean03303 {
 
   public BeanGetter<SimpleBean03303_1> simpleBean1;
 
+  @ConstructorProperties({"beanGroup2", "simpleBean2"})
   public MainBeanImpl03303(BeanGetter<List<BeanGroup03303_2>> beanGroup2, BeanGetter<SimpleBean03303_2> simpleBean2) {
     this.beanGroup2 = beanGroup2;
     this.simpleBean2 = simpleBean2;

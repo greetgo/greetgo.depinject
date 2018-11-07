@@ -5,6 +5,8 @@ import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.Qualifier;
 import kz.greetgo.depinject.core.SkipInject;
 
+import java.beans.ConstructorProperties;
+
 @Bean
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class BeanRef036_3 {
@@ -18,6 +20,7 @@ public class BeanRef036_3 {
   @SkipInject
   private final BeanGetter<Object> leftRef2 = null;
 
+  @ConstructorProperties("reference")
   public BeanRef036_3(@Qualifier("left_id") BeanGetter<BeanTarget036_3> reference) {
     this.reference = reference;
   }

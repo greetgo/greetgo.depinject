@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -17,6 +18,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class Utils {
@@ -237,5 +239,33 @@ public class Utils {
       return noneNull(null);
     }
     return newQualifier(factoredBy.qualifier(), factoredBy.qualifierRegexp());
+  }
+
+  public static Optional<Field> findDeclaredField(Class<?> aClass, String fieldName) {
+
+    Class<?> current = aClass;
+
+    while (true) {
+
+      if (current == null) {
+        return Optional.empty();
+      }
+
+      try {
+
+        return Optional.of(current.getDeclaredField(fieldName));
+
+      } catch (NoSuchFieldException ignore) {
+
+        if (Object.class.equals(current)) {
+          return Optional.empty();
+        }
+
+        current = current.getSuperclass();
+
+        continue;
+      }
+    }
+
   }
 }

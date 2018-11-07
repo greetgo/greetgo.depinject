@@ -3,18 +3,19 @@ package kz.greetgo.depinject.gen;
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.HideFromDepinject;
-import kz.greetgo.depinject.core.SkipInject;
 import kz.greetgo.depinject.gen.errors.BeanContainerMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.IllegalBeanGetterDefinition;
 import kz.greetgo.depinject.gen.errors.ManyCandidates;
+import kz.greetgo.depinject.gen.errors.MismatchConstructorPropertiesCount;
+import kz.greetgo.depinject.gen.errors.NoAnnotationConstructorProperties;
 import kz.greetgo.depinject.gen.errors.NoBeanConfig;
 import kz.greetgo.depinject.gen.errors.NoCandidates;
 import kz.greetgo.depinject.gen.errors.NoConstructorsToCreateBean;
 import kz.greetgo.depinject.gen.errors.NoDefaultBeanFactory;
-import kz.greetgo.depinject.gen.errors.NonPublicBeanWithoutConstructor;
 import kz.greetgo.depinject.gen.errors.QualifierNotMatched;
 import kz.greetgo.depinject.gen.errors.SuitableConstructorContainsIllegalArgument;
 
+import java.beans.ConstructorProperties;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.reverseOrder;
 import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInConstructorArg;
@@ -140,13 +139,28 @@ public class Context {
         this.constructor = constructor;
       }
 
-      public void checkArgumentsOk() {
-        int argIndex = 0;
-        for (ConstructorArg constructorArg : argList) {
-          if (constructorArg.beanReference == null) {
-            throw new SuitableConstructorContainsIllegalArgument(argIndex, constructor, beanClass);
+      public void validateArguments() {
+        if (argList.size() > 0) {
+
+          ConstructorProperties cp = constructor.getAnnotation(ConstructorProperties.class);
+          if (cp == null) {
+            throw new NoAnnotationConstructorProperties(beanClass, constructor);
           }
-          argIndex++;
+
+          if (cp.value().length != argList.size()) {
+            throw new MismatchConstructorPropertiesCount(beanClass, cp.value().length, constructor, argList.size());
+          }
+
+        }
+
+        {
+          int argIndex = 0;
+          for (ConstructorArg constructorArg : argList) {
+            if (constructorArg.beanReference == null) {
+              throw new SuitableConstructorContainsIllegalArgument(argIndex, constructor, beanClass);
+            }
+            argIndex++;
+          }
         }
       }
     }
@@ -197,44 +211,10 @@ public class Context {
 
     argSetList.sort(reverseOrder(Comparator.comparing(a -> a.argList.size())));
 
-    argSetList.get(0).checkArgumentsOk();
+    argSetList.get(0).validateArguments();
 
     List<ConstructorArg> selectedArgList = argSetList.get(0).argList;
-    //checkBeanGetterNotPublicFor(beanClass, selectedArgList);
 
     return new BeanCreationWithConstructor(this, beanClass, bean, selectedArgList);
   }
-
-
-  private static void checkBeanGetterNotPublicFor(Class<?> beanClass, List<ConstructorArg> selectedArgList) {
-
-    Set<String> argTypes = selectedArgList.stream()
-        .map(a -> a.argType.toString())
-        .collect(Collectors.toSet());
-
-    if (beanClass.getAnnotation(SkipInject.class) != null) {
-      return;
-    }
-
-    for (Field field : beanClass.getDeclaredFields()) {
-      if (Modifier.isPublic(field.getModifiers())) {
-        continue;
-      }
-
-      if (!BeanGetter.class.equals(field.getType())) {
-        continue;
-      }
-
-      if (field.getAnnotation(SkipInject.class) != null) {
-        continue;
-      }
-
-      if (argTypes.contains(field.getGenericType().toString())) {
-        continue;
-      }
-
-      throw new NonPublicBeanWithoutConstructor(null, field, beanClass);
-    }
-  }
-
 }
