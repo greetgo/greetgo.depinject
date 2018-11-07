@@ -35,3 +35,7 @@
  - Renamed BeanGetterIsNotPublic ⟶ to NonPublicBeanWithoutConstructor
    > Because added constructors with BeanGetter arguments, and now non-public BeanGetter is OK, if it is
    > initialized through constructor.
+
+#### Changes: from 2.1.6 ⟶ to 2.1.7
+  - Added id in annotation @Bean
+  - Added annotation @Qualifier to select beans by id
