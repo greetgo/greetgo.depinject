@@ -18,6 +18,7 @@ public class SuitableConstructorContainsIllegalArgument extends RuntimeException
     String hfd = HideFromDepinject.class.getSimpleName();
     return "for " + beanClass
         + "\n\tDepinject finds constructor with maximum number of arguments and use it to create bean."
+        + "\n\tIf constructor has arguments, it MUST be marked with annotation @ConstructorProperties({...})."
         + "\n\tAll arguments of this constructor MUST have type " + bg + " (with generics in)"
         + "\n"
         + "\n\tNow depinject found constructor without this type in bean " + beanClass

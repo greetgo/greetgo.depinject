@@ -2,16 +2,20 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.BeanGetter;
 import kz.greetgo.depinject.core.HideFromDepinject;
+import kz.greetgo.depinject.gen.errors.MismatchConstructorPropertiesCount;
+import kz.greetgo.depinject.gen.errors.NoAnnotationConstructorProperties;
 import kz.greetgo.depinject.gen.errors.NoConstructorsToCreateBean;
 import kz.greetgo.depinject.gen.errors.SuitableConstructorContainsIllegalArgument;
 import kz.greetgo.util.RND;
 import org.testng.annotations.Test;
 
+import java.beans.ConstructorProperties;
+
 import static kz.greetgo.depinject.gen.TestUtil.beanAnn;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
 
-public class ContextTest3_constructors {
+public class Context_newBeanCreationWithConstructor_Test {
 
   class Bean1 {}
 
@@ -25,7 +29,7 @@ public class ContextTest3_constructors {
   }
 
   @Test
-  public void newBeanCreationWithConstructor_defaultConstructor() {
+  public void default_constructor_with_fields() {
     Context context = new Context();
 
     Class<?> beanClass = WithDefaultConstructor.class;
@@ -64,7 +68,7 @@ public class ContextTest3_constructors {
   }
 
   @Test
-  public void newBeanCreationWithConstructor_oneConstructorWithArguments() {
+  public void oneConstructorWithArguments() {
     Context context = new Context();
 
     Class<?> beanClass = OneConstructor.class;
@@ -92,18 +96,21 @@ public class ContextTest3_constructors {
     private final BeanGetter<Bean2> bean2;
     private final BeanGetter<Bean3> bean3;
 
+    @ConstructorProperties({"bean1"})
     public ManyConstructors(BeanGetter<Bean1> bean1) {
       this.bean1 = bean1;
       this.bean2 = null;
       this.bean3 = null;
     }
 
+    @ConstructorProperties({"bean2", "bean1"})
     public ManyConstructors(BeanGetter<Bean2> bean2, BeanGetter<Bean1> bean1) {
       this.bean1 = bean1;
       this.bean2 = bean2;
       this.bean3 = null;
     }
 
+    @ConstructorProperties({"bean3", "bean1", "bean2"})
     public ManyConstructors(BeanGetter<Bean3> bean3, BeanGetter<Bean1> bean1, BeanGetter<Bean2> bean2) {
       this.bean1 = bean1;
       this.bean2 = bean2;
@@ -112,7 +119,7 @@ public class ContextTest3_constructors {
   }
 
   @Test
-  public void newBeanCreationWithConstructor_twoConstructors() {
+  public void twoConstructors() {
     Context context = new Context();
 
     Class<?> beanClass = ManyConstructors.class;
@@ -141,7 +148,7 @@ public class ContextTest3_constructors {
   }
 
   @Test
-  public void newBeanCreationWithConstructor_noConstructors() {
+  public void noConstructors() {
     Context context = new Context();
 
     Class<?> beanClass = NoConstructors.class;
@@ -182,18 +189,25 @@ public class ContextTest3_constructors {
     private final BeanGetter<Bean2> bean2;
     private final BeanGetter<Bean3> bean3;
 
+    @ConstructorProperties({"bean1"})
     public ManyConstructorsButSuitableIsLeft(BeanGetter<Bean1> bean1) {
       this.bean1 = bean1;
       this.bean2 = null;
       this.bean3 = null;
+      this.notBeanGetter = null;
     }
 
+    @ConstructorProperties({"bean2", "bean1"})
     public ManyConstructorsButSuitableIsLeft(BeanGetter<Bean2> bean2, BeanGetter<Bean1> bean1) {
       this.bean1 = bean1;
       this.bean2 = bean2;
       this.bean3 = null;
+      this.notBeanGetter = null;
     }
 
+    private final SomeClass notBeanGetter;
+
+    @ConstructorProperties({"bean3", "bean1", "bean2", "notBeanGetter"})
     public ManyConstructorsButSuitableIsLeft(BeanGetter<Bean3> bean3,
                                              BeanGetter<Bean1> bean1,
                                              BeanGetter<Bean2> bean2,
@@ -202,11 +216,12 @@ public class ContextTest3_constructors {
       this.bean1 = bean1;
       this.bean2 = bean2;
       this.bean3 = bean3;
+      this.notBeanGetter = notBeanGetter;
     }
   }
 
   @Test
-  public void newBeanCreationWithConstructor_ManyConstructorsButSuitableIsLeft() {
+  public void many_constructors_but_suitable_is_wrong() {
     Context context = new Context();
 
     Class<?> beanClass = ManyConstructorsButSuitableIsLeft.class;
@@ -247,18 +262,28 @@ public class ContextTest3_constructors {
   public static class CheckWorkingOfAnnotation_HideFromDepinject {
     private final BeanGetter<Bean1> bean1;
     private final BeanGetter<Bean2> bean2;
+    private final BeanGetter<Bean3> bean3;
 
+    @ConstructorProperties({"bean1"})
     public CheckWorkingOfAnnotation_HideFromDepinject(BeanGetter<Bean1> bean1) {
       this.bean1 = bean1;
       this.bean2 = null;
+      bean3 = null;
+      notBeanGetter = null;
     }
 
+    @ConstructorProperties({"bean2", "bean1"})
     public CheckWorkingOfAnnotation_HideFromDepinject(BeanGetter<Bean2> bean2, BeanGetter<Bean1> bean1) {
       this.bean1 = bean1;
       this.bean2 = bean2;
+      bean3 = null;
+      notBeanGetter = null;
     }
 
+    private final SomeClass notBeanGetter;
+
     @HideFromDepinject
+    @ConstructorProperties({"bean3", "bean1", "bean2", "notBeanGetter"})
     public CheckWorkingOfAnnotation_HideFromDepinject(BeanGetter<Bean3> bean3,
                                                       BeanGetter<Bean1> bean1,
                                                       BeanGetter<Bean2> bean2,
@@ -266,11 +291,13 @@ public class ContextTest3_constructors {
     ) {
       this.bean1 = bean1;
       this.bean2 = bean2;
+      this.bean3 = bean3;
+      this.notBeanGetter = notBeanGetter;
     }
   }
 
   @Test
-  public void newBeanCreationWithConstructor_CheckWorkingOfAnnotation_HideFromDepinject() {
+  public void check_working_of_annotation_HideFromDepinject() {
     Context context = new Context();
 
     Class<?> beanClass = CheckWorkingOfAnnotation_HideFromDepinject.class;
@@ -286,4 +313,114 @@ public class ContextTest3_constructors {
     //No ERROR - good: annotation @HideFromDepinject is working good
   }
 
+  public static class BeanWithDefaultConstructor {
+    //No annotation @ConstructorProperties
+    public BeanWithDefaultConstructor() {}
+  }
+
+  @Test
+  public void constructor_without_arguments_may_absent_annotation_ConstructorProperties() {
+    Context context = new Context();
+
+    Class<?> beanClass = BeanWithDefaultConstructor.class;
+
+    boolean singleton = RND.bool();
+
+    //
+    //
+    context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
+    //
+    //
+  }
+
+  @SuppressWarnings("unused")
+  public static class BeanWithConstructorWithoutAnnotationConstructorProperties {
+    private final BeanGetter<Bean1> bean1;
+    private final BeanGetter<Bean2> bean2;
+
+    //No annotation @ConstructorProperties
+    public BeanWithConstructorWithoutAnnotationConstructorProperties(BeanGetter<Bean1> bean1,
+                                                                     BeanGetter<Bean2> bean2) {
+      this.bean1 = bean1;
+      this.bean2 = bean2;
+    }
+  }
+
+  @Test
+  public void constructor_with_arguments_and_without_ann_ConstructorProperties_throws_error() {
+    Context context = new Context();
+
+    Class<?> beanClass = BeanWithConstructorWithoutAnnotationConstructorProperties.class;
+
+    boolean singleton = RND.bool();
+
+    NoAnnotationConstructorProperties error = null;
+
+    try {
+      //
+      //
+      context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
+      //
+      //
+
+      fail("Must be error: NoAnnotationConstructorProperties");
+    } catch (NoAnnotationConstructorProperties e) {
+      error = e;
+    }
+
+    assertThat(error).isNotNull();
+
+    String st = TestUtil.extractStackTraceToStr(error);
+    System.out.println(st);
+
+    String cp = ConstructorProperties.class.getSimpleName();
+
+    assertThat(st).contains("Depinject finds constructor with maximum number of arguments and use it to create bean.");
+    assertThat(st).contains("This constructor MUST be marked with annotation " + cp + ".");
+    assertThat(st).contains("Please mark this constructor with annotation " + cp + ".");
+  }
+
+  @SuppressWarnings("unused")
+  public static class BeanWithMismatchConstructorPropertiesCount {
+    private final BeanGetter<Bean1> bean1;
+    private final BeanGetter<Bean2> bean2;
+
+    @ConstructorProperties({"bean1", "bean2", "wow"})
+    public BeanWithMismatchConstructorPropertiesCount(BeanGetter<Bean1> bean1,
+                                                      BeanGetter<Bean2> bean2) {
+      this.bean1 = bean1;
+      this.bean2 = bean2;
+    }
+  }
+
+  @Test
+  public void mismatch_constructor_properties_count() {
+    Context context = new Context();
+
+    Class<?> beanClass = BeanWithMismatchConstructorPropertiesCount.class;
+
+    boolean singleton = RND.bool();
+
+    MismatchConstructorPropertiesCount error = null;
+
+    try {
+      //
+      //
+      context.newBeanCreationWithConstructor(beanClass, beanAnn(singleton));
+      //
+      //
+
+      fail("Must be error: MismatchConstructorPropertiesCount");
+    } catch (MismatchConstructorPropertiesCount e) {
+      error = e;
+    }
+
+    assertThat(error).isNotNull();
+
+    String st = TestUtil.extractStackTraceToStr(error);
+    System.out.println(st);
+
+    assertThat(st).contains("Annotation ConstructorProperties contains 3 elements");
+    assertThat(st).contains("constructor contains 2 arguments");
+  }
 }

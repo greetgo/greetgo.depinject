@@ -27,7 +27,7 @@ public class BeanReferencePlace {
       @Override
       public String display() {
         return "public field " + Utils.asStr(beanClass) + "." + field.getName()
-            + " -> " + typeAsStr(referencingClass);
+            + " -> " + typeAsStr(referencingClass) + qualifierAsStr(qualifier());
       }
 
       @Override
@@ -35,6 +35,14 @@ public class BeanReferencePlace {
         return noneNull(field.getAnnotation(Qualifier.class));
       }
     };
+  }
+
+  private static String qualifierAsStr(Qualifier qualifier) {
+    if (qualifier == null || qualifier.value().isEmpty()) {
+      return "";
+    }
+
+    return qualifier.regexp() ? " [id ~ /" + qualifier.value() + "/]" : " [id = " + qualifier.value() + "]";
   }
 
   public static BeanReference.Place placeInConstructorArg(Type referencingType,
@@ -50,7 +58,7 @@ public class BeanReferencePlace {
       @Override
       public String display() {
         return "argument " + argIndex + " of constructor in " + Utils.asStr(beanClass)
-            + " -> " + typeAsStr(referencingType);
+            + " -> " + typeAsStr(referencingType) + qualifierAsStr(qualifier());
       }
 
       @Override
@@ -84,7 +92,7 @@ public class BeanReferencePlace {
 
       @Override
       public String display() {
-        return "bean factory of " + Utils.asStr(beanConfig);
+        return "bean factory of " + Utils.asStr(beanConfig) + qualifierAsStr(qualifier());
       }
 
       @Override
@@ -103,7 +111,8 @@ public class BeanReferencePlace {
 
       @Override
       public String display() {
-        return factoredBy.getClass().getSimpleName() + " in (or in any parents of) " + Utils.asStr(beanClass);
+        return factoredBy.getClass().getSimpleName()
+            + " in (or in any parents of) " + Utils.asStr(beanClass) + qualifierAsStr(qualifier());
       }
 
       @Override
@@ -122,7 +131,9 @@ public class BeanReferencePlace {
 
       @Override
       public String display() {
-        return "bean container method " + Utils.asStr(method.getDeclaringClass()) + "." + method.getName() + "()";
+        return "bean container method "
+            + Utils.asStr(method.getDeclaringClass()) + "." + method.getName() + "()"
+            + qualifierAsStr(qualifier());
       }
 
       @Override
