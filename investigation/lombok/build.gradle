@@ -1,11 +1,10 @@
 buildscript {
   ext.greetgoDepinjectVersion = rootProject.file('../greetgo.depinject/src_resources/depinject_version.txt').text.trim()
-
-
 }
 
 plugins {
   id 'net.ltgt.apt' version '0.10'
+  id 'io.franzbecker.gradle-lombok' version '1.14'
 }
 
 subprojects {

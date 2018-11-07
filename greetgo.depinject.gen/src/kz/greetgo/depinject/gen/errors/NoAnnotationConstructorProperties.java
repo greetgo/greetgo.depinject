@@ -16,6 +16,9 @@ public class NoAnnotationConstructorProperties extends RuntimeException {
     ) + "\n" +
         "\nDepinject finds constructor with maximum number of arguments and use it to create bean." +
         "\nThis constructor MUST be marked with annotation ConstructorProperties." +
-        "\nPlease mark this constructor with annotation ConstructorProperties.");
+        "\nPlease mark this constructor with annotation ConstructorProperties." +
+        "\n\nIf you are using lombok then you need add the following to lombok.config file:" +
+        "\n\n\tlombok.anyConstructor.addConstructorProperties=true" +
+        "\n\n");
   }
 }

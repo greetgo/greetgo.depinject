@@ -17,8 +17,8 @@ public class Module1Test extends AbstractDepinjectTestNg {
 
   public BeanGetter<Module1> module1;
 
-  @SuppressWarnings("SpellCheckingInspection")
   @Test
+  @SuppressWarnings("SpellCheckingInspection")
   public void test_working_with_lombok() {
 
     StringBuilder out = new StringBuilder();
