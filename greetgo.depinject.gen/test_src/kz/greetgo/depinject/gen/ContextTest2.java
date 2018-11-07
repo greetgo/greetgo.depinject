@@ -34,7 +34,7 @@ public class ContextTest2 {
   }
 
   @Test
-  public void fillBeanGetterDotListInner() throws Exception {
+  public void fillBeanGetterDotListInner() {
     List<BeanGetterInPublicField> list = new ArrayList<>();
 
     Context context = new Context();
@@ -67,7 +67,7 @@ public class ContextTest2 {
   }
 
   @Test(expectedExceptions = IllegalBeanGetterDefinition.class)
-  public void fillBeanGetterDotListInner_IllegalBeanGetterDefinition() throws Exception {
+  public void fillBeanGetterDotListInner_IllegalBeanGetterDefinition() {
     Context context = new Context();
 
     //
@@ -77,12 +77,11 @@ public class ContextTest2 {
     //
   }
 
-  interface I1 extends BeanPreparation<Bean1> {
-  }
+  @SuppressWarnings("deprecation")
+  interface I1 extends BeanPreparation<Bean1> {}
 
   @SuppressWarnings("unused")
-  interface I2<T> {
-  }
+  interface I2<T> {}
 
   class C1 implements I1, I2<String> {
     @Override
@@ -92,7 +91,7 @@ public class ContextTest2 {
   }
 
   @Test
-  public void getPreparingClassInner() throws Exception {
+  public void getPreparingClassInner() {
     //
     //
     Class<?> result = BeanCreation.getPreparingClass(C1.class, new HashSet<>());
@@ -108,7 +107,7 @@ public class ContextTest2 {
   }
 
   @Test
-  public void getPreparingClassInner_null() throws Exception {
+  public void getPreparingClassInner_null() {
     //
     //
     Class<?> result = BeanCreation.getPreparingClass(C2.class, new HashSet<>());

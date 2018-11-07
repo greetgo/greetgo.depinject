@@ -11,7 +11,7 @@ import static kz.greetgo.depinject.gen.TestUtil.beanAnn;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
 
-public class ContextTest3 {
+public class ContextTest3_constructors {
 
   class Bean1 {}
 
