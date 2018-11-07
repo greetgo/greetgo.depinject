@@ -17,6 +17,8 @@ import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_3;
 import kz.greetgo.depinject.gen.t03x.test_beans036.root.BeanTarget036_6;
 import kz.greetgo.depinject.gen.t03x.test_beans039.BeanConfig039;
 import kz.greetgo.depinject.gen.t03x.test_beans039.MainBean039;
+import kz.greetgo.depinject.gen.t04x.test_beans040.BeanConfig040;
+import kz.greetgo.depinject.gen.t04x.test_beans040.MainBean040;
 import org.testng.annotations.Test;
 
 import java.util.Set;
@@ -233,6 +235,45 @@ public class BeanContainerManagerReadQualifierTest {
   public void read_qualifier_of_private_bean_getter_with_same_types() {
     Context context = new Context();
     BeanContainerManager bcm = context.createManager(BeanContainer039.class);
+
+    //
+    //
+    bcm.prepareToWrite();
+    //
+    //
+
+    bcm.usingBeanReferences.forEach(ref ->
+        System.out.println("place = " + ref.place.type() + " : " + ref.place.display()));
+    System.out.println();
+
+    Set<String> qualifierSet = bcm.usingBeanReferences
+        .stream()
+        .map(r -> r.place)
+        .map(BeanReference.Place::qualifier)
+        .map(Qualifier::value)
+        .filter(value -> value.length() > 0)
+        .collect(Collectors.toSet());
+
+    assertThat(qualifierSet).containsOnly("bean1", "bean2", "bean3");
+  }
+
+
+
+
+
+
+
+
+  @Include(BeanConfig040.class)
+  interface BeanContainer040 extends BeanContainer {
+    @SuppressWarnings("unused")
+    MainBean040 mainBean();
+  }
+
+  @Test
+  public void read_qualifier_of_private_bean_getter_with_same_types_from_parent_too() {
+    Context context = new Context();
+    BeanContainerManager bcm = context.createManager(BeanContainer040.class);
 
     //
     //
