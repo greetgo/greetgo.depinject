@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-  ext.depinjectVersion = '2.0.0'
+  ext.depinjectVersion = '2.1.7'
   ext.testNgVersion = '6.5.1'
 
   compile "kz.greetgo.depinject:greetgo.depinject:$depinjectVersion"
