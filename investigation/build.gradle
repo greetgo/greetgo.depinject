@@ -24,7 +24,7 @@ subprojects {
     ext.jettyVersion = '9.2+'
     ext.springVersion = '4.2.3.RELEASE'
     ext.gwtVersion = '2.8.0'
-    ext.greetgoUtilVersion = '0.0.27'
+    ext.greetgoUtilVersion = '0.1.1'
     ext.testNgVersion = '6.5.1'
     ext.classScannerVersion = '2.0.0'
     ext.greetgoJavaCompilerVersion = "2.0.0"
