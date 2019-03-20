@@ -26,9 +26,6 @@ public class AbstractDepinjectTestNg_SimpleTest extends AbstractDepinjectTestNg 
 
   @Test
   public void testConnect() {
-
-    //todo pompei runing test
-
     assertThat(simpleBean.get()).isNotNull();
   }
 

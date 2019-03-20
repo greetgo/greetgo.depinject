@@ -107,7 +107,7 @@ public class DepinjectUtil {
 
     for (JavaFile javaFile : implementBeanContainers(packageName, srcDir)) {
 
-      classLoader.addFile(javaFile.srcDirFile());
+      classLoader.addClasspath(javaFile.srcDirFile());
 
     }
 

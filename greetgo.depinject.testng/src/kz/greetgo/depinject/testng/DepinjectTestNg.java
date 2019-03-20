@@ -63,7 +63,7 @@ public class DepinjectTestNg {
       testNgTestClass, testNgTestConfig, classList);
 
     FilesClassLoader classLoader = DepinjectUtil.ensureAndGetDepinjectLoader();
-    classLoader.addFile(new File(srcDir));
+    classLoader.addClasspath(new File(srcDir));
 
     compiler.classpath().add(new File(srcDir));
 

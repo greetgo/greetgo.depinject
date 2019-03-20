@@ -37,7 +37,7 @@ subprojects {
     ext.gwtVersion = '2.8.0'
     ext.greetgoUtilVersion = '0.1.2'
     ext.testNgVersion = '6.14.3'
-    ext.classScannerVersion = '2.0.2'
+    ext.classScannerVersion = '2.0.3'
     ext.greetgoJavaCompilerVersion = "2.0.4"
 
     testCompile "org.testng:testng:$testNgVersion"

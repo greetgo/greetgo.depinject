@@ -13,9 +13,7 @@ import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.errors.FactoryMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoInclude;
-import kz.greetgo.java_compiler.FilesClassLoader;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -158,19 +156,9 @@ public class BeanCreationCollector {
   private void collectFromPackage(String packageName) {
     ClassScanner classScanner = new ClassScannerDef();
 
-    ClassLoader classLoader = Depinject.additionalLoader.get();
+    classScanner.addClassLoader(Depinject.additionalLoader.get());
 
-    System.out.println("5jn43j265h7v :: in ( " + classLoader + " ) collectFromPackage " + packageName);
-    if (classLoader instanceof FilesClassLoader) {
-      FilesClassLoader fcl = (FilesClassLoader) classLoader;
-      for (File file : fcl.getFiles()) {
-        System.out.println("5jn43j265h7v :: classpath " + file);
-      }
-    }
-
-    //todo pompei a problem place
-
-    Set<Class<?>> classes = classScanner.scanPackage(packageName, classLoader);
+    Set<Class<?>> classes = classScanner.scanPackage(packageName);
 
     for (Class<?> someClass : classes) {
       Bean bean = someClass.getAnnotation(Bean.class);
