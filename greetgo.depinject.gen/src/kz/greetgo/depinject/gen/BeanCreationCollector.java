@@ -1,6 +1,8 @@
 package kz.greetgo.depinject.gen;
 
+import kz.greetgo.class_scanner.ClassScanner;
 import kz.greetgo.class_scanner.ClassScannerDef;
+import kz.greetgo.depinject.Depinject;
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanConfig;
 import kz.greetgo.depinject.core.BeanContainer;
@@ -8,16 +10,18 @@ import kz.greetgo.depinject.core.BeanFactory;
 import kz.greetgo.depinject.core.BeanScanner;
 import kz.greetgo.depinject.core.FactoredBy;
 import kz.greetgo.depinject.core.Include;
-import kz.greetgo.depinject.core.ScanPackage;
 import kz.greetgo.depinject.gen.errors.FactoryMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.gen.errors.NoBeanContainer;
 import kz.greetgo.depinject.gen.errors.NoInclude;
+import kz.greetgo.java_compiler.FilesClassLoader;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInAnnotationFactoredBy;
 import static kz.greetgo.depinject.gen.BeanReferencePlace.placeInBeanFactory;
@@ -93,20 +97,7 @@ public class BeanCreationCollector {
         }
       }
 
-      {
-        //noinspection deprecation
-        ScanPackage scanPackage = beanConfig.getAnnotation(ScanPackage.class);
-
-        if (scanPackage != null) {
-          for (String subPackageName : scanPackage.value()) {
-            String packageName = calcFullName(beanConfig.getPackage().getName(), subPackageName);
-            context.configTree.scannerPackage(packageName);
-            context.configTree.tab++;
-            collectFromPackage(packageName);
-            context.configTree.tab--;
-          }
-        }
-      }
+      applyAnnotationScanPackage(beanConfig);
 
       if (addToFactoryClassStack) {
         factoryClassStack.removeLast();
@@ -114,6 +105,22 @@ public class BeanCreationCollector {
 
     } finally {
       context.configTree.tab--;
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private void applyAnnotationScanPackage(Class<?> beanConfig) {
+    kz.greetgo.depinject.core.ScanPackage scanPackage
+      = beanConfig.getAnnotation(kz.greetgo.depinject.core.ScanPackage.class);
+
+    if (scanPackage != null) {
+      for (String subPackageName : scanPackage.value()) {
+        String packageName = calcFullName(beanConfig.getPackage().getName(), subPackageName);
+        context.configTree.scannerPackage(packageName);
+        context.configTree.tab++;
+        collectFromPackage(packageName);
+        context.configTree.tab--;
+      }
     }
   }
 
@@ -149,23 +156,42 @@ public class BeanCreationCollector {
   }
 
   private void collectFromPackage(String packageName) {
-    new ClassScannerDef().scanPackage(packageName).forEach(someClass -> {
+    ClassScanner classScanner = new ClassScannerDef();
+
+    ClassLoader classLoader = Depinject.additionalLoader.get();
+
+    System.out.println("5jn43j265h7v :: in ( " + classLoader + " ) collectFromPackage " + packageName);
+    if (classLoader instanceof FilesClassLoader) {
+      FilesClassLoader fcl = (FilesClassLoader) classLoader;
+      for (File file : fcl.getFiles()) {
+        System.out.println("5jn43j265h7v :: classpath " + file);
+      }
+    }
+
+    //todo pompei a problem place
+
+    Set<Class<?>> classes = classScanner.scanPackage(packageName, classLoader);
+
+    for (Class<?> someClass : classes) {
       Bean bean = someClass.getAnnotation(Bean.class);
       if (bean != null) {
         addClassAsBeanAndViewItForAnotherBeans(someClass, bean);
       }
-    });
+    }
+
   }
 
   private void addClassAsBeanAndViewItForAnotherBeans(Class<?> beanClass, Bean bean) {
     final BeanCreation beanCreation;
 
     if (Utils.isRealClass(beanClass)) {
-      beanCreationList.add(beanCreation =
-          context.newBeanCreationWithConstructor(beanClass, bean));
+      beanCreationList.add(
+        beanCreation = context.newBeanCreationWithConstructor(beanClass, bean)
+      );
     } else {
-      beanCreationList.add(beanCreation =
-          context.newBeanCreationWithBeanFactory(beanClass, bean, extractBeanFactoryReference(beanClass)));
+      beanCreationList.add(
+        beanCreation = context.newBeanCreationWithBeanFactory(beanClass, bean, extractBeanFactoryReference(beanClass))
+      );
     }
 
     context.configTree.bean("" + beanCreation);
@@ -183,7 +209,7 @@ public class BeanCreationCollector {
       }
 
       BeanCreationWithFactoryMethod subBean = context.newBeanCreationWithFactoryMethod(
-          method.getReturnType(), methodBean, beanCreation, method);
+        method.getReturnType(), methodBean, beanCreation, method);
 
       context.configTree.bean("" + subBean);
       beanCreationList.add(subBean);

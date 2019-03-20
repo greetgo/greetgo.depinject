@@ -4,9 +4,9 @@ import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.t02x.test_beans027.beans.BeanConfig027;
 import kz.greetgo.depinject.gen.t02x.test_beans027.interfaces.IBeanB2;
+import kz.greetgo.java_compiler.FilesClassLoader;
 import kz.greetgo.java_compiler.JavaCompiler;
 import kz.greetgo.java_compiler.JavaCompilerFactory;
-import kz.greetgo.util.ServerUtil;
 
 import java.io.File;
 
@@ -41,9 +41,10 @@ public class BeanContainerGeneratorRunProbe {
 
     compiler.compile(src + "/kz/greetgo/depinject/gen/test/TestBeanContainerImpl.java");
 
-    ServerUtil.addToClasspath(src);
+    FilesClassLoader classLoader = new FilesClassLoader(ClassLoader.getSystemClassLoader());
+    classLoader.addFile(new File(src));
 
-    final Class<?> containerClass = Class.forName("kz.greetgo.depinject.gen.test.TestBeanContainerImpl");
+    final Class<?> containerClass = classLoader.loadClass("kz.greetgo.depinject.gen.test.TestBeanContainerImpl");
     System.out.println("containerClass = " + containerClass);
 
     TestBeanContainer container = (TestBeanContainer) containerClass.newInstance();

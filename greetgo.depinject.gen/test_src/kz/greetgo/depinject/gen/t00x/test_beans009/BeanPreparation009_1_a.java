@@ -4,6 +4,7 @@ import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanPreparation;
 import kz.greetgo.depinject.core.BeanPreparationPriority;
 
+@SuppressWarnings("deprecation")
 @Bean
 @BeanPreparationPriority(-9)
 public class BeanPreparation009_1_a implements BeanPreparation<Bean1> {

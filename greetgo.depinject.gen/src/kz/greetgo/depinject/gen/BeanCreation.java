@@ -2,8 +2,6 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanGetter;
-import kz.greetgo.depinject.core.BeanPreparation;
-import kz.greetgo.depinject.core.BeanPreparationPriority;
 import kz.greetgo.depinject.core.HasAfterInject;
 import kz.greetgo.depinject.core.replace.BeanReplacer;
 import kz.greetgo.depinject.core.replace.ReplacePriority;
@@ -97,6 +95,7 @@ public abstract class BeanCreation {
 
   protected abstract void markToUseAdditions();
 
+  @SuppressWarnings("Duplicates")
   public void writeGetter(int tab, Outer out) {
     out.nl();
 
@@ -106,11 +105,11 @@ public abstract class BeanCreation {
 
     if (bean.singleton()) {
       out.tab(tab).stn("private final " + Utils.codeName(AtomicReference.class) + "<" + Utils.codeName(beanClass) +
-          "> " + cachedValueVarName() + " = new " + Utils.codeName(AtomicReference.class) + "<>(null);");
+        "> " + cachedValueVarName() + " = new " + Utils.codeName(AtomicReference.class) + "<>(null);");
     }
 
     out.tab(tab).stn("private final " + Utils.codeName(BeanGetter.class)
-        + "<" + Utils.codeName(beanClass) + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
+      + "<" + Utils.codeName(beanClass) + "> " + getterVarName() + " = this::" + gettingMethodName() + ";");
     out.tab(tab).stn("private " + Utils.codeName(beanClass) + " " + gettingMethodName() + " () {");
 
     if (bean.singleton()) {
@@ -195,7 +194,9 @@ public abstract class BeanCreation {
     public int compareTo(BeanPreparationPriorityDot o) {
       {
         int cmp = Integer.compare(parenting, o.parenting);
-        if (cmp != 0) { return cmp; }
+        if (cmp != 0) {
+          return cmp;
+        }
       }
       return Double.compare(fromAnnotation, o.fromAnnotation);
     }
@@ -210,20 +211,22 @@ public abstract class BeanCreation {
 
   public void calculatesBeanPreparationPriority(List<BeanCreation> preparations) {
     {
-      //noinspection deprecation
-      BeanPreparationPriority annotation = Utils.getAnnotation(beanClass, BeanPreparationPriority.class);
+      @SuppressWarnings("deprecation")
+      kz.greetgo.depinject.core.BeanPreparationPriority annotation = Utils.getAnnotation(
+        beanClass, kz.greetgo.depinject.core.BeanPreparationPriority.class
+      );
       if (annotation != null) {
         beanPreparationPriority.fromAnnotation = annotation.value();
       }
     }
 
     preparations.stream()
-        .filter(bc -> bc.preparingClass != null)
-        .forEach(that -> {
-          if (that.preparingClass.isAssignableFrom(this.preparingClass)) {
-            that.beanPreparationPriority.parenting++;
-          }
-        });
+      .filter(bc -> bc.preparingClass != null)
+      .forEach(that -> {
+        if (that.preparingClass.isAssignableFrom(this.preparingClass)) {
+          that.beanPreparationPriority.parenting++;
+        }
+      });
   }
 
   public BeanPreparationPriorityDot beanPreparationPriority() {
@@ -248,8 +251,7 @@ public abstract class BeanCreation {
 
       if (rawType instanceof Class) {
         Class<?> rawClass = (Class<?>) rawType;
-        //noinspection deprecation
-        if (BeanPreparation.class == rawClass) {
+        if (isBeanPreparation(rawClass)) {
           Type typeArg0 = parameterizedType.getActualTypeArguments()[0];
           return Utils.extractRawClass(typeArg0);
         }
@@ -276,6 +278,11 @@ public abstract class BeanCreation {
     }
 
     throw new IllegalArgumentException("Unknown type: " + type);
+  }
+
+  @SuppressWarnings("deprecation")
+  private static boolean isBeanPreparation(Class<?> rawClass) {
+    return kz.greetgo.depinject.core.BeanPreparation.class == rawClass;
   }
 
   protected String preparationInfo() {
@@ -312,7 +319,9 @@ public abstract class BeanCreation {
     public int compareTo(ReplacerPriorityDot o) {
       {
         int cmp = Double.compare(priority, o.priority);
-        if (cmp != 0) { return cmp; }
+        if (cmp != 0) {
+          return cmp;
+        }
       }
       {
         return className.compareTo(o.className);

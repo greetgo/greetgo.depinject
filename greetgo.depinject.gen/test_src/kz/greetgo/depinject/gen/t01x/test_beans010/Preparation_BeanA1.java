@@ -3,6 +3,7 @@ package kz.greetgo.depinject.gen.t01x.test_beans010;
 import kz.greetgo.depinject.core.Bean;
 import kz.greetgo.depinject.core.BeanPreparation;
 
+@SuppressWarnings("deprecation")
 @Bean
 public class Preparation_BeanA1 implements BeanPreparation<BeanA1> {
   @Override

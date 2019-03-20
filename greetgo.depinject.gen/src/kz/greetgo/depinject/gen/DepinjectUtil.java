@@ -2,11 +2,12 @@ package kz.greetgo.depinject.gen;
 
 import kz.greetgo.class_scanner.ClassScanner;
 import kz.greetgo.class_scanner.ClassScannerDef;
+import kz.greetgo.depinject.Depinject;
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
+import kz.greetgo.java_compiler.FilesClassLoader;
 import kz.greetgo.java_compiler.JavaCompiler;
 import kz.greetgo.java_compiler.JavaCompilerFactory;
-import kz.greetgo.util.ServerUtil;
 
 import java.io.File;
 import java.lang.reflect.ParameterizedType;
@@ -39,15 +40,15 @@ public class DepinjectUtil {
 
   @SuppressWarnings("unused")
   public static String spaces(int spaces) {
-    char s[] = new char[spaces];
+    char[] s = new char[spaces];
     for (int i = 0, n = s.length; i < n; i++) {
       s[i] = ' ';
     }
     return new String(s);
   }
 
-  public static List<File> generateBeanContainersSources(String packageName, String srcDir) {
-    List<File> filesToCompile = new ArrayList<>();
+  public static List<JavaFile> generateBeanContainersSources(String packageName, String srcDir) {
+    List<JavaFile> filesToCompile = new ArrayList<>();
 
     {
       ClassScanner classScanner = new ClassScannerDef();
@@ -59,32 +60,57 @@ public class DepinjectUtil {
           continue;
         }
 
+
         BeanContainerGenerator bcg = new BeanContainerGenerator();
         bcg.beanContainerInterface = aClass;
         bcg.implClassName = aClass.getSimpleName() + BeanContainer.IMPL_POSTFIX;
         bcg.packageName = aClass.getPackage().getName();
 
-        filesToCompile.add(bcg.writeToSourceDir(srcDir));
+        File file = bcg.writeToSourceDir(srcDir);
+
+        filesToCompile.add(new JavaFile(file, srcDir, bcg.packageName, bcg.implClassName));
       }
     }
 
     return filesToCompile;
   }
 
-  public static void implementBeanContainers(String packageName, String srcDir) {
-    List<File> filesToCompile = generateBeanContainersSources(packageName, srcDir);
+  public static List<JavaFile> implementBeanContainers(String packageName, String srcDir) {
+    List<JavaFile> filesToCompile = generateBeanContainersSources(packageName, srcDir);
 
     final JavaCompiler compiler = JavaCompilerFactory.createDefault();
 
-    for (File file : filesToCompile) {
-      compiler.compile(file);
+    for (JavaFile javaFile : filesToCompile) {
+      compiler.compile(javaFile.file);
     }
+
+    return filesToCompile;
   }
 
-  public static void implementAndUseBeanContainers(String packageName, String srcDir) throws Exception {
-    implementBeanContainers(packageName, srcDir);
+  public static FilesClassLoader ensureAndGetDepinjectLoader() {
 
-    ServerUtil.addToClasspath(srcDir);
+    ClassLoader classLoader = Depinject.additionalLoader
+      .updateAndGet(loader -> loader != null ? loader : new FilesClassLoader(ClassLoader.getSystemClassLoader()));
+
+    if (!(classLoader instanceof FilesClassLoader)) {
+      throw new IllegalStateException("Illegal depinject class loader class: " + classLoader.getClass()
+        + ". Must be " + FilesClassLoader.class);
+    }
+
+    return (FilesClassLoader) classLoader;
+
+  }
+
+  public static void implementAndUseBeanContainers(String packageName, String srcDir) {
+
+    FilesClassLoader classLoader = ensureAndGetDepinjectLoader();
+
+    for (JavaFile javaFile : implementBeanContainers(packageName, srcDir)) {
+
+      classLoader.addFile(javaFile.srcDirFile());
+
+    }
+
   }
 
   public static DepinjectVersion version() {

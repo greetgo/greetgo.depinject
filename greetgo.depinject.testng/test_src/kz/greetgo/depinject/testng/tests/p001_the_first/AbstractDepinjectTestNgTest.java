@@ -48,7 +48,7 @@ public class AbstractDepinjectTestNgTest extends AbstractDepinjectTestNg {
 
   @Test
   public void goToEveryWhere() {
-    final String checkValue = RND.intStr(30);
+    final String checkValue = RND.strInt(30);
 
     sinus.get().acceptCheckValue(checkValue);
 

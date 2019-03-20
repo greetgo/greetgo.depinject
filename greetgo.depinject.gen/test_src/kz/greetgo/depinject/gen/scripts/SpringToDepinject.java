@@ -38,6 +38,7 @@ public class SpringToDepinject {
     scanDirAndConvertSpringsFiles(new File(appDir + "kaspiptp.client/src/main/java/"));
     scanDirAndConvertSpringsFiles(new File(appDir + "kaspiptp.stand/src/main/java/"));
 
+    //noinspection unused,SpellCheckingInspection
     File file = new File("/home/pompei/IdeaProjects/kaspiptp/kaspiptp.parent/kaspiptp.db/src/main/java/" +
       "kz/greetgo/kaspiptp/db/register/impl/UtilRegisterImpl.java");
 
@@ -74,7 +75,7 @@ public class SpringToDepinject {
 
     final List<String> varList = new ArrayList<>();
 
-    String tmp = RND.intStr(10);
+    String tmp = RND.strInt(10);
 
     while (matcher.find()) {
       varList.add(matcher.group(4));

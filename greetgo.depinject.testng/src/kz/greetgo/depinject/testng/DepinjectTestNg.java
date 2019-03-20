@@ -6,6 +6,8 @@ import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.BeanScanner;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.BeanContainerGenerator;
+import kz.greetgo.depinject.gen.DepinjectUtil;
+import kz.greetgo.java_compiler.FilesClassLoader;
 import kz.greetgo.java_compiler.JavaCompiler;
 import kz.greetgo.java_compiler.JavaCompilerFactory;
 import kz.greetgo.util.RND;
@@ -18,7 +20,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static kz.greetgo.util.ServerUtil.*;
+import static kz.greetgo.util.ServerUtil.dummyCheck;
+import static kz.greetgo.util.ServerUtil.extractName;
+import static kz.greetgo.util.ServerUtil.extractPackage;
+import static kz.greetgo.util.ServerUtil.resolveFile;
 
 public class DepinjectTestNg {
 
@@ -27,7 +32,7 @@ public class DepinjectTestNg {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
 
-    String srcDir = srcTempDir + "/" + sdf.format(new Date()) + "-" + RND.intStr(10);
+    String srcDir = srcTempDir + "/" + sdf.format(new Date()) + "-" + RND.strInt(10);
 
     List<Class<?>> classList = new ArrayList<>();
 
@@ -38,17 +43,17 @@ public class DepinjectTestNg {
       return srcDir;
     }
 
-    String outerPackage = "a" + RND.intStr(10) + ".";
+    String outerPackage = "a" + RND.strInt(10) + ".";
 
     String containerInterface
-      = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterface_" + RND.intStr(10);
+      = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterface_" + RND.strInt(10);
     String containerInterfaceImpl
-      = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterfaceImpl_" + RND.intStr(10);
+      = outerPackage + testNgTestClass.getSimpleName() + "_ContainerInterfaceImpl_" + RND.strInt(10);
 
     String testNgTestStaticFactory
-      = outerPackage + testNgTestClass.getSimpleName() + "_StaticFactory_" + RND.intStr(10);
+      = outerPackage + testNgTestClass.getSimpleName() + "_StaticFactory_" + RND.strInt(10);
     String testNgTestConfig
-      = outerPackage + testNgTestClass.getSimpleName() + "_Config_" + RND.intStr(10);
+      = outerPackage + testNgTestClass.getSimpleName() + "_Config_" + RND.strInt(10);
 
     final File testNgTestConfigJava = writeTestNgTestConfig(srcDir, testNgTestConfig);
 
@@ -57,7 +62,10 @@ public class DepinjectTestNg {
     final File containerInterfaceJava = writeTestNgTestConfig(srcDir, containerInterface,
       testNgTestClass, testNgTestConfig, classList);
 
-    addToClasspath(srcDir);
+    FilesClassLoader classLoader = DepinjectUtil.ensureAndGetDepinjectLoader();
+    classLoader.addFile(new File(srcDir));
+
+    compiler.classpath().add(new File(srcDir));
 
     compiler.compile(testNgTestConfigJava);
 
@@ -67,7 +75,7 @@ public class DepinjectTestNg {
 
     {
       BeanContainerGenerator g = new BeanContainerGenerator();
-      g.beanContainerInterface = Class.forName(containerInterface);
+      g.beanContainerInterface = classLoader.loadClass(containerInterface);
 
       g.implClassName = extractName(containerInterfaceImpl);
       g.packageName = extractPackage(containerInterfaceImpl);
@@ -79,9 +87,9 @@ public class DepinjectTestNg {
 
     compiler.compile(containerInterfaceImplJava);
 
-    final Class<?> containerInterfaceImplClass = Class.forName(containerInterfaceImpl);
+    final Class<?> containerInterfaceImplClass = classLoader.loadClass(containerInterfaceImpl);
 
-    final Class<?> testNgTestStaticFactoryClass = Class.forName(testNgTestStaticFactory);
+    final Class<?> testNgTestStaticFactoryClass = classLoader.loadClass(testNgTestStaticFactory);
     testNgTestStaticFactoryClass.getField("instance").set(null, testNgTest);
 
     final Object containerInstance = containerInterfaceImplClass.newInstance();
@@ -176,8 +184,12 @@ public class DepinjectTestNg {
 
 
   private static void appendAllIncludes(List<Class<?>> classList, Class<?> aClass) {
-    if (aClass == null) { return; }
-    if (aClass == Object.class) { return; }
+    if (aClass == null) {
+      return;
+    }
+    if (aClass == Object.class) {
+      return;
+    }
 
     final ContainerConfig a = aClass.getAnnotation(ContainerConfig.class);
 
@@ -188,6 +200,8 @@ public class DepinjectTestNg {
 
     Collections.addAll(classList, a.value());
 
-    if (a.inherit()) { appendAllIncludes(classList, aClass.getSuperclass()); }
+    if (a.inherit()) {
+      appendAllIncludes(classList, aClass.getSuperclass());
+    }
   }
 }

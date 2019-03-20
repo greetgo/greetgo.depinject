@@ -12,6 +12,7 @@ public class BeanContainerGenerator {
   public File writeToSourceDir(String sourceDir) {
     final String packagePath = packageName.replace('.', '/');
     File file = new File(sourceDir + '/' + packagePath + '/' + implClassName + ".java");
+    //noinspection ResultOfMethodCallIgnored
     file.getParentFile().mkdirs();
 
     try (PrintWriter writer = new PrintWriter(file, "UTF-8")) {
