@@ -1,5 +1,6 @@
 package kz.greetgo.depinject.gen;
 
+import java.io.File;
 import kz.greetgo.depinject.core.BeanContainer;
 import kz.greetgo.depinject.core.Include;
 import kz.greetgo.depinject.gen.t02x.test_beans027.beans.BeanConfig027;
@@ -7,8 +8,6 @@ import kz.greetgo.depinject.gen.t02x.test_beans027.interfaces.IBeanB2;
 import kz.greetgo.java_compiler.FilesClassLoader;
 import kz.greetgo.java_compiler.JavaCompiler;
 import kz.greetgo.java_compiler.JavaCompilerFactory;
-
-import java.io.File;
 
 public class BeanContainerGeneratorRunProbe {
   @Include({BeanConfig027.class})
@@ -41,18 +40,19 @@ public class BeanContainerGeneratorRunProbe {
 
     compiler.compile(src + "/kz/greetgo/depinject/gen/test/TestBeanContainerImpl.java");
 
-    FilesClassLoader classLoader = new FilesClassLoader(ClassLoader.getSystemClassLoader());
-    classLoader.addFile(new File(src));
+    try (FilesClassLoader classLoader = new FilesClassLoader(ClassLoader.getSystemClassLoader())) {
+      classLoader.addClasspath(new File(src));
 
-    final Class<?> containerClass = classLoader.loadClass("kz.greetgo.depinject.gen.test.TestBeanContainerImpl");
-    System.out.println("containerClass = " + containerClass);
+      final Class<?> containerClass = classLoader.loadClass("kz.greetgo.depinject.gen.test.TestBeanContainerImpl");
+      System.out.println("containerClass = " + containerClass);
 
-    TestBeanContainer container = (TestBeanContainer) containerClass.newInstance();
+      TestBeanContainer container = (TestBeanContainer) containerClass.newInstance();
 
-    System.out.println("container = " + container);
+      System.out.println("container = " + container);
 
-    container.getIBeanB2().goodDay();
+      container.getIBeanB2().goodDay();
 
-    System.out.println("BeanContainerGeneratorRunProbe COMPLETE");
+      System.out.println("BeanContainerGeneratorRunProbe COMPLETE");
+    }
   }
 }
