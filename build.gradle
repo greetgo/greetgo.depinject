@@ -17,8 +17,8 @@ allprojects {
 
   version = rootProject.file('greetgo.depinject/src_resources/depinject_version.txt').text.trim()
 
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
 
   group = "kz.greetgo.depinject"
 }

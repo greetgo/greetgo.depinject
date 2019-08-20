@@ -7,3 +7,6 @@ include 'greetgo.depinject.gen'
 include 'greetgo.depinject.testng'
 include 'greetgo.depinject.gradle'
 include 'modules'
+
+include 'depinject'
+include 'depinject.testing'
