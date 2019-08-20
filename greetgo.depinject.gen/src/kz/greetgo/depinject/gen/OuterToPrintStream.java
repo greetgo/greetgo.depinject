@@ -35,4 +35,5 @@ public class OuterToPrintStream implements Outer {
   public void close() {
     out.close();
   }
+
 }

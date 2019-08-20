@@ -16,4 +16,5 @@ public interface Outer extends Closeable {
   Outer tab(int tab);
 
   void close();
+
 }

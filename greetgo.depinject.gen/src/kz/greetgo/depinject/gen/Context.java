@@ -126,6 +126,7 @@ public class Context {
     BeanReference beanReference = newBeanReference(referencingClass, place);
 
     list.add(new BeanGetterInPublicField(field.getName(), beanReference));
+
   }
 
   public BeanCreation newBeanCreationWithConstructor(Class<?> beanClass, Bean bean) {
@@ -217,4 +218,5 @@ public class Context {
 
     return new BeanCreationWithConstructor(this, beanClass, bean, selectedArgList);
   }
+
 }

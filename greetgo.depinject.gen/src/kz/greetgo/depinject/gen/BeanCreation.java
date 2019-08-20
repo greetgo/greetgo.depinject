@@ -190,7 +190,6 @@ public abstract class BeanCreation {
     double fromAnnotation = 0;
 
     @Override
-    @SuppressWarnings("NullableProblems")
     public int compareTo(BeanPreparationPriorityDot o) {
       {
         int cmp = Integer.compare(parenting, o.parenting);
@@ -315,7 +314,6 @@ public abstract class BeanCreation {
     private double priority = 0;
 
     @Override
-    @SuppressWarnings("NullableProblems")
     public int compareTo(ReplacerPriorityDot o) {
       {
         int cmp = Double.compare(priority, o.priority);

@@ -1,4 +1,4 @@
-rootProject.name = "greetgo.depinject.parent"
+rootProject.name = "greetgo.depinject"
 
 include 'greetgo.depinject'
 include 'greetgo.depinject.gwt'

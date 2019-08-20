@@ -32,4 +32,5 @@ public class BeanContainerGenerator {
     BeanContainerManager bcm = context.createManager(beanContainerInterface);
     bcm.writeBeanContainerImpl(outer, packageName, implClassName);
   }
+
 }

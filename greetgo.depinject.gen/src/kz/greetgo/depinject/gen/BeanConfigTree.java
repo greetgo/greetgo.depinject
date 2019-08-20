@@ -62,7 +62,6 @@ public class BeanConfigTree {
     message(TreeElementType.Bean, message);
   }
 
-
   public String asStr(boolean showBeans, boolean showTitle) {
     StringBuilder sb = new StringBuilder();
     if (showTitle) {
@@ -75,4 +74,5 @@ public class BeanConfigTree {
 
     return sb.toString();
   }
+
 }

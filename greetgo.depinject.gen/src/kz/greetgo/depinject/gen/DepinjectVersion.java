@@ -23,7 +23,6 @@ public class DepinjectVersion implements Comparable<DepinjectVersion> {
   }
 
   @Override
-  @SuppressWarnings("NullableProblems")
   public int compareTo(DepinjectVersion o) {
     {
       int cmp = version1 - o.version1;
