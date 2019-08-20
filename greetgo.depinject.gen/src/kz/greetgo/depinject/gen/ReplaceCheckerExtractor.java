@@ -4,6 +4,7 @@ import kz.greetgo.depinject.core.replace.ReplaceInstanceOf;
 import kz.greetgo.depinject.core.replace.ReplaceWithAnn;
 
 public class ReplaceCheckerExtractor {
+
   public static ReplaceChecker fromBeanClass(Class<?> beanClass) {
 
     ReplaceChecker checker1 = extractWithAnn(beanClass);
@@ -56,4 +57,5 @@ public class ReplaceCheckerExtractor {
 
     return c -> c.getAnnotation(ann.value()) != null;
   }
+
 }

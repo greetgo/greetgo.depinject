@@ -11,9 +11,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.Objects;
 
-import static kz.greetgo.depinject.gen.Utils.*;
+import static kz.greetgo.depinject.gen.Utils.beanConfigToQualifier;
+import static kz.greetgo.depinject.gen.Utils.factoredByToQualifier;
+import static kz.greetgo.depinject.gen.Utils.findDeclaredField;
+import static kz.greetgo.depinject.gen.Utils.noneNull;
+import static kz.greetgo.depinject.gen.Utils.typeAsStr;
 
 public class BeanReferencePlace {
   public static BeanReference.Place placeInPublicBeanGetter(Type referencingClass, Class<?> beanClass, Field field) {
@@ -26,7 +29,7 @@ public class BeanReferencePlace {
       @Override
       public String display() {
         return "public field " + Utils.asStr(beanClass) + "." + field.getName()
-            + " -> " + typeAsStr(referencingClass) + qualifierAsStr(qualifier());
+          + " -> " + typeAsStr(referencingClass) + qualifierAsStr(qualifier());
       }
 
       @Override
@@ -56,8 +59,8 @@ public class BeanReferencePlace {
 
       @Override
       public String display() {
-        return "argument " + argIndex + " of constructor in " + Utils.asStr(beanClass)
-            + " -> " + typeAsStr(referencingType) + qualifierAsStr(qualifier());
+        return "argument №" + argIndex + " type " + argType + " of constructor in " + Utils.asStr(beanClass)
+          + " -> " + typeAsStr(referencingType) + qualifierAsStr(qualifier());
       }
 
       @Override
@@ -70,8 +73,8 @@ public class BeanReferencePlace {
         //   in method Context.newBeanCreationWithConstructor(...)
 
         Field field = findDeclaredField(beanClass, cp.value()[argIndex])
-            .orElseThrow(() -> new NoFieldSpecifiedInAnnotationConstructorProperties(
-                beanClass, cp.value()[argIndex], constructor));
+          .orElseThrow(() -> new NoFieldSpecifiedInAnnotationConstructorProperties(
+            beanClass, cp.value()[argIndex], constructor));
 
         Qualifier fieldQualifier = field.getAnnotation(Qualifier.class);
 
@@ -80,10 +83,10 @@ public class BeanReferencePlace {
         }
 
         return Arrays.stream(constructor.getParameterAnnotations()[argIndex])
-            .filter(a -> a instanceof Qualifier)
-            .map(a -> (Qualifier) a)
-            .findAny()
-            .orElse(noneNull(null));
+          .filter(a -> a instanceof Qualifier)
+          .map(a -> (Qualifier) a)
+          .findAny()
+          .orElse(noneNull(null));
       }
     };
   }
@@ -117,7 +120,7 @@ public class BeanReferencePlace {
       @Override
       public String display() {
         return factoredBy.getClass().getSimpleName()
-            + " in (or in any parents of) " + Utils.asStr(beanClass) + qualifierAsStr(qualifier());
+          + " in (or in any parents of) " + Utils.asStr(beanClass) + qualifierAsStr(qualifier());
       }
 
       @Override
@@ -137,8 +140,8 @@ public class BeanReferencePlace {
       @Override
       public String display() {
         return "bean container method "
-            + Utils.asStr(method.getDeclaringClass()) + "." + method.getName() + "()"
-            + qualifierAsStr(qualifier());
+          + Utils.asStr(method.getDeclaringClass()) + "." + method.getName() + "()"
+          + qualifierAsStr(qualifier());
       }
 
       @Override
@@ -147,4 +150,5 @@ public class BeanReferencePlace {
       }
     };
   }
+
 }

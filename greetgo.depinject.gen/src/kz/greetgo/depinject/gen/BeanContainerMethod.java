@@ -19,7 +19,6 @@ public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
   }
 
   @Override
-  @SuppressWarnings("NullableProblems")
   public int compareTo(BeanContainerMethod o) {
     return compareStr().compareTo(o.compareStr());
   }

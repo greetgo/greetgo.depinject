@@ -32,6 +32,9 @@ public class BeanContainerManager {
 
   List<BeanReference> writingBeanReferences;
 
+  /**
+   * This is the main core logic of library - all magic is here
+   */
   void prepareToWrite() {
 
     //

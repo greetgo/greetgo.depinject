@@ -17,3 +17,4 @@ gwt-unitCache/
 *.iws
 *.out
 out/
+/.shelf/

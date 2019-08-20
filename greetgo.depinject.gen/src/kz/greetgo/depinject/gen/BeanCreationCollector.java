@@ -122,7 +122,6 @@ public class BeanCreationCollector {
     }
   }
 
-
   static String calcFullName(String current, String relative) {
     if (relative.startsWith(".")) {
       return current + relative;
@@ -173,14 +172,12 @@ public class BeanCreationCollector {
     final BeanCreation beanCreation;
 
     if (Utils.isRealClass(beanClass)) {
-      beanCreationList.add(
-        beanCreation = context.newBeanCreationWithConstructor(beanClass, bean)
-      );
+      beanCreation = context.newBeanCreationWithConstructor(beanClass, bean);
     } else {
-      beanCreationList.add(
-        beanCreation = context.newBeanCreationWithBeanFactory(beanClass, bean, extractBeanFactoryReference(beanClass))
-      );
+      beanCreation = context.newBeanCreationWithBeanFactory(beanClass, bean, extractBeanFactoryReference(beanClass));
     }
+
+    beanCreationList.add(beanCreation);
 
     context.configTree.bean("" + beanCreation);
     context.configTree.tab++;
@@ -215,8 +212,8 @@ public class BeanCreationCollector {
 
       BeanReference.Place place = placeInAnnotationFactoredBy(beanClass, factoredBy);
 
-
       return context.newBeanReference(factoredBy.value(), place);
+
     }
 
     if (factoryClassStack.size() == 0) {

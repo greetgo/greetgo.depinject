@@ -15,7 +15,6 @@ public class BeanGetterInPublicField implements Comparable<BeanGetterInPublicFie
   }
 
   @Override
-  @SuppressWarnings("NullableProblems")
   public int compareTo(BeanGetterInPublicField o) {
     return fieldName.compareTo(o.fieldName);
   }

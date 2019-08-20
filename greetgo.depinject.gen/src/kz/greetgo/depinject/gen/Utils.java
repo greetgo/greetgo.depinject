@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class Utils {
+
   public static <T extends Annotation> T getAnnotation(Method method, Class<T> annotation) {
     while (true) {
       T ann = method.getAnnotation(annotation);
@@ -169,7 +170,7 @@ public class Utils {
   }
 
   public static void copyStreams(InputStream inputStream, OutputStream outputStream, int bufferSize) {
-    byte buffer[] = new byte[bufferSize];
+    byte[] buffer = new byte[bufferSize];
 
     try {
       try {
@@ -268,4 +269,5 @@ public class Utils {
     }
 
   }
+
 }

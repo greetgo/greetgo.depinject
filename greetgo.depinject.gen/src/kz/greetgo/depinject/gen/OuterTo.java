@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
 public class OuterTo {
+
   public static Outer file(File file) {
     try {
       FileOutputStream fileOut = new FileOutputStream(file);
@@ -16,4 +17,5 @@ public class OuterTo {
       throw new RuntimeException(e);
     }
   }
+
 }
