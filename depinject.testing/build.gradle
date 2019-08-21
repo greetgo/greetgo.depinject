@@ -3,3 +3,9 @@ dependencies {
   compileOnly project(":depinject:annotations")
   annotationProcessor project(":depinject:annotations")
 }
+
+task example(type: JavaExec) {
+  group "my"
+  classpath = sourceSets.main.runtimeClasspath
+  main = "kz.greetgo.depinject.testing.launcher.Example"
+}

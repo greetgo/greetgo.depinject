@@ -1,6 +1,6 @@
 package kz.greetgo.depinject.ap;
 
-import com.sun.tools.javac.code.Symbol;
+//import com.sun.tools.javac.code.Symbol;
 import kz.greetgo.depinject.ann.Bean;
 import kz.greetgo.depinject.ann.BeanContainer;
 import kz.greetgo.depinject.ann.Include;
@@ -44,8 +44,8 @@ public class DepinjectAnnotationProcessorOld extends AbstractProcessor {
   }
 
   private void generateBeanContainer(Element beanContainer) {
-    if (beanContainer instanceof Symbol.ClassSymbol) {
-      Symbol.ClassSymbol beanContainerClass = (Symbol.ClassSymbol) beanContainer;
+    if (beanContainer instanceof TypeElement) {
+      TypeElement beanContainerClass = (TypeElement) beanContainer;
       String implName = beanContainerClass.getQualifiedName() + "Impl";
       System.out.println("implName = " + implName);
 
