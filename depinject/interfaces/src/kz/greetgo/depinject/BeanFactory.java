@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.core;
+package kz.greetgo.depinject;
 
 public interface BeanFactory {
   Object createBean(Class<?> beanClass) throws Exception;

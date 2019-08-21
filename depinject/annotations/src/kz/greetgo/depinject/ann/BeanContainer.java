@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.core;
+package kz.greetgo.depinject.ann;
 
 
 import java.lang.annotation.Documented;

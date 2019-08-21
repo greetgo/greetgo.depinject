@@ -1,4 +1,6 @@
-package kz.greetgo.depinject.core;
+package kz.greetgo.depinject.ann;
+
+import kz.greetgo.depinject.BeanGetter;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -1,6 +1,6 @@
 package kz.greetgo.depinject.testing.beans2;
 
-import kz.greetgo.depinject.core.Bean;
+import kz.greetgo.depinject.ann.Bean;
 
 @Bean
 public class Hello2 {

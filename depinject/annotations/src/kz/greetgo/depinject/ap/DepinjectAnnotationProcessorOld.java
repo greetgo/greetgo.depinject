@@ -1,9 +1,9 @@
 package kz.greetgo.depinject.ap;
 
 import com.sun.tools.javac.code.Symbol;
-import kz.greetgo.depinject.core.Bean;
-import kz.greetgo.depinject.core.BeanContainer;
-import kz.greetgo.depinject.core.Include;
+import kz.greetgo.depinject.ann.Bean;
+import kz.greetgo.depinject.ann.BeanContainer;
+import kz.greetgo.depinject.ann.Include;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -17,8 +17,9 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class DepinjectAnnotationProcessor extends AbstractProcessor {
+public class DepinjectAnnotationProcessorOld extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -62,7 +63,6 @@ public class DepinjectAnnotationProcessor extends AbstractProcessor {
           out.println("}");
 
         }
-
 
 
       } catch (IOException e) {

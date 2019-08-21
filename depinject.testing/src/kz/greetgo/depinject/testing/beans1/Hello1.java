@@ -1,7 +1,7 @@
 package kz.greetgo.depinject.testing.beans1;
 
-import kz.greetgo.depinject.core.Bean;
-import kz.greetgo.depinject.core.BeanGetter;
+import kz.greetgo.depinject.ann.Bean;
+import kz.greetgo.depinject.BeanGetter;
 import kz.greetgo.depinject.testing.beans2.Hello2;
 
 @Bean

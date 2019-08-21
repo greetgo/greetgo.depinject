@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.core;
+package kz.greetgo.depinject.ann;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -9,10 +9,4 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface BeanConfig {
-  Class<? extends BeanFactory> factory() default BeanFactory.class;
-
-  String qualifier() default "";
-
-  boolean qualifierRegexp() default false;
-}
+public @interface BeanScanner {}
