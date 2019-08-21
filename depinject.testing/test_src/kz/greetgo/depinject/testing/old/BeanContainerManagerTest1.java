@@ -18,7 +18,7 @@ public class BeanContainerManagerTest1 {
 
   @BeanContainer
   @Include(BeanConfig007.class)
-  public interface For_prepareToWrite_ManyCandidates {
+  interface For_prepareToWrite_ManyCandidates {
     @SuppressWarnings("unused")
     SomeBeanClass asd();
   }
