@@ -2,6 +2,8 @@ dependencies {
   compile project(":depinject:interfaces")
   compileOnly project(":depinject:annotations")
   annotationProcessor project(":depinject:annotations")
+  testAnnotationProcessor project(":depinject:annotations")
+  testCompile project(":depinject:annotations")
 }
 
 task example(type: JavaExec) {

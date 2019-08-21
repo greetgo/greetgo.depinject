@@ -31,13 +31,14 @@ public class DepinjectAnnotationProcessor extends AbstractProcessor {
 
   private void generateBeanContainer(Element beanContainer) {
 
-    System.out.println("beanContainer = " + beanContainer);
-
     if (beanContainer instanceof TypeElement) {
       TypeElement typeElement = (TypeElement) beanContainer;
 
-      String qualifiedName = typeElement.getQualifiedName().toString();
-      System.out.println("qualifiedName = " + qualifiedName);
+      if (typeElement.getKind().isInterface()) {
+        String qualifiedName = typeElement.getQualifiedName().toString();
+        System.out.println("qualifiedName = " + qualifiedName);
+      }
+
     }
 
   }
