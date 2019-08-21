@@ -1,4 +1,4 @@
 dependencies {
-  compileOnly project(":depinject")
+  compile project(":depinject")
   annotationProcessor project(":depinject")
 }
