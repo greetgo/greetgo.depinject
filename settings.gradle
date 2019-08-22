@@ -9,5 +9,8 @@ include 'greetgo.depinject.gradle'
 include 'modules'
 
 include 'depinject:annotations'
+include 'depinject:ann.util'
+include 'depinject:ann.util.testing'
+include 'depinject:ann.util.test_processor'
 include 'depinject:interfaces'
 include 'depinject.testing'

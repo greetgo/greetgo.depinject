@@ -1,7 +1,10 @@
 package kz.greetgo.depinject.ap.message;
 
-public interface Message {
+public abstract class Message extends RuntimeException {
 
-  MessageLevel getLevel();
+  abstract public MessageLevel getLevel();
 
+  public Message(String message) {
+    super(message);
+  }
 }

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static kz.greetgo.depinject.ap.message.__DepinjectMessageContainer__.__getMessagesFor__;
+import static kz.greetgo.depinject.ap.message.DepinjectMessageLog.__getMessagesFor__;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class BeanContainerManagerTest1 {

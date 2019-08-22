@@ -1,11 +1,21 @@
 package kz.greetgo.depinject.ap.engine.errors;
 
-public class NoInclude extends RuntimeException {
+import kz.greetgo.depinject.ap.message.Message;
+import kz.greetgo.depinject.ap.message.MessageLevel;
 
-  public final Class<?> mustContainingClass;
+import javax.lang.model.element.TypeElement;
 
-  public NoInclude(Class<?> mustContainingClass) {
+public class NoInclude extends Message {
+
+  public final TypeElement mustContainingClass;
+
+  public NoInclude(TypeElement mustContainingClass) {
     super("In " + mustContainingClass.toString());
     this.mustContainingClass = mustContainingClass;
+  }
+
+  @Override
+  public MessageLevel getLevel() {
+    return MessageLevel.ERROR;
   }
 }

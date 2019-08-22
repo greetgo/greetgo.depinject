@@ -1,8 +1,9 @@
 package kz.greetgo.depinject.ap.engine;
 
-import kz.greetgo.depinject.ann.Bean;
 import kz.greetgo.depinject.BeanGetter;
+import kz.greetgo.depinject.ann.Bean;
 import kz.greetgo.depinject.ann.HideFromDepinject;
+import kz.greetgo.depinject.ann.util.AnnProcUtil;
 import kz.greetgo.depinject.ap.engine.errors.BeanContainerMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.ap.engine.errors.IllegalBeanGetterDefinition;
 import kz.greetgo.depinject.ap.engine.errors.ManyCandidates;
@@ -15,11 +16,16 @@ import kz.greetgo.depinject.ap.engine.errors.NoDefaultBeanFactory;
 import kz.greetgo.depinject.ap.engine.errors.QualifierNotMatched;
 import kz.greetgo.depinject.ap.engine.errors.SuitableConstructorContainsIllegalArgument;
 
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import java.beans.ConstructorProperties;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -28,18 +34,26 @@ import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Collections.reverseOrder;
+import static javax.lang.model.element.Modifier.STATIC;
 import static kz.greetgo.depinject.ap.engine.BeanReferencePlace.placeInConstructorArg;
 import static kz.greetgo.depinject.ap.engine.BeanReferencePlace.placeInPublicBeanGetter;
 
 public class Context {
 
   public final BeanConfigTree configTree = new BeanConfigTree();
+  public final RoundEnvironment roundEnv;
+  public final ProcessingEnvironment processingEnv;
 
-  public BeanContainerManager createManager(Class<?> beanContainerInterface) {
+  public Context(RoundEnvironment roundEnv, ProcessingEnvironment processingEnv) {
+    this.roundEnv = roundEnv;
+    this.processingEnv = processingEnv;
+  }
+
+  public BeanContainerManager createManager(TypeElement beanContainerInterface) {
     return new BeanContainerManager(this, beanContainerInterface);
   }
 
-  public BeanCreationCollector newBeanCreationCollector(Class<?> beanContainerInterface) {
+  public BeanCreationCollector newBeanCreationCollector(TypeElement beanContainerInterface) {
     return new BeanCreationCollector(this, beanContainerInterface);
   }
 
@@ -47,7 +61,7 @@ public class Context {
     return new NoBeanConfig(beanConfig);
   }
 
-  public BeanReference newBeanReference(Type target, BeanReference.Place place) {
+  public BeanReference newBeanReference(TypeMirror target, BeanReference.Place place) {
     return new BeanReference(this, target, place);
   }
 
@@ -73,15 +87,15 @@ public class Context {
     return new ManyCandidates(beanReference, configTree);
   }
 
-  public List<BeanContainerMethod> extractBeanContainerMethodList(Class<?> beanContainer) {
+  public List<BeanContainerMethod> extractBeanContainerMethodList(TypeElement beanContainer) {
     List<BeanContainerMethod> ret = new ArrayList<>();
 
-    for (Method method : beanContainer.getMethods()) {
-      if (Modifier.isStatic(method.getModifiers())) {
+    for (ExecutableElement method : AnnProcUtil.extractMethods(beanContainer)) {
+      if (method.getModifiers().contains(STATIC)) {
         continue;
       }
 
-      if (method.getParameterTypes().length > 0) {
+      if (method.getParameters().size() > 0) {
         throw new BeanContainerMethodCannotContainAnyArguments(beanContainer, method);
       }
 
@@ -219,4 +233,7 @@ public class Context {
     return new BeanCreationWithConstructor(this, beanClass, bean, selectedArgList);
   }
 
+  public <T extends Annotation> List<T> getAllAnnotations(TypeElement typeElement, Class<T> annClass) {
+    throw new RuntimeException("Impl");
+  }
 }

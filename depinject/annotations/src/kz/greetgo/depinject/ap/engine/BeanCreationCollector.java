@@ -2,15 +2,14 @@ package kz.greetgo.depinject.ap.engine;
 
 import kz.greetgo.depinject.ann.Bean;
 import kz.greetgo.depinject.ann.BeanConfig;
-import kz.greetgo.depinject.ann.BeanContainer;
 import kz.greetgo.depinject.ann.BeanFactory;
 import kz.greetgo.depinject.ann.BeanScanner;
 import kz.greetgo.depinject.ann.FactoredBy;
 import kz.greetgo.depinject.ann.Include;
 import kz.greetgo.depinject.ap.engine.errors.FactoryMethodCannotContainAnyArguments;
-import kz.greetgo.depinject.ap.engine.errors.NoBeanContainer;
 import kz.greetgo.depinject.ap.engine.errors.NoInclude;
 
+import javax.lang.model.element.TypeElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,9 +26,9 @@ public class BeanCreationCollector {
 
   private final Context context;
 
-  private final Class<?> beanContainerInterface;
+  private final TypeElement beanContainerInterface;
 
-  public BeanCreationCollector(Context context, Class<?> beanContainerInterface) {
+  public BeanCreationCollector(Context context, TypeElement beanContainerInterface) {
     this.context = context;
     this.beanContainerInterface = beanContainerInterface;
   }
@@ -37,13 +36,10 @@ public class BeanCreationCollector {
   public final List<BeanCreation> beanCreationList = new ArrayList<>();
 
   public List<BeanCreation> collect() {
-    if (!BeanContainer.class.isAssignableFrom(beanContainerInterface)) {
-      throw new NoBeanContainer(beanContainerInterface);
-    }
 
-    context.configTree.root(beanContainerInterface.getName());
+    context.configTree.root(beanContainerInterface.getQualifiedName().toString());
 
-    List<Include> includes = Utils.getAllAnnotations(beanContainerInterface, Include.class);
+    List<Include> includes = context.getAllAnnotations(beanContainerInterface, Include.class);
     if (includes.isEmpty()) {
       throw new NoInclude(beanContainerInterface);
     }

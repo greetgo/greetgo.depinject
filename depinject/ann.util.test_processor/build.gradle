@@ -1,6 +1,5 @@
 dependencies {
 
-  compile project(":depinject:interfaces")
   compile project(":depinject:ann.util")
 
 }

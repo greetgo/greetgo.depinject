@@ -5,14 +5,14 @@ import kz.greetgo.depinject.ann.FactoredBy;
 import kz.greetgo.depinject.ann.Qualifier;
 import kz.greetgo.depinject.ap.engine.errors.NoFieldSpecifiedInAnnotationConstructorProperties;
 
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import java.beans.ConstructorProperties;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
-import static kz.greetgo.depinject.ap.engine.Utils.typeAsStr;
 import static kz.greetgo.depinject.ap.engine.Utils.beanConfigToQualifier;
 import static kz.greetgo.depinject.ap.engine.Utils.factoredByToQualifier;
 import static kz.greetgo.depinject.ap.engine.Utils.findDeclaredField;
@@ -131,7 +131,7 @@ public class BeanReferencePlace {
     };
   }
 
-  public static BeanReference.Place placeInBeanContainerMethod(Method method) {
+  public static BeanReference.Place placeInBeanContainerMethod(ExecutableElement method) {
     return new BeanReference.Place() {
       @Override
       public BeanReference.PlaceType type() {
@@ -141,7 +141,7 @@ public class BeanReferencePlace {
       @Override
       public String display() {
         return "bean container method "
-          + Utils.asStr(method.getDeclaringClass()) + "." + method.getName() + "()"
+          + Utils.asStr((TypeElement) method.getEnclosingElement()) + "." + method.getSimpleName() + "()"
           + qualifierAsStr(qualifier());
       }
 

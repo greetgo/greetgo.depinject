@@ -7,6 +7,7 @@ import kz.greetgo.depinject.BeanReplacer;
 import kz.greetgo.depinject.ann.ReplacePriority;
 import kz.greetgo.depinject.ap.engine.errors.LeftException;
 
+import javax.lang.model.element.TypeElement;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class BeanCreation {
-  public final Class<?> beanClass;
+  public final TypeElement beanClass;
   protected final Bean bean;
 
   public int varIndex;
@@ -24,7 +25,7 @@ public abstract class BeanCreation {
   protected final Context context;
 
 
-  public BeanCreation(Context context, Class<?> beanClass, Bean bean) {
+  public BeanCreation(Context context, TypeElement beanClass, Bean bean) {
     this.context = context;
     this.bean = bean;
     if (beanClass == null) {

@@ -1,0 +1,6 @@
+dependencies {
+
+  compile project(":depinject:ann.util.test_processor")
+  annotationProcessor project(":depinject:ann.util.test_processor")
+
+}

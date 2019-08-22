@@ -1,14 +1,23 @@
 package kz.greetgo.depinject.ap.engine.errors;
 
-import java.lang.reflect.Method;
+import kz.greetgo.depinject.ap.message.Message;
+import kz.greetgo.depinject.ap.message.MessageLevel;
 
-public class BeanContainerMethodCannotContainAnyArguments extends RuntimeException {
-  public final Class<?> beanContainerInterface;
-  public final Method method;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 
-  public BeanContainerMethodCannotContainAnyArguments(Class<?> beanContainerInterface, Method method) {
-    super(beanContainerInterface.getSimpleName() + "." + method.getName());
+public class BeanContainerMethodCannotContainAnyArguments extends Message {
+  public final TypeElement beanContainerInterface;
+  public final ExecutableElement method;
+
+  public BeanContainerMethodCannotContainAnyArguments(TypeElement beanContainerInterface, ExecutableElement method) {
+    super(beanContainerInterface.getSimpleName() + "." + method.getSimpleName());
     this.beanContainerInterface = beanContainerInterface;
     this.method = method;
+  }
+
+  @Override
+  public MessageLevel getLevel() {
+    return MessageLevel.ERROR;
   }
 }

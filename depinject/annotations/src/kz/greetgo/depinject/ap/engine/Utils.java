@@ -4,6 +4,7 @@ import kz.greetgo.depinject.ann.BeanConfig;
 import kz.greetgo.depinject.ann.FactoredBy;
 import kz.greetgo.depinject.ann.Qualifier;
 
+import javax.lang.model.element.TypeElement;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -89,9 +90,9 @@ public class Utils {
   }
 
   private static <T extends Annotation> void putAllAnnotations(
-      Class<?> source, Class<T> annotation,
-      List<T> accumulator,
-      Set<Class<?>> cache
+    Class<?> source, Class<T> annotation,
+    List<T> accumulator,
+    Set<Class<?>> cache
   ) {
 
     if (source == null) {
@@ -140,6 +141,22 @@ public class Utils {
     return aClass.getSimpleName();
   }
 
+  public static String asStr(TypeElement typeElement) {
+
+    boolean isInterface = typeElement.getKind().isInterface();
+    if (isInterface) {
+      //noinspection SpellCheckingInspection
+      return "iface " + typeElement.getSimpleName();
+    }
+
+    boolean isAbstract = typeElement.getModifiers().contains(javax.lang.model.element.Modifier.ABSTRACT);
+    if (isAbstract) {
+      return "abstract " + typeElement.getSimpleName();
+    }
+
+    return typeElement.getSimpleName().toString();
+  }
+
   public static Class<?> extractRawClass(Type type) {
     if (type instanceof Class) {
       return (Class<?>) type;
@@ -151,7 +168,11 @@ public class Utils {
   }
 
   public static String codeName(Class<?> aClass) {
-    return aClass.getName().replaceAll("\\$", ".");
+    return codeName(aClass.getName());
+  }
+
+  public static String codeName(String className) {
+    return className.replaceAll("\\$", ".");
   }
 
   public static String streamToStr(InputStream inputStream) {
@@ -269,5 +290,6 @@ public class Utils {
     }
 
   }
+
 
 }

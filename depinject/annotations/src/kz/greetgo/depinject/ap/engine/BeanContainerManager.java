@@ -3,6 +3,7 @@ package kz.greetgo.depinject.ap.engine;
 
 import kz.greetgo.depinject.ap.engine.errors.NoMethodsInBeanContainer;
 
+import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,9 +13,9 @@ import java.util.stream.Collectors;
 
 public class BeanContainerManager {
   private final Context context;
-  private final Class<?> beanContainerInterface;
+  private final TypeElement beanContainerInterface;
 
-  BeanContainerManager(Context context, Class<?> beanContainerInterface) {
+  BeanContainerManager(Context context, TypeElement beanContainerInterface) {
     this.context = context;
     this.beanContainerInterface = beanContainerInterface;
   }
