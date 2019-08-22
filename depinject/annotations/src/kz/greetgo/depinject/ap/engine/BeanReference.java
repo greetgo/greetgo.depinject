@@ -1,13 +1,12 @@
 package kz.greetgo.depinject.ap.engine;
 
 import kz.greetgo.depinject.BeanGetter;
-import kz.greetgo.depinject.ann.Qualifier;
+import kz.greetgo.depinject.ann.util.AnnProcUtil;
+import kz.greetgo.depinject.ann.util.Place;
 import kz.greetgo.depinject.ap.engine.errors.IllegalBeanGetterArgumentType;
 import kz.greetgo.depinject.ap.engine.errors.LeftException;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -19,22 +18,6 @@ import java.util.stream.Collectors;
 
 public class BeanReference {
 
-  enum PlaceType {
-    InPublicBeanGetter,
-    InConstructorArg,
-    InBeanFactory,
-    InAnnotationFactoredBy,
-    InBeanContainerMethod
-  }
-
-  public interface Place {
-    PlaceType type();
-
-    String display();
-
-    Qualifier qualifier();
-  }
-
   public final Place place;
   private final Context context;
 
@@ -44,6 +27,8 @@ public class BeanReference {
 
     this.context = context;
     this.place = place;
+
+    AnnProcUtil.toBeanRefData(target, place);
 
     if (target instanceof Class) {
       sourceClass = (Class<?>) target;

@@ -94,4 +94,9 @@ public class SomeClassXTest {
 
   }
 
+  public static void main(String[] args) {
+    TestResults testResults = ExampleAnnProcessor.newTestResults();
+    System.out.println(testResults.readAnnotationsFromSomeMethodX());
+  }
+
 }

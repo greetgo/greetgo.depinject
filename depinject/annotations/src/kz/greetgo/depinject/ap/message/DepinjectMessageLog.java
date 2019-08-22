@@ -1,5 +1,8 @@
 package kz.greetgo.depinject.ap.message;
 
+import kz.greetgo.depinject.ann.util.message.Message;
+import kz.greetgo.depinject.ann.util.message.MessageLevel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

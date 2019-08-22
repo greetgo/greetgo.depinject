@@ -1,4 +1,4 @@
-package kz.greetgo.depinject.ap.message;
+package kz.greetgo.depinject.ann.util.message;
 
 public abstract class Message extends RuntimeException {
 

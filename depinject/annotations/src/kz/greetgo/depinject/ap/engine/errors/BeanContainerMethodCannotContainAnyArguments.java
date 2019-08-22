@@ -1,7 +1,7 @@
 package kz.greetgo.depinject.ap.engine.errors;
 
-import kz.greetgo.depinject.ap.message.Message;
-import kz.greetgo.depinject.ap.message.MessageLevel;
+import kz.greetgo.depinject.ann.util.message.Message;
+import kz.greetgo.depinject.ann.util.message.MessageLevel;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;

@@ -3,6 +3,8 @@ package kz.greetgo.depinject.ap.engine;
 import kz.greetgo.depinject.ann.BeanConfig;
 import kz.greetgo.depinject.ann.FactoredBy;
 import kz.greetgo.depinject.ann.Qualifier;
+import kz.greetgo.depinject.ann.util.Place;
+import kz.greetgo.depinject.ann.util.PlaceType;
 import kz.greetgo.depinject.ap.engine.errors.NoFieldSpecifiedInAnnotationConstructorProperties;
 
 import javax.lang.model.element.ExecutableElement;
@@ -20,11 +22,11 @@ import static kz.greetgo.depinject.ap.engine.Utils.noneNull;
 import static kz.greetgo.depinject.ap.engine.Utils.typeAsStr;
 
 public class BeanReferencePlace {
-  public static BeanReference.Place placeInPublicBeanGetter(Type referencingClass, Class<?> beanClass, Field field) {
-    return new BeanReference.Place() {
+  public static Place placeInPublicBeanGetter(Type referencingClass, Class<?> beanClass, Field field) {
+    return new Place() {
       @Override
-      public BeanReference.PlaceType type() {
-        return BeanReference.PlaceType.InPublicBeanGetter;
+      public PlaceType type() {
+        return PlaceType.InPublicBeanGetter;
       }
 
       @Override
@@ -48,14 +50,14 @@ public class BeanReferencePlace {
     return qualifier.regexp() ? " [id ~ /" + qualifier.value() + "/]" : " [id = " + qualifier.value() + "]";
   }
 
-  public static BeanReference.Place placeInConstructorArg(Type referencingType,
-                                                          Type argType, int argIndex,
-                                                          Class<?> beanClass,
-                                                          Constructor<?> constructor) {
-    return new BeanReference.Place() {
+  public static Place placeInConstructorArg(Type referencingType,
+                                            Type argType, int argIndex,
+                                            Class<?> beanClass,
+                                            Constructor<?> constructor) {
+    return new Place() {
       @Override
-      public BeanReference.PlaceType type() {
-        return BeanReference.PlaceType.InConstructorArg;
+      public PlaceType type() {
+        return PlaceType.InConstructorArg;
       }
 
       @Override
@@ -92,11 +94,11 @@ public class BeanReferencePlace {
     };
   }
 
-  public static BeanReference.Place placeInBeanFactory(Class<?> beanConfig, BeanConfig beanConfigAnn) {
-    return new BeanReference.Place() {
+  public static Place placeInBeanFactory(Class<?> beanConfig, BeanConfig beanConfigAnn) {
+    return new Place() {
       @Override
-      public BeanReference.PlaceType type() {
-        return BeanReference.PlaceType.InBeanFactory;
+      public PlaceType type() {
+        return PlaceType.InBeanFactory;
       }
 
       @Override
@@ -111,11 +113,11 @@ public class BeanReferencePlace {
     };
   }
 
-  public static BeanReference.Place placeInAnnotationFactoredBy(Class<?> beanClass, FactoredBy factoredBy) {
-    return new BeanReference.Place() {
+  public static Place placeInAnnotationFactoredBy(Class<?> beanClass, FactoredBy factoredBy) {
+    return new Place() {
       @Override
-      public BeanReference.PlaceType type() {
-        return BeanReference.PlaceType.InAnnotationFactoredBy;
+      public PlaceType type() {
+        return PlaceType.InAnnotationFactoredBy;
       }
 
       @Override
@@ -131,11 +133,11 @@ public class BeanReferencePlace {
     };
   }
 
-  public static BeanReference.Place placeInBeanContainerMethod(ExecutableElement method) {
-    return new BeanReference.Place() {
+  public static Place placeInBeanContainerMethod(ExecutableElement method) {
+    return new Place() {
       @Override
-      public BeanReference.PlaceType type() {
-        return BeanReference.PlaceType.InBeanContainerMethod;
+      public PlaceType type() {
+        return PlaceType.InBeanContainerMethod;
       }
 
       @Override

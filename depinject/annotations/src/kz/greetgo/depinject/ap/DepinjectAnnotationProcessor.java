@@ -8,7 +8,7 @@ import kz.greetgo.depinject.ap.engine.ClassName;
 import kz.greetgo.depinject.ap.engine.Context;
 import kz.greetgo.depinject.ap.engine.OuterToStringBuilder;
 import kz.greetgo.depinject.ap.message.DepinjectMessageLog;
-import kz.greetgo.depinject.ap.message.Message;
+import kz.greetgo.depinject.ann.util.message.Message;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;

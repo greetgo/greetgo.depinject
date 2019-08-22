@@ -4,6 +4,7 @@ import kz.greetgo.depinject.BeanGetter;
 import kz.greetgo.depinject.ann.Bean;
 import kz.greetgo.depinject.ann.HideFromDepinject;
 import kz.greetgo.depinject.ann.util.AnnProcUtil;
+import kz.greetgo.depinject.ann.util.Place;
 import kz.greetgo.depinject.ap.engine.errors.BeanContainerMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.ap.engine.errors.IllegalBeanGetterDefinition;
 import kz.greetgo.depinject.ap.engine.errors.ManyCandidates;
@@ -61,7 +62,7 @@ public class Context {
     return new NoBeanConfig(beanConfig);
   }
 
-  public BeanReference newBeanReference(TypeMirror target, BeanReference.Place place) {
+  public BeanReference newBeanReference(TypeMirror target, Place place) {
     return new BeanReference(this, target, place);
   }
 
@@ -135,7 +136,7 @@ public class Context {
 
     Type referencingClass = pt.getActualTypeArguments()[0];
 
-    BeanReference.Place place = placeInPublicBeanGetter(referencingClass, beanClass, field);
+    Place place = placeInPublicBeanGetter(referencingClass, beanClass, field);
 
     BeanReference beanReference = newBeanReference(referencingClass, place);
 
@@ -208,7 +209,7 @@ public class Context {
 
         Type referencingType = parameterizedType.getActualTypeArguments()[0];
 
-        BeanReference.Place place = placeInConstructorArg(referencingType, argType, argIndex, beanClass, constructor);
+        Place place = placeInConstructorArg(referencingType, argType, argIndex, beanClass, constructor);
 
         BeanReference beanReference = newBeanReference(referencingType, place);
 

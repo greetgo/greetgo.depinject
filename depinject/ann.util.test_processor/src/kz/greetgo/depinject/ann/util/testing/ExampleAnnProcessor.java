@@ -1,6 +1,8 @@
 package kz.greetgo.depinject.ann.util.testing;
 
 import kz.greetgo.depinject.ann.util.AnnProcUtil;
+import kz.greetgo.depinject.ann.util.BeanRefData;
+import kz.greetgo.depinject.ann.util.PlaceUtil;
 import kz.greetgo.depinject.ann.util.ValueEntry;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -21,6 +23,7 @@ import java.util.Set;
 
 import static kz.greetgo.depinject.ann.util.AnnProcUtil.getMethodAnnotationQualifiedNames;
 import static kz.greetgo.depinject.ann.util.AnnProcUtil.getMethodAnnotationValues;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ExampleAnnProcessor extends AbstractProcessor {
@@ -116,6 +119,8 @@ public class ExampleAnnProcessor extends AbstractProcessor {
               print_returns_toCode(out, "returnsSomeModel2", method);
             }
 
+            testToBeanRefData(methods);
+
           }
 
         }
@@ -124,6 +129,26 @@ public class ExampleAnnProcessor extends AbstractProcessor {
 
       out.println("}");
 
+    }
+
+  }
+
+  private static void testToBeanRefData(List<ExecutableElement> methods) {
+
+    {
+      ExecutableElement method = findMethod("returnsListSomeModel1", methods);
+      BeanRefData beanRefData = AnnProcUtil.toBeanRefData(method.getReturnType(), PlaceUtil.NO_WHERE);
+
+      assertThat(beanRefData).isNotNull();
+      assertThat(beanRefData.isList).isTrue();
+      assertThat(beanRefData.typeElement.toString()).isEqualTo("kz.greetgo.depinject.ann.util.testing.model.SomeModel1");
+    }
+    {
+      ExecutableElement method = findMethod("returnsSomeModel1", methods);
+      BeanRefData beanRefData = AnnProcUtil.toBeanRefData(method.getReturnType(), PlaceUtil.NO_WHERE);
+      assertThat(beanRefData).isNotNull();
+      assertThat(beanRefData.isList).isFalse();
+      assertThat(beanRefData.typeElement.toString()).isEqualTo("kz.greetgo.depinject.ann.util.testing.model.SomeModel1");
     }
 
   }

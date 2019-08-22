@@ -1,5 +1,6 @@
 dependencies {
 
   compile project(":depinject:ann.util")
+  compile "$assertingJar"
 
 }

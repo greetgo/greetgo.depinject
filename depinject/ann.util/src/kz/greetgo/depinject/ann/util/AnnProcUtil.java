@@ -1,5 +1,7 @@
 package kz.greetgo.depinject.ann.util;
 
+import kz.greetgo.depinject.ann.util.message.CommonError;
+
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -103,6 +106,66 @@ public class AnnProcUtil {
 
   public static String toCode(TypeMirror typeMirror) {
     return typeMirror.toString();
+  }
+
+  public static boolean isList(DeclaredType declaredType) {
+    Element element = declaredType.asElement();
+    if (element instanceof TypeElement) {
+      TypeElement typeElement = (TypeElement) element;
+      return "java.util.List".contentEquals(typeElement.getQualifiedName());
+    }
+    return false;
+  }
+
+  public static BeanRefData toBeanRefData(TypeMirror typeMirror, Place place) throws InternalError {
+    DeclaredType declaredType = typeMirror.accept(GetDeclaredType.get(), null).orElse(null);
+
+    if (declaredType == null) {
+      throw new CommonError(place, "Unknown TypeMirror = " + typeMirror);
+    }
+
+    if (isList(declaredType)) {
+
+      if (declaredType.getTypeArguments().isEmpty()) {
+        throw new CommonError(place, "java.util.List has no type arguments");
+      }
+      if (declaredType.getTypeArguments().size() > 1) {
+        throw new CommonError(place, "java.util.List has too many type arguments = "
+          + declaredType.getTypeArguments().size());
+      }
+
+      TypeMirror argumentTypeMirror = declaredType.getTypeArguments().get(0);
+
+      Optional<DeclaredType> argumentDeclaredTypeOptional = argumentTypeMirror.accept(GetDeclaredType.get(), null);
+
+      DeclaredType argumentDeclaredType = argumentDeclaredTypeOptional.orElse(null);
+
+      if (argumentDeclaredType == null) {
+        throw new CommonError(place, "Unknown type of argument of java.util.List<> = " + argumentTypeMirror);
+      }
+
+      Element argumentElement = argumentDeclaredType.asElement();
+
+      if (!(argumentElement instanceof TypeElement)) {
+        throw new CommonError(place, "Unknown type element of argument of java.util.List<> = " + argumentElement);
+      }
+
+      TypeElement argumentTypeElement = (TypeElement) argumentElement;
+      return new BeanRefData(argumentTypeElement, true);
+    }
+
+    {
+      Element element = declaredType.asElement();
+
+      if (!(element instanceof TypeElement)) {
+        throw new CommonError(place, "Unknown type element " + element);
+      }
+
+      TypeElement typeElement = (TypeElement) element;
+
+      return new BeanRefData(typeElement, false);
+    }
+
   }
 
 }

@@ -2,9 +2,9 @@ package kz.greetgo.depinject.testing.old;
 
 import kz.greetgo.depinject.ann.BeanContainer;
 import kz.greetgo.depinject.ann.Include;
-import kz.greetgo.depinject.ap.message.ManyCandidates;
-import kz.greetgo.depinject.ap.message.Message;
-import kz.greetgo.depinject.ap.message.NoCandidates;
+import kz.greetgo.depinject.ann.util.message.ManyCandidates;
+import kz.greetgo.depinject.ann.util.message.Message;
+import kz.greetgo.depinject.ann.util.message.NoCandidates;
 import kz.greetgo.depinject.testing.old.t00x.test_beans007.BeanConfig007;
 import kz.greetgo.depinject.testing.old.t00x.test_beans007.SomeBeanClass;
 import org.testng.annotations.Test;

@@ -1,6 +1,7 @@
 package kz.greetgo.depinject.ap.engine;
 
 import kz.greetgo.depinject.ann.util.AnnProcUtil;
+import kz.greetgo.depinject.ann.util.Place;
 
 import javax.lang.model.element.ExecutableElement;
 
@@ -14,7 +15,7 @@ public class BeanContainerMethod implements Comparable<BeanContainerMethod> {
   public BeanContainerMethod(Context context, ExecutableElement method) {
     this.method = method;
 
-    BeanReference.Place place = placeInBeanContainerMethod(method);
+    Place place = placeInBeanContainerMethod(method);
 
     beanReference = context.newBeanReference(method.getReturnType(), place);
   }

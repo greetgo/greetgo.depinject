@@ -6,6 +6,7 @@ import kz.greetgo.depinject.ann.BeanFactory;
 import kz.greetgo.depinject.ann.BeanScanner;
 import kz.greetgo.depinject.ann.FactoredBy;
 import kz.greetgo.depinject.ann.Include;
+import kz.greetgo.depinject.ann.util.Place;
 import kz.greetgo.depinject.ap.engine.errors.FactoryMethodCannotContainAnyArguments;
 import kz.greetgo.depinject.ap.engine.errors.NoInclude;
 
@@ -75,7 +76,7 @@ public class BeanCreationCollector {
 
       if (addToFactoryClassStack) {
 
-        BeanReference.Place place = placeInBeanFactory(beanConfig, beanConfigAnn);
+        Place place = placeInBeanFactory(beanConfig, beanConfigAnn);
 
         factoryClassStack.add(context.newBeanReference(factoryClass, place));
       }
@@ -204,7 +205,7 @@ public class BeanCreationCollector {
 
       FactoredBy factoredBy = factoredByList.get(0);
 
-      BeanReference.Place place = placeInAnnotationFactoredBy(beanClass, factoredBy);
+      Place place = placeInAnnotationFactoredBy(beanClass, factoredBy);
 
       return context.newBeanReference(factoredBy.value(), place);
 
