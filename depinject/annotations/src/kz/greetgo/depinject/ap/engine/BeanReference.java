@@ -2,13 +2,12 @@ package kz.greetgo.depinject.ap.engine;
 
 import kz.greetgo.depinject.BeanGetter;
 import kz.greetgo.depinject.ann.util.AnnProcUtil;
+import kz.greetgo.depinject.ann.util.BeanRefData;
 import kz.greetgo.depinject.ann.util.Place;
-import kz.greetgo.depinject.ap.engine.errors.IllegalBeanGetterArgumentType;
-import kz.greetgo.depinject.ap.engine.errors.LeftException;
+import kz.greetgo.depinject.ann.util.QualifierData;
+import kz.greetgo.depinject.ann.util.message.CommonError;
 
 import javax.lang.model.type.TypeMirror;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -20,53 +19,22 @@ public class BeanReference {
 
   public final Place place;
   private final Context context;
+  public final BeanRefData data;
 
-  //TODO pompei ....
   public BeanReference(Context context, TypeMirror target, Place place) {
     Objects.requireNonNull(place);
 
     this.context = context;
     this.place = place;
 
-    AnnProcUtil.toBeanRefData(target, place);
-
-    if (target instanceof Class) {
-      sourceClass = (Class<?>) target;
-      isList = false;
-      return;
-    }
-
-    if (target instanceof ParameterizedType) {
-      ParameterizedType parameterizedType = (ParameterizedType) target;
-
-      if (parameterizedType.getRawType() == List.class) {
-        Type listArg = parameterizedType.getActualTypeArguments()[0];
-
-        if (listArg instanceof Class) {
-          sourceClass = (Class<?>) listArg;
-          isList = true;
-          return;
-        }
-
-        throw new IllegalBeanGetterArgumentType("Cannot extract bean class from List: "
-          + parameterizedType.toString() + "; " + place);
-      }
-
-      throw new IllegalBeanGetterArgumentType("Cannot extract bean class from parameterized type: "
-        + parameterizedType.toString() + "; " + place);
-    }
-
-    throw new IllegalBeanGetterArgumentType("Cannot extract bean class from type: " + target.toString() + "; " + place);
+    data = AnnProcUtil.toBeanRefData(target, place);
   }
-
-  public final String sourceClassQualifiedName;
-  public final boolean isList;
 
   @SuppressWarnings("unused")
   public String targetClassCode() {
-    return isList
-      ? Utils.codeName(List.class) + '<' + Utils.codeName(sourceClassQualifiedName) + '>'
-      : Utils.codeName(sourceClassQualifiedName);
+    return data.isList
+      ? Utils.codeName(List.class) + '<' + AnnProcUtil.toCode(data.typeElement) + '>'
+      : AnnProcUtil.toCode(data.typeElement);
   }
 
   public final List<GetterCreation> getterCreations = new ArrayList<>();
@@ -75,7 +43,7 @@ public class BeanReference {
 
   public String compareStr() {
     if (compareStr == null) {
-      compareStr = (isList ? "A_" : "B_") + sourceClassQualifiedName;
+      compareStr = (data.isList ? "A." : "B.") + AnnProcUtil.toCode(data.typeElement);
     }
     return compareStr;
   }
@@ -93,7 +61,7 @@ public class BeanReference {
 
     BeanReference that = (BeanReference) o;
 
-    if (isList != that.isList) {
+    if (data.isList != that.data.isList) {
       return false;
     }
 
@@ -101,11 +69,11 @@ public class BeanReference {
       return false;
     }
 
-    if (!place.qualifier().value().equals(place.qualifier().value())) {
+    if (!Objects.equals(place.qualifier().value, place.qualifier().value)) {
       return false;
     }
 
-    if (place.qualifier().regexp() != place.qualifier().regexp()) {
+    if (place.qualifier().regexp != place.qualifier().regexp) {
       return false;
     }
 
@@ -114,10 +82,15 @@ public class BeanReference {
 
   @Override
   public int hashCode() {
-    int result = (isList ? 1 : 0);
+    int result = (data.isList ? 1 : 0);
+
     result = 31 * result + getterCreations.hashCode();
-    result = 31 * result + place.qualifier().value().hashCode();
-    result = 31 * result + (place.qualifier().regexp() ? 1 : 0);
+
+    QualifierData qualifier = place.qualifier();
+
+    result = 31 * result + qualifier.value.hashCode();
+    result = 31 * result + (qualifier.regexp ? 1 : 0);
+
     return result;
   }
 
@@ -125,6 +98,7 @@ public class BeanReference {
 
   public final List<BeanCreation> assignableCandidates = new ArrayList<>();
 
+  //TODO pompei ....
   public void fillTargetCreationsFrom(List<BeanCreation> candidates) {
     if (wasFillTargetCreations) {
       return;
@@ -133,7 +107,7 @@ public class BeanReference {
 
     for (BeanCreation candidate : candidates) {
       if (isReferencingTo(candidate)) {
-        getterCreations.add(new GetterCreation(sourceClass, candidate));
+        getterCreations.add(new GetterCreation(data.typeElement, candidate));
       }
 
       //context.processingEnv.getTypeUtils().isAssignable()
@@ -152,18 +126,18 @@ public class BeanReference {
       return false;
     }
 
-    if (place.qualifier().value().isEmpty()) {
+    if (place.qualifier().value.isEmpty()) {
       return true;
     }
 
-    if (place.qualifier().regexp()) {
+    if (place.qualifier().regexp) {
       return Pattern
-        .compile(place.qualifier().value())
+        .compile(place.qualifier().value)
         .matcher(candidate.bean.id())
         .matches();
     }
 
-    return place.qualifier().value().equals(candidate.bean.id());
+    return place.qualifier().value.equals(candidate.bean.id());
   }
 
   public boolean use = false;
@@ -185,7 +159,7 @@ public class BeanReference {
 
   @Override
   public String toString() {
-    return (isList ? "[" : "") + Utils.asStr(sourceClass) + (isList ? "]" : "")
+    return (data.isList ? "[" : "") + Utils.asStr(data.typeElement) + (data.isList ? "]" : "")
       + " -> " + getterCreations.size() + '['
       + getterCreations.stream()
       .map(GetterCreation::toString)
@@ -194,7 +168,7 @@ public class BeanReference {
   }
 
   public void checkConnectivity() {
-    if (isList) {
+    if (data.isList) {
       return;
     }
 
@@ -245,27 +219,27 @@ public class BeanReference {
 
 
   public boolean needGetter() {
-    return isList;
+    return data.isList;
   }
 
   public int varIndex = 0;
 
   public String getterVarName() {
     return needGetter()
-      ? "getter_ref_" + (isList ? "list_" : "") + sourceClass.getSimpleName() + '_' + varIndex()
+      ? "getter_ref_" + (data.isList ? "list_" : "") + data.typeElement.getSimpleName() + '_' + varIndex()
       : getterCreations.get(0).getterVarName();
   }
 
   private String gettingMethodName() {
     if (!needGetter()) {
-      throw new LeftException("jhb4jhb5hjb6jn7");
+      throw new CommonError(place, "jhb4jhb5 : calling gettingMethodName() for needGetter() == false");
     }
-    return "get_ref_" + (isList ? "list_" : "") + sourceClass.getSimpleName() + '_' + varIndex();
+    return "get_ref_" + (data.isList ? "list_" : "") + data.typeElement.getSimpleName() + '_' + varIndex();
   }
 
   private int varIndex() {
     if (varIndex <= 0) {
-      throw new RuntimeException("Left var index = " + varIndex);
+      throw new CommonError(place, "j543b667 : Left var index = " + varIndex);
     }
     return varIndex;
   }
@@ -275,7 +249,7 @@ public class BeanReference {
       return;
     }
     outer.nl();
-    if (isList) {
+    if (data.isList) {
       writeGetterAsList(tab, outer);
     } else {
       writeGetterMono(tab, outer);
@@ -284,18 +258,20 @@ public class BeanReference {
 
   @SuppressWarnings("unused")
   private void writeGetterMono(int tab, Outer outer) {
-    throw new UnsupportedOperationException();
+    throw new CommonError(place, "y65u3i7 : UnsupportedOperationException");
   }
 
   private void writeGetterAsList(int tab, Outer outer) {
+    String typeElementCode = AnnProcUtil.toCode(data.typeElement);
+
     outer.tab(tab).stn("private final " + Utils.codeName(BeanGetter.class) + "<" + Utils.codeName(List.class)
-      + "<" + Utils.codeName(sourceClass) + ">> " + getterVarName() + " = this::" + gettingMethodName() + ";");
+      + "<" + typeElementCode + ">> " + getterVarName() + " = this::" + gettingMethodName() + ";");
     outer.tab(tab).stn("private " + Utils.codeName(List.class)
-      + "<" + Utils.codeName(sourceClass) + "> " + gettingMethodName() + "() {");
+      + "<" + typeElementCode + "> " + gettingMethodName() + "() {");
 
     final int tab1 = tab + 1;
 
-    outer.tab(tab1).stn(Utils.codeName(List.class) + "<" + Utils.codeName(sourceClass)
+    outer.tab(tab1).stn(Utils.codeName(List.class) + "<" + typeElementCode
       + "> list = new " + Utils.codeName(ArrayList.class) + "<>();");
 
     for (GetterCreation gc : getterCreations) {

@@ -108,6 +108,10 @@ public class AnnProcUtil {
     return typeMirror.toString();
   }
 
+  public static String toCode(TypeElement typeElement) {
+    return typeElement.toString();
+  }
+
   public static boolean isList(DeclaredType declaredType) {
     Element element = declaredType.asElement();
     if (element instanceof TypeElement) {

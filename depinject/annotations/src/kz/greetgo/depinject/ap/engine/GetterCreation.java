@@ -4,15 +4,17 @@ import kz.greetgo.depinject.BeanGetter;
 import kz.greetgo.depinject.BeanReplacer;
 import kz.greetgo.depinject.ap.engine.errors.LeftException;
 
+import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class GetterCreation {
-  public final Class<?> getterClass;
+  //TODO pompei rename to `typeElement`
+  public final TypeElement getterClass;
   public final BeanCreation beanCreation;
 
-  public GetterCreation(Class<?> getterClass, BeanCreation beanCreation) {
+  public GetterCreation(TypeElement getterClass, BeanCreation beanCreation) {
     if (getterClass == null) {
       throw new NullPointerException("getterClass == null");
     }

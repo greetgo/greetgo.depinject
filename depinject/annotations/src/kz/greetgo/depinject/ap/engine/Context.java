@@ -115,8 +115,9 @@ public class Context {
     return new BeanCreationWithFactoryMethod(this, returnType, bean, parentBeanCreation, method);
   }
 
-  void fillBeanGetterHolderListInner(List<BeanGetterInPublicField> beanGetterInPublicFieldList, Class<?> beanClass) {
+  void fillBeanGetterHolderListInner(List<BeanGetterInPublicField> beanGetterInPublicFieldList, TypeElement beanClass) {
 
+    //TODO pompei continue after will work TypeElement.getFields
     for (Field field : beanClass.getFields()) {
       if (field.getType() == BeanGetter.class) {
         addHolder(beanGetterInPublicFieldList, field, beanClass);
